@@ -15,8 +15,8 @@
 
 {{-- BG KUSUS AUTH --}}
 <body class="min-h-screen antialiased text-[#2E4F2A] flex flex-col
-             bg-[#EFE6D2]"> {{-- ganti sesuai skema loginmu --}}
-   <main class="relative flex-1 overflow-hidden">
+             bg-[#EFE6D2]"> 
+   <main class="relative flex-1 overflow-hidden min-h-[calc(100vh-40px)]">
     
     {{-- Atas-tengah --}}
     <span
@@ -35,8 +35,8 @@
     {{-- Kanan-bawah --}}
     <span
       class="pointer-events-none select-none absolute -z-10
-             bottom-6 right-30
-             h-16 w-16 rounded-full bg-[#F6B357]">
+             bottom-2 right-30
+             h-20 w-20 rounded-full bg-[#F6B357]">
     </span>
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
       @yield('content')
@@ -44,7 +44,7 @@
   </main>
 
 
-  {{-- footer sama di semua halaman (bisa include biar DRY) --}}
+  {{-- FOOTER --}}
     <footer class="mt-auto w-full bg-white">
     {{-- teks/copyright --}}
     <div class="py-3 text-center text-lg opacity-75 text-black">©CaloriMate</div>

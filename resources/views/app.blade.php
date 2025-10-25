@@ -42,7 +42,7 @@
 
         {{-- Register --}}
         <div class="ml-auto">
-          <a href="#register"
+          <a href="{{ url('/register') }}"
              class="inline-flex items-center rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#2E4F2A] shadow-sm hover:opacity-90 transition">
             Register
           </a>

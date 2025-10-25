@@ -1,36 +1,47 @@
 @extends('auth')
 
-@section('title', 'Login')
+@section('title','Login')
 
 @section('content')
-<div class="overflow-hidden mx-auto max-w-4xl bg-white rounded-3xl shadow-lg grid grid-cols-1 lg:grid-cols-2 mt-10 lg:min-h-[550px]">
-    {{-- Kiri --}}
+<div class="rounded-3xl overflow-hidden mx-auto w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 shadow-lg bg-white">
+
+  {{-- KIRI --}}
   <div
-    class="bg-[#344F1F] text-white p-6 rounded-3xl h-full
-           lg:rounded-tr-3xl lg:rounded-br-3xl
-           lg:-mr-2 lg:z-10 ">   
-    <img src="{{ asset('images/maskot_login.png') }}"
-         class="max-h-[430px] w-auto mx-auto" alt="">
+    class="relative bg-[#344F1F] text-white flex items-end
+           px-6 pt-6 pb-0 lg:-mr-2 lg:z-10">
+    {{-- dekor lingkaran --}}
+    <img
+      src="{{ asset('images/group-54.png') }}"
+      alt=""
+      aria-hidden="true"
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 object-contain pointer-events-none select-none" />
+    {{-- maskot --}}
+    <img
+      src="{{ asset('images/mascot-register.png') }}"
+      alt="CaloriMate Mascot"
+      class="relative z-10 w-full max-w-[420px] h-auto mx-auto select-none" />
   </div>
 
-  {{-- Kanan --}}
-  <div class="bg-white rounded-3xl p-8  flex flex-col items-center justify-center">
-    <div class="text-2xl font-extrabold">
-      <span class="text-[#2E4F2A]">Calori</span><span class="text-[#F2A94A]">Mate</span>
-    </div>
-    <h2 class="mt-4 text-2xl font-semibold text-[#2E4F2A]">Login</h2>
+  {{-- KANAN--}}
+  <div class="relative bg-white p-8 md:p-10 lg:p-12 flex items-center justify-center">
+      <img src="{{ asset('images/logo-warna.png') }}" alt="CaloriMate Logo" class="absolute top-6 md:top-8 left-1/2 -translate-x-1/2
+              h-16 md:h-20 lg:h-24 select-none" />
+      {{-- KONTEN LOGIN --}}
+      <div class="w-full max-w-sm text-center pt-12 md:pt-28 lg:pt-20">
+        <h2 class="text-3xl md:text-4xl font-bold text-[#2E4F2A] mb-6">Login</h2>
 
-    <div class="mt-8 w-full max-w-xs space-y-4">
-      <a href="{{ url('/login/trainer') }}"
-         class="block rounded-lg bg-[#2E7D32] px-5 py-3 text-center font-semibold text-white shadow-md hover:opacity-90">
-        Login as Trainer
-      </a>
-      <div class="text-center text-sm text-[#2E4F2A]/70">Or</div>
-      <a href="{{ url('/login/user') }}"
-         class="block rounded-lg bg-[#2E7D32] px-5 py-3 text-center font-semibold text-white shadow-md hover:opacity-90">
-        Login as User
-      </a>
-    </div>
+        <div class="space-y-4">
+          <a href="{{ url('/login/trainer') }}"
+            class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90">
+            Login as Trainer
+          </a>
+          <div class="text-sm text-[#2E4F2A]/70">Or</div>
+          <a href="{{ url('/login/user') }}"
+            class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90">
+            Login as Client
+          </a>
+        </div>
+      </div>
   </div>
 </div>
 @endsection

@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientRegisterController;
+use App\Http\Controllers\FoodController;;
 
 
 
@@ -19,8 +20,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register.form');
 Route::post('/register', [AuthController::class, 'doRegister'])->name('register.do');
 
-Route::get('/register/client', [ClientRegisterController::class, 'show'])->name('register.client.show');
-Route::post('/register/client', [ClientRegisterController::class, 'store'])->name('register.client.store');
+    Route::get('/register/client', [ClientRegisterController::class, 'show'])->name('register.client.show');
+    Route::post('/register/client', [ClientRegisterController::class, 'store'])->name('register.client.store');
+
+Route::prefix('trainer')->name('trainer.')->group(function () {
+    Route::resource('foods', FoodController::class);
+});
 
 
 // Role-specific example pages
