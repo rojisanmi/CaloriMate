@@ -8,7 +8,7 @@
       Hello Trainer,
     </h1>
     <p class="mt-4 text-xl md:text-3xl text-[#2E471F]/90">
-      Let’s Keep Everything Running Smoothly!
+      Let's Keep Everything Running Smoothly!
     </p>
 
     <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -16,10 +16,11 @@
          class="inline-block rounded-lg bg-[#2E471F] text-white font-semibold px-8 py-3 shadow hover:opacity-90">
         Kelola Makanan
       </a>
-      <a href="{{ url('/trainer/workouts') }}"
+      <a href="{{ url('/trainer/programs') }}"
          class="inline-block rounded-lg bg-[#2E471F] text-white font-semibold px-8 py-3 shadow hover:opacity-90">
         Kelola Latihan
       </a>
+      <form method="POST" action="{{ route('logout') }}">@csrf<button>Logout</button></form>
     </div>
   </section>
 @endsection

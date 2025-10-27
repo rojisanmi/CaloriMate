@@ -55,11 +55,11 @@
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
               {{ $food->name }}
             </th>
-            <td class="px-6 py-4">{{ $food->gramasi }}</td>
-            <td class="px-6 py-4">{{ $food->kalori }}</td>
-            <td class="px-6 py-4">{{ $food->lemak }}</td>
-            <td class="px-6 py-4">{{ $food->karbo }}</td>
-            <td class="px-6 py-4">{{ $food->protein }}</td>
+            <td class="px-6 py-4">{{ $food->grammage }}</td>
+            <td class="px-6 py-4">{{ $food->calories_per_portion }}</td>
+            <td class="px-6 py-4">{{ $food->total_fat }}</td>
+            <td class="px-6 py-4">{{ $food->total_carbo }}</td>
+            <td class="px-6 py-4">{{ $food->total_protein }}</td>
             <td class="px-6 py-4">
               <div class="flex items-center justify-end gap-2">
                 <a href="{{ route('trainer.foods.edit', $food) }}"

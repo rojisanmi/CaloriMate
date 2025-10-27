@@ -21,14 +21,18 @@ class FoodController extends Controller
 
     public function create()
     {
-        return view('kelola-makanan.create');
+        return view('add-makanan');
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name'=>'required|string|max:100',
-            // kolom lain…
+            'grammage' => 'required|numeric|min:0',
+            'calories_per_portion' => 'required|numeric|min:0',
+            'total_fat' => 'required|numeric|min:0',
+            'total_carbo' => 'required|numeric|min:0',
+            'total_protein' => 'required|numeric|min:0',
         ]);
         Food::create($data);
         return redirect()->route('trainer.foods.index')->with('ok','Item ditambahkan');
@@ -36,14 +40,18 @@ class FoodController extends Controller
 
     public function edit(Food $food)
     {
-        return view('kelola-makanan.edit', compact('food'));
+        return view('edit-makanan', compact('food'));
     }
 
     public function update(Request $request, Food $food)
     {
         $data = $request->validate([
             'name'=>'required|string|max:100',
-            // kolom lain…
+            'grammage' => 'required|numeric|min:0',
+            'calories_per_portion' => 'required|numeric|min:0',
+            'total_fat' => 'required|numeric|min:0',
+            'total_carbo' => 'required|numeric|min:0',
+            'total_protein' => 'required|numeric|min:0',
         ]);
         $food->update($data);
         return redirect()->route('trainer.foods.index')->with('ok','Item diupdate');
