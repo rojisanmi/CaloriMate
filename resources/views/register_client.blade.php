@@ -55,6 +55,9 @@
 
         {{-- Tinggi Badan (cm) --}}
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Tinggi Badan (cm)
+          </span>
           <input type="number" step="0.1" name="tinggi_badan" value="{{ old('tinggi_badan') }}" required
                  placeholder="Tinggi Badan (cm)"
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
@@ -62,6 +65,9 @@
 
         {{-- Berat Badan (kg) --}}
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Berat Badan (kg)
+          </span>
           <input type="number" step="0.1" name="berat_badan" value="{{ old('berat_badan') }}" required
                  placeholder="Berat Badan (kg)"
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
@@ -69,6 +75,9 @@
 
         {{-- Gender --}}
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Gender
+          </span>
           <select name="gender" required
                   class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 text-base focus:border-[#2d5016] focus:outline-none transition">
             <option value="" disabled {{ old('gender') ? '' : 'selected' }}>Pilih</option>
@@ -79,6 +88,9 @@
 
         {{-- Umur --}}
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Umur
+          </span>
           <input type="number" name="umur" min="5" max="120" value="{{ old('umur') }}" required
                  placeholder="Umur"
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">

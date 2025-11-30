@@ -20,7 +20,6 @@
          class="inline-block rounded-lg bg-[#2E471F] text-white font-semibold px-8 py-3 shadow hover:opacity-90">
         Kelola Latihan
       </a>
-      <form method="POST" action="{{ route('logout') }}">@csrf<button>Logout</button></form>
     </div>
   </section>
 @endsection

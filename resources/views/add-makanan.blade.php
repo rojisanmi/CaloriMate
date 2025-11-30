@@ -12,7 +12,7 @@
     </a>
   </div>
 
-  {{-- Error summary --}}
+  {{-- Error summary
   @if ($errors->any())
     <div class="mb-4 rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3">
       <ul class="list-disc list-inside">
@@ -21,7 +21,7 @@
         @endforeach
       </ul>
     </div>
-  @endif
+  @endif --}}
 
   <div class="bg-white shadow-md rounded-lg p-6">
     <form method="POST" action="{{ route('trainer.foods.store') }}" class="space-y-5">

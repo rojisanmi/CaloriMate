@@ -57,21 +57,33 @@
         @endif
 
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Email
+          </span>
           <input type="email" name="email" placeholder="Alamat Email" value="{{ old('email') }}" required
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
         </label>
 
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Username
+          </span>
           <input name="username" placeholder="Username" value="{{ old('username') }}" required
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
         </label>
 
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Password
+          </span>
           <input type="password" name="password" placeholder="Password" required
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
         </label>
 
         <label class="block">
+          <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
+            Confirm Password
+          </span>
           <input type="password" name="password_confirmation" placeholder="Confirm Password" required
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
         </label>

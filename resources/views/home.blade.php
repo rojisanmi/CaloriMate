@@ -42,7 +42,7 @@
     </div>
 
     {{-- RIGHT mascot --}}
-    <div class="relative">
+    <div class="relative pt-8 lg:pt-10 overflow-hidden">
       {{-- dekor belakang (lingkaran/gelombang) --}}
         <img
         src="{{ asset('images/bg_circle_landing.png') }}"
@@ -50,14 +50,14 @@
         aria-hidden="true"
         class="pointer-events-none select-none
             absolute -z-10 
-            right-20 top-6     {{-- posisi --}}
-            w-lg max-w-none   {{-- ukuran --}}
+            right-20 top-6    
+            w-100 max-w-none   
             ">
       {{-- Maskot --}}
       <img
         src="{{ asset('images/maskot_landing.png') }}"
         alt="CaloriMate Mascot"
-        class="mx-auto lg:ml-auto lg:mr-0 max-h-[600px] w-auto drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)] select-none"
+        class="mx-auto lg:ml-auto lg:mr-0 max-h-[400px] w-auto drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)] select-none"
         draggable="false" />
     </div>
   </div>
@@ -72,7 +72,7 @@
     </script>
   @endif
 
-{{-- placeholder sections untuk menu navbar --}}
+
 {{-- <section id="community" class="mt-24"></section>
 <section id="support" class="mt-24"></section>
 <section id="contact" class="mt-24"></section>

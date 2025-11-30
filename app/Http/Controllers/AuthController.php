@@ -85,13 +85,13 @@ class AuthController extends Controller
  public function doRegister(Request $request)
 {
     $data = $request->validate([
-        // ganti 'user' -> 'users' jika tabelmu plural
+        
         'username' => 'required|string|max:20|unique:user,username',
         'email'    => 'required|email|max:255|unique:user,email',
         'password' => 'required|string|min:6|confirmed',
     ]);
 
-    // simpan ke session (password di-hash, role dipaksa client = 1)
+  
     session([
         'reg.step1' => [
             'username' => $data['username'],

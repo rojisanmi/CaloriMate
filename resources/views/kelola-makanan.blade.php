@@ -88,22 +88,10 @@
     </table>
 
     {{-- FOOTER: info & pagination --}}
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4 px-4 py-3">
-      @php
-        // angka "Showing X–Y of Z"
-        $from = ($foods->currentPage() - 1) * $foods->perPage() + 1;
-        $to   = min($foods->currentPage() * $foods->perPage(), $foods->total());
-      @endphp
-      <span class="text-sm text-gray-600">
-        Showing <span class="font-semibold text-gray-900">{{ $from }}</span>–
-        <span class="font-semibold text-gray-900">{{ $to }}</span>
-        of <span class="font-semibold text-gray-900">{{ $foods->total() }}</span>
-      </span>
-
-      {{-- Tailwind pagination --}}
-      <div>
+   {{-- FOOTER: pagination --}}
+    <div class="flex justify-end px-4 py-3">
+      <div class="inline-flex">
         {{ $foods->appends(['q'=>request('q'),'per_page'=>request('per_page')])->links() }}
       </div>
     </div>
-  </div>
 @endsection
