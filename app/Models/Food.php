@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Food extends Model
 {
-   protected $table = 'foods';
+    protected $table = 'foods';
     protected $primaryKey = 'food_id';
-    public $timestamps = false; 
+    public $timestamps = false;
 
     protected $fillable = [
         'name',
@@ -18,4 +18,15 @@ class Food extends Model
         'total_carbo',
         'total_protein',
     ];
+    public function foodConsumptions()
+    {
+        return $this->hasMany(FoodConsumption::class, 'food_id', 'food_id');
+    }
+
+    public function calculateCalories(float $portionGrams): float
+    {
+        if ($this->grammage <= 0)
+            return 0;
+        return round(($this->calories_per_portion / $this->grammage) * $portionGrams, 2);
+    }
 }

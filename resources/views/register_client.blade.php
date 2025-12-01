@@ -55,14 +55,14 @@
 
         {{-- Tinggi Badan (cm) --}}
         <label class="block">
-          <input type="number" step="0.1" name="tinggi_badan" value="{{ old('tinggi_badan') }}" required
+          <input type="number" step="0.1" name="tb" value="{{ old('tinggi_badan') }}" required
                  placeholder="Tinggi Badan (cm)"
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
         </label>
 
         {{-- Berat Badan (kg) --}}
         <label class="block">
-          <input type="number" step="0.1" name="berat_badan" value="{{ old('berat_badan') }}" required
+          <input type="number" step="0.1" name="bb" value="{{ old('berat_badan') }}" required
                  placeholder="Berat Badan (kg)"
                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
         </label>

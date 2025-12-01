@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Food;
@@ -12,7 +13,7 @@ class FoodController extends Controller
         $perPage = (int) $request->integer('per_page', 10);
 
         $foods = Food::query()
-            ->when($q, fn($qq) => $qq->where('name','like',"%$q%"))
+            ->when($q, fn($qq) => $qq->where('name', 'like', "%$q%"))
             ->orderBy('name')
             ->paginate($perPage);
 
@@ -27,15 +28,17 @@ class FoodController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'=>'required|string|max:100',
+            'name' => 'required|string|max:100',
             'grammage' => 'required|numeric|min:0',
             'calories_per_portion' => 'required|numeric|min:0',
             'total_fat' => 'required|numeric|min:0',
             'total_carbo' => 'required|numeric|min:0',
             'total_protein' => 'required|numeric|min:0',
         ]);
+
         Food::create($data);
-        return redirect()->route('trainer.foods.index')->with('ok','Item ditambahkan');
+
+        return redirect()->route('trainer.foods.index')->with('ok', 'Item ditambahkan');
     }
 
     public function edit(Food $food)
@@ -46,21 +49,22 @@ class FoodController extends Controller
     public function update(Request $request, Food $food)
     {
         $data = $request->validate([
-            'name'=>'required|string|max:100',
+            'name' => 'required|string|max:100',
             'grammage' => 'required|numeric|min:0',
             'calories_per_portion' => 'required|numeric|min:0',
             'total_fat' => 'required|numeric|min:0',
             'total_carbo' => 'required|numeric|min:0',
             'total_protein' => 'required|numeric|min:0',
         ]);
+
         $food->update($data);
-        return redirect()->route('trainer.foods.index')->with('ok','Item diupdate');
+
+        return redirect()->route('trainer.foods.index')->with('ok', 'Item diupdate');
     }
 
     public function destroy(Food $food)
     {
         $food->delete();
-        return back()->with('ok','Item dihapus');
+        return back()->with('ok', 'Item dihapus');
     }
 }
-

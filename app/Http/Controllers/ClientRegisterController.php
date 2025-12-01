@@ -2,73 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Models\Client;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class ClientRegisterController extends Controller
 {
-    public function show(Request $request)
+    public function show()
     {
-        $step1 = Session::get('reg.step1');
-        if (!$step1) {
+        if (!session()->has('reg.step1')) {
             return redirect()->route('register.form')
-                ->withErrors(['username' => 'Selesaikan langkah pertama dulu.']);
+                ->withErrors(['register' => 'Please complete the first registration step.']);
         }
 
-        $username = $step1['username'];
-
-        // Jika ternyata client sudah ada (user lama), arahkan
-        if (Client::where('username', $username)->exists()) {
-            Session::forget('reg.step1');
-            return redirect()->route('user.home');
-        }
-
-        return view('register_client', ['username' => $username]);
+        $step = session('reg.step1'); // ['username'=>..., 'email'=>..., ...]
+        return view('register_client', [
+            'username' => $step['username'],
+        ]);
     }
 
     public function store(Request $request)
-    {   
-        
-        $step1 = Session::get('reg.step1');
-        if (!$step1) {
+    {
+        // Ensure step1 exists
+        $step = Session::get('reg.step1');
+        if (!$step) {
             return redirect()->route('register.form')
-                ->withErrors(['username' => 'Sesi kedaluwarsa. Silakan daftar lagi.']);
+                ->withErrors(['register' => 'Please complete the first registration step.']);
         }
 
+        // Validate client fields
         $data = $request->validate([
-            'tinggi_badan' => 'required|numeric|min:50|max:300',
-            'berat_badan'  => 'required|numeric|min:10|max:500',
-            'gender'       => 'required|in:L,P',
-            'umur'         => 'required|integer|min:5|max:120',
+            'tb' => 'required|numeric|min:50|max:300', // cm
+            'bb' => 'required|numeric|min:10|max:400', // kg
+            'gender' => 'required|in:L,P',
+            'umur' => 'required|integer|min:1|max:120',
         ]);
 
-
-        DB::transaction(function () use ($step1, $data) {
-            // 1) buat user (role selalu 1 = client)
-            $user = User::create([
-                'username' => $step1['username'],
-                'email'    => $step1['email'],
-                'password' => $step1['password'], // sudah di-hash
-                'role'     => 1,
+        // Transactionally create user and client
+        DB::transaction(function () use ($step, $data) {
+            // Create user (table 'user', PK 'username')
+            User::create([
+                'username' => $step['username'],
+                'email' => $step['email'],
+                'password' => $step['password'], // plain text per your choice
+                'role' => $step['role'],     // 1 = client
             ]);
 
-            // 2) buat client (schema kamu: PK username)
+            // Create client profile
             Client::create([
-                'username' => $step1['username'],
-                'tb'       => round($data['tinggi_badan'], 2),
-                'bb'       => round($data['berat_badan'], 2),
-                'gender'   => $data['gender'],
-                'umur'     => (int) $data['umur'],
-                // jika punya user_id fk: 'user_id' => $user->id,
+                'username' => $step['username'],
+                'tb' => $data['tb'],
+                'bb' => $data['bb'],
+                'gender' => $data['gender'],
+                'umur' => $data['umur'],
             ]);
         });
 
+        // Clear the step
         Session::forget('reg.step1');
 
-        return redirect()->route('home')->with('status', 'Registrasi selesai. Silakan login.');
+        // Auto login
+        $request->session()->regenerate();
+        Session::put('user_id', $step['username']);
+        Session::put('user_role', 1);
+        Session::put('user_name', $step['username']);
 
+        return redirect()->route('user.home')->with('status', 'Registration complete.');
     }
 }
