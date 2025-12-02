@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Models\Client;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class ClientRegisterController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        if (!session()->has('reg.step1')) {
+        $step1 = Session::get('reg.step1');
+        if (!$step1) {
             return redirect()->route('register.form')
                 ->withErrors(['username' => 'Selesaikan langkah pertama dulu.']);
         }
@@ -27,15 +28,14 @@ class ClientRegisterController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Ensure step1 exists
-        $step = Session::get('reg.step1');
-        if (!$step) {
+    {   
+        
+        $step1 = Session::get('reg.step1');
+        if (!$step1) {
             return redirect()->route('register.form')
-                ->withErrors(['register' => 'Please complete the first registration step.']);
+                ->withErrors(['username' => 'Sesi kedaluwarsa. Silakan daftar lagi.']);
         }
 
-        // Validate client fields
         $data = $request->validate([
             'tinggi_badan' => 'required|numeric|min:100|max:300',
             'berat_badan'  => 'required|numeric|min:40|max:500',
@@ -61,15 +61,9 @@ class ClientRegisterController extends Controller
             ]);
         });
 
-        // Clear the step
         Session::forget('reg.step1');
 
-        // Auto login
-        $request->session()->regenerate();
-        Session::put('user_id', $step['username']);
-        Session::put('user_role', 1);
-        Session::put('user_name', $step['username']);
+        return redirect()->route('home')->with('status', 'Registrasi selesai. Silakan login.');
 
-        return redirect()->route('user.home')->with('status', 'Registration complete.');
     }
 }
