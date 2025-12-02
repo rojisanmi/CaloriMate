@@ -14,13 +14,16 @@ class ClientRegisterController extends Controller
     {
         if (!session()->has('reg.step1')) {
             return redirect()->route('register.form')
-                ->withErrors(['register' => 'Please complete the first registration step.']);
+                ->withErrors(['username' => 'Selesaikan langkah pertama dulu.']);
         }
 
-        $step = session('reg.step1'); // ['username'=>..., 'email'=>..., ...]
-        return view('register_client', [
-            'username' => $step['username'],
-        ]);
+        $username = $step1['username'];
+        if (Client::where('username', $username)->exists()) {
+            Session::forget('reg.step1');
+            return redirect()->route('user.home');
+        }
+
+        return view('register_client', ['username' => $username]);
     }
 
     public function store(Request $request)
@@ -34,29 +37,27 @@ class ClientRegisterController extends Controller
 
         // Validate client fields
         $data = $request->validate([
-            'tb' => 'required|numeric|min:50|max:300', // cm
-            'bb' => 'required|numeric|min:10|max:400', // kg
-            'gender' => 'required|in:L,P',
-            'umur' => 'required|integer|min:1|max:120',
+            'tinggi_badan' => 'required|numeric|min:100|max:300',
+            'berat_badan'  => 'required|numeric|min:40|max:500',
+            'gender'       => 'required|in:L,P',
+            'umur'         => 'required|integer|min:5|max:120',
         ]);
 
-        // Transactionally create user and client
-        DB::transaction(function () use ($step, $data) {
-            // Create user (table 'user', PK 'username')
-            User::create([
-                'username' => $step['username'],
-                'email' => $step['email'],
-                'password' => $step['password'], // plain text per your choice
-                'role' => $step['role'],     // 1 = client
+
+        DB::transaction(function () use ($step1, $data) {
+            $user = User::create([
+                'username' => $step1['username'],
+                'email'    => $step1['email'],
+                'password' => $step1['password'], 
+                'role'     => 1,
             ]);
 
-            // Create client profile
             Client::create([
-                'username' => $step['username'],
-                'tb' => $data['tb'],
-                'bb' => $data['bb'],
-                'gender' => $data['gender'],
-                'umur' => $data['umur'],
+                'username' => $step1['username'],
+                'tb'       => round($data['tinggi_badan'], 2),
+                'bb'       => round($data['berat_badan'], 2),
+                'gender'   => $data['gender'],
+                'umur'     => (int) $data['umur'],
             ]);
         });
 
