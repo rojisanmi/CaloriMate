@@ -11,6 +11,12 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
+        // if (Session::has('user_id')) {
+        //     // Route by role if already logged in
+        //     return (int) Session::get('user_role') === 2
+        //         ? redirect()->route('trainer.home')
+        //         : redirect()->route('user.home');
+        // }
         return view('login');
     }
 
@@ -23,13 +29,13 @@ class AuthController extends Controller
     {
         return view('login_trainer');
     }
-
+    
     public function doLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:20',
             'password' => 'required|string',
-            'role' => 'required|integer',
+            'role'     => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -78,27 +84,27 @@ class AuthController extends Controller
         return view('register');
     }
 
-    public function doRegister(Request $request)
-    {
-        $data = $request->validate([
+ public function doRegister(Request $request)
+{
+    $data = $request->validate([
+        
+        'username' => 'required|string|max:20|unique:user,username',
+        'email'    => 'required|email|max:255|unique:user,email',
+        'password' => 'required|string|min:6|confirmed',
+    ]);
 
-            'username' => 'required|string|max:20|unique:user,username',
-            'email' => 'required|email|max:255|unique:user,email',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+  
+    session([
+        'reg.step1' => [
+            'username' => $data['username'],
+            'email'    => $data['email'],
+            'password' => $data['password'],
+            'role'     => 1, // client only
+        ],
+    ]);
 
-
-        session([
-            'reg.step1' => [
-                'username' => $data['username'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'role' => 1, // client only
-            ],
-        ]);
-
-        return redirect()->route('register.client.show');
-    }
+    return redirect()->route('register.client.show');
+}
 
 
 
