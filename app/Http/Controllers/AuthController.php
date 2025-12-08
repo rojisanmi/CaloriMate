@@ -60,7 +60,7 @@ class AuthController extends Controller
         // Redirect by role
         return (int) $user->role === 2
             ? redirect()->route('trainer.home')
-            : redirect()->route('user.home');
+            : redirect()->route('client.home');
     }
 
 
@@ -77,7 +77,7 @@ class AuthController extends Controller
         if (Session::has('user_id')) {
             return (int) Session::get('user_role') === 2
                 ? redirect()->route('trainer.home')
-                : redirect()->route('user.home');
+                : redirect()->route('client.home');
         }
         return view('register');
     }

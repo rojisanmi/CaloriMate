@@ -40,3 +40,7 @@ Route::get('/user/home', function () {
 Route::get('/trainer/home', function () {
     return view('trainer_home');
 })->name('trainer.home')->middleware(['auth.required', 'role:2']);
+
+Route::get('/client/home', function () {
+    return view('client_home');
+})->name('client.home')->middleware(['auth.required', 'role:1']);
