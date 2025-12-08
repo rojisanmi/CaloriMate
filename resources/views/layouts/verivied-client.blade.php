@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>@yield('title','Trainer')</title>
+  <title>@yield('title','Client')</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
@@ -11,7 +11,7 @@
 
   {{-- HEADER --}}
   <header class="fixed inset-x-0 top-0 z-60 ml-0 bg-[#2E471F] text-white shadow">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-4">
       <button id="btnOpenSidebar"
               class="inline-flex items-center justify-center h-10 w-10 rounded-md hover:bg-white/10 focus:outline-none"
               aria-label="Open Sidebar">
@@ -20,11 +20,11 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
-      <a href="{{ route('trainer.home') }}" class="text-2xl font-extrabold tracking-tight">
+      <a href="{{ route('client.home') }}" class="text-2xl font-extrabold tracking-tight">
          <img
         src="{{ asset('images/logo.png') }}"  {{-- pakai file logomu --}}
         alt="CaloriMate"
-        class="h-8 md:h-12 lg:h-15 w-auto select-none"
+        class="h-8 md:h-9 lg:h-10 w-auto select-none"
         draggable="false"
       />
       </a>
@@ -35,7 +35,7 @@
   {{-- MAIN --}}
   <main class="flex-1 pt-16"> {{-- pt-16 = tinggi header --}}
     {{-- Overlay & Sidebar berada di bawah header --}}
-    @include('layouts.sidebar')
+    @include('layouts.sidebar-client')
 
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
       @yield('content')
@@ -49,8 +49,8 @@
 
   {{-- Drawer logic: overlay only, no pushing content --}}
 <script>
-  const drawer  = document.getElementById('trainerSidebar');
-  const overlay = document.getElementById('sidebarOverlay');
+  const drawer  = document.getElementById('clientSidebar');
+  const overlay = document.getElementById('sidebarClientOverlay');
   const btnTop  = document.getElementById('btnOpenSidebar');
   const btnIn   = document.getElementById('btnToggleSidebarInside');
 

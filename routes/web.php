@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientRegisterController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ItemsLatihanController
 ;
 
 
@@ -29,7 +30,7 @@ Route::post('/register/client', [ClientRegisterController::class, 'store'])->nam
 Route::prefix('trainer')->name('trainer.')->group(function () {
     Route::resource('foods', FoodController::class);
     Route::resource('programs', ProgramController::class);
-
+    Route::resource('programs.items', ItemsLatihanController::class)->shallow();
 });
 
 
@@ -46,3 +47,7 @@ Route::get('/trainer/home', function () {
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::get('/client/home', function () {
+    return view('client_home');
+})->name('client.home')->middleware(['auth.required', 'role:1']);
