@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientRegisterController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ItemsLatihanController
 ;
 
 
@@ -28,7 +29,7 @@ Route::post('/register/client', [ClientRegisterController::class, 'store'])->nam
 Route::prefix('trainer')->name('trainer.')->group(function () {
     Route::resource('foods', FoodController::class);
     Route::resource('programs', ProgramController::class);
-
+    Route::resource('programs.items', ItemsLatihanController::class)->shallow();
 });
 
 

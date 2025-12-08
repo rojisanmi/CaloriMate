@@ -44,8 +44,8 @@
 
     <a href="{{ route('trainer.home') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('trainer.home')) }}">Home</a>
     <a href="{{ url('/trainer/profile') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/profile')) }}">Profile</a>
-    <a href="{{ url('/trainer/foods') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/foods*')) }}">Kelola makanan</a>
-    <a href="{{ url('/trainer/workouts') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/workouts*')) }}">Kelola latihan</a>
+    <a href="{{ url('/trainer/foods') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/foods')) }}">Kelola makanan</a>
+    <a href="{{ url('/trainer/programs') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/programs')) }}">Kelola latihan</a>
     <form method="POST" action="{{ route('logout') }}" class="mt-4">
       @csrf
       <button type="submit" class="w-full text-left rounded-full px-4 py-3 hover:bg-gray-100 flex items-center gap-3">
