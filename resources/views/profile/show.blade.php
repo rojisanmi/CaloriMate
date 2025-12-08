@@ -1,4 +1,12 @@
-@extends('layouts.verivied')
+@php
+    if ($user->isClient()) {
+        $layout = 'layouts.verivied-client';
+    } else {
+        $layout = 'layouts.verivied';
+    }
+@endphp
+
+@extends($layout)
 
 @section('content')
 <div class="profile-container">
@@ -15,14 +23,12 @@
         <p><strong>Berat Badan:</strong> {{ $user->client->bb ?? '–' }} kg</p>
         <p><strong>Jenis Kelamin:</strong> {{ ($user->client->gender ?? null) === 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
         <p><strong>Umur:</strong> {{ $user->client->umur ?? '–' }} tahun</p>
-
-    @elseif ($user->isTrainer())
+    @else
         <h3>Data Trainer</h3>
         <p><strong>Username:</strong> {{ $user->username }}</p>
         <p><strong>Nama:</strong> {{ $user->trainer->nama ?? '–' }}</p>
         <p><strong>Keahlian:</strong> {{ $user->trainer->keahlian ?? '–' }}</p>
         <p><strong>Sertifikasi:</strong> {{ $user->trainer->sertifikasi ?? '–' }}</p>
-
     @endif
 
     <a href="{{ route('profile.edit') }}" class="btn btn-primary">Edit Profil</a>
