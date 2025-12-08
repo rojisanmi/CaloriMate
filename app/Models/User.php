@@ -26,12 +26,7 @@ class User extends Model
     {
         return $this->hasMany(History::class, 'username', 'username');
     }
-
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class, 'username', 'username');
-    }
-
+    
     public function isClient(): bool
     {
         return (int) $this->role === 1;
