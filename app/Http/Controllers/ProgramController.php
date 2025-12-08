@@ -34,9 +34,8 @@ class ProgramController extends Controller
             'difficulty' => 'nullable|string|max:50',
             'duration_minutes' => 'nullable|integer|min:1',
 
-            // arrays for program items
-            'items' => 'array',
-            'items.*.exercise_name' => 'required_with:items|string|max:100',
+            'items' => 'nullable|array',
+            'items.*.exercise_name' => 'required|string|max:100',
             'items.*.duration_minutes' => 'nullable|integer|min:1',
             'items.*.intensity_level' => 'nullable|string|max:50',
         ]);
@@ -49,20 +48,22 @@ class ProgramController extends Controller
                 'duration_minutes' => $data['duration_minutes'] ?? null,
             ]);
 
-            if (!empty($data['items'])) {
-                foreach ($data['items'] as $row) {
-                    ProgramItem::create([
-                        'program_id' => $program->program_id,
-                        'exercise_name' => $row['exercise_name'],
-                        'duration_minutes' => $row['duration_minutes'] ?? null,
-                        'intensity_level' => $row['intensity_level'] ?? null,
-                    ]);
-                }
+            foreach ($data['items'] ?? [] as $row) {
+                ProgramItem::create([
+                    // sesuaikan kalau PK Program kamu 'id'
+                    'program_id' => $program->program_id,
+                    'exercise_name' => $row['exercise_name'],
+                    'duration_minutes' => $row['duration_minutes'] ?? null,
+                    'intensity_level' => $row['intensity_level'] ?? null,
+                ]);
             }
         });
 
-        return redirect()->route('trainer.programs.index')->with('ok', 'Program dibuat');
+        return redirect()
+            ->route('trainer.programs.index')
+            ->with('ok', 'Program dibuat');
     }
+
 
     public function edit(Program $program)
     {
