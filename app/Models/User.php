@@ -52,4 +52,12 @@ class User extends Model
 
         return null;
     }
+    public function getRoleLabelAttribute()
+    {
+        return match((int) $this->role) {
+            1 => 'Client',
+            2 => 'Trainer',
+            default => 'Unknown',
+        };
+    }
 }

@@ -1,7 +1,7 @@
 @extends('app')
 @section('title', 'CaloriMate - About')
 @section('content')  
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
     {{-- LEFT copy --}}
     <div class="max-w-xl">
       <span class="inline-block text-[2rem] tracking-widest italic font-latin">about</span>
@@ -37,30 +37,27 @@
           </p>
         </div>
       </div>
-
-      
     </div>
 
     {{-- RIGHT mascot --}}
     <div class="relative pt-8 lg:pt-10">
-      {{-- dekor belakang (lingkaran/gelombang) --}}
-        <img
+      {{-- Dekor belakang (lingkaran/gelombang) --}} 
+      <img
         src="{{ asset('images/bg_circle_landing.png') }}"
         alt=""
         aria-hidden="true"
-        class="pointer-events-none select-none
-            absolute -z-10 
-            right-20 top-6    
-            w-100 max-w-none   
-            ">
+        class="pointer-events-none select-none absolute -z-10 right-10 top-10 w-80 max-w-none opacity-70"
+      >
+      
       {{-- Maskot --}}
       <img
         src="{{ asset('images/maskot_landing.png') }}"
         alt="CaloriMate Mascot"
-        class="mx-auto lg:ml-auto lg:mr-0 max-h-[500px] w-auto drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)] select-none"
+        class="mx-auto max-h-[500px] lg:max-h-[60vh] xl:max-h-[70vh] w-auto drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)] select-none"
         draggable="false" />
     </div>
   </div>
+
   @if (session('status'))
     <div id="flash-status"
         class="fixed top-24 left-1/2 -translate-x-1/2 z-50
