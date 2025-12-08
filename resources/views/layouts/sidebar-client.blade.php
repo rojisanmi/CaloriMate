@@ -46,7 +46,7 @@
     <a href="{{ url('/profile') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/profile')) }}">Profile</a>
     <a href="{{ route('client.diary') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.diary*')) }}">Diary</a>
     <a href="{{ url('/client/exercise') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/exercise*')) }}">Exercise</a>
-    <a href="{{ url('/client/statistic') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/statistic*')) }}">Statistic</a>
+    <a href="{{ route('client.statistic') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.statistic')) }}">Statistic</a>
     <a href="{{ route('client.history') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.history')) }}">History</a>
     <form method="POST" action="{{ route('logout') }}" class="mt-4">
       @csrf

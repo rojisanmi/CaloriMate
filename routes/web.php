@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemsLatihanController;
 use App\Http\Controllers\Client\DiaryController;
 use App\Http\Controllers\Client\HistoryController;
+use App\Http\Controllers\Client\StatisticController;
 
 
 
@@ -60,4 +61,6 @@ Route::prefix('client')->name('client.')->middleware(['auth.required', 'role:1']
     Route::delete('/diary/remove', [DiaryController::class, 'removeFood'])->name('diary.remove');
 
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
+
+    Route::get('/statistic', [StatisticController::class, 'index'])->name('statistic');
 });
