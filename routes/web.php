@@ -5,8 +5,9 @@ use App\Http\Controllers\ClientRegisterController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ItemsLatihanController
-;
+use App\Http\Controllers\ItemsLatihanController;
+use App\Http\Controllers\Client\DiaryController;
+use App\Http\Controllers\Client\HistoryController;
 
 
 
@@ -51,3 +52,12 @@ Route::post('/profile', [ProfileController::class, 'update'])->name('profile.upd
 Route::get('/client/home', function () {
     return view('client_home');
 })->name('client.home')->middleware(['auth.required', 'role:1']);
+
+Route::prefix('client')->name('client.')->middleware(['auth.required', 'role:1'])->group(function () {
+    Route::get('/diary', [DiaryController::class, 'index'])->name('diary');
+    Route::get('/diary/add/{category}', [DiaryController::class, 'showAddFood'])->name('diary.add');
+    Route::post('/diary/store', [DiaryController::class, 'storeFood'])->name('diary.store');
+    Route::delete('/diary/remove', [DiaryController::class, 'removeFood'])->name('diary.remove');
+
+    Route::get('/history', [HistoryController::class, 'index'])->name('history');
+});

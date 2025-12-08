@@ -44,10 +44,10 @@
 
     <a href="{{ route('client.home') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.home')) }}">Home</a>
     <a href="{{ url('/client/profile') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/profile')) }}">Profile</a>
-    <a href="{{ url('/client/diary') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/diary*')) }}">Diary</a>
+    <a href="{{ route('client.diary') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.diary*')) }}">Diary</a>
     <a href="{{ url('/client/exercise') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/exercise*')) }}">Exercise</a>
     <a href="{{ url('/client/statistic') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/statistic*')) }}">Statistic</a>
-    <a href="{{ url('/client/history') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/history*')) }}">History</a>
+    <a href="{{ route('client.history') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.history')) }}">History</a>
     <form method="POST" action="{{ route('logout') }}" class="mt-4">
       @csrf
       <button type="submit" class="w-full text-left rounded-full px-4 py-3 hover:bg-gray-100 flex items-center gap-3">
