@@ -1,14 +1,14 @@
 @php
-  $name = session('user_name', 'Trainer');
+  $name = session('user_name', 'Client');
 @endphp
 
 {{-- OVERLAY: tutup seluruh layar (termasuk header) --}}
-<div id="sidebarOverlay"
+<div id="sidebarClientOverlay"
      class="fixed inset-0 z-[90] bg-black/30 transition-opacity duration-200
             opacity-0 pointer-events-none"></div>
 
 {{-- DRAWER: dari atas sampai bawah, di atas header --}}
-<aside id="trainerSidebar"
+<aside id="clientSidebar"
   class="fixed inset-y-0 left-0 z-[100] h-screen w-[300px] bg-white shadow-xl
          pt-6 pb-6 pl-4 pr-4 transform -translate-x-full transition-transform duration-200
          rounded-none lg:rounded-r-lg">
@@ -28,7 +28,7 @@
 
       <div class="ml-2">
         <div class="text-lg font-semibold">{{ $name }}</div>
-        <div class="text-sm text-gray-500 -mt-0.5">Trainer</div>
+        <div class="text-sm text-gray-500 -mt-0.5">Client</div>
       </div>
     </div>
     <div class="h-px bg-gray-200 mt-4"></div>
@@ -42,10 +42,12 @@
         : 'rounded-full px-4 py-3 hover:bg-gray-100';
     @endphp
 
-    <a href="{{ route('trainer.home') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('trainer.home')) }}">Home</a>
-    <a href="{{ url('/profile') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/profile')) }}">Profile</a>
-    <a href="{{ url('/trainer/foods') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/foods')) }}">Kelola makanan</a>
-    <a href="{{ url('/trainer/programs') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/programs')) }}">Kelola latihan</a>
+    <a href="{{ route('client.home') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.home')) }}">Home</a>
+    <a href="{{ url('/profile') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/profile')) }}">Profile</a>
+    <a href="{{ route('client.diary') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.diary*')) }}">Diary</a>
+    <a href="{{ url('/client/exercise') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/exercise*')) }}">Exercise</a>
+    <a href="{{ url('/client/statistic') }}" class="flex items-center gap-3 {{ $isActive(request()->is('client/statistic*')) }}">Statistic</a>
+    <a href="{{ route('client.history') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('client.history')) }}">History</a>
     <form method="POST" action="{{ route('logout') }}" class="mt-4">
       @csrf
       <button type="submit" class="w-full text-left rounded-full px-4 py-3 hover:bg-gray-100 flex items-center gap-3">

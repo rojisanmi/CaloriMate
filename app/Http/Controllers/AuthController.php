@@ -35,6 +35,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:20',
             'password' => 'required|string',
+            'role'     => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -44,6 +45,7 @@ class AuthController extends Controller
         // Match username and plaintext password
         $user = User::where('username', $request->username)
             ->where('password', $request->password)
+            ->where('role', $request->role)
             ->first();
 
         if (!$user) {
@@ -60,7 +62,7 @@ class AuthController extends Controller
         // Redirect by role
         return (int) $user->role === 2
             ? redirect()->route('trainer.home')
-            : redirect()->route('user.home');
+            : redirect()->route('client.home');
     }
 
 
@@ -77,7 +79,7 @@ class AuthController extends Controller
         if (Session::has('user_id')) {
             return (int) Session::get('user_role') === 2
                 ? redirect()->route('trainer.home')
-                : redirect()->route('user.home');
+                : redirect()->route('client.home');
         }
         return view('register');
     }

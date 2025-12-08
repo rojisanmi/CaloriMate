@@ -57,6 +57,7 @@
             <input type="password" name="password" placeholder="Password" required
                    class="w-full px-6 py-3 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base focus:border-[#2d5016] focus:outline-none transition">
           </label>
+          <input type="hidden" name="role" value="2">
 
           <div class="flex justify-center pt-2">
             <button type="submit"
