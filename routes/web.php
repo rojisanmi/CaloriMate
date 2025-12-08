@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientRegisterController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ProfileController;
 ;
 
 
@@ -40,3 +41,8 @@ Route::get('/user/home', function () {
 Route::get('/trainer/home', function () {
     return view('trainer_home');
 })->name('trainer.home')->middleware(['auth.required', 'role:2']);
+
+// Profile routes
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
