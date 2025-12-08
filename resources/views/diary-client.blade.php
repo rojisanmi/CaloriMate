@@ -1,4 +1,4 @@
-@extends('layouts.verified-client')
+@extends('layouts.verivied-client')
 
 @section('title','Diary')
 
@@ -25,10 +25,10 @@
         {{-- ITEM --}}
         @php
           $segments = [
-            ['label'=>'Makan Pagi', 'icon'=>'🌅'],
-            ['label'=>'Makan Siang', 'icon'=>'☀️'],
-            ['label'=>'Makan Malam', 'icon'=>'🌇'],
-            ['label'=>'Camilan/Lainnya', 'icon'=>'🌙'],
+            ['label'=>'Makan Pagi', 'icon'=>'🌅', 'category'=>'breakfast'],
+            ['label'=>'Makan Siang', 'icon'=>'☀️', 'category'=>'lunch'],
+            ['label'=>'Makan Malam', 'icon'=>'🌇', 'category'=>'dinner'],
+            ['label'=>'Camilan/Lainnya', 'icon'=>'🌙', 'category'=>'snack'],
           ];
         @endphp
 
@@ -40,12 +40,12 @@
             </div>
 
             {{-- ADD BUTTON --}}
-            <button
+            <a href="{{ route('client.diary.add', $segment['category']) }}"
               class="h-7 w-7 flex items-center justify-center
                      rounded bg-[#2E471F] text-white font-bold
                      hover:bg-[#243A18]">
               +
-            </button>
+            </a>
         </div>
         @endforeach
 

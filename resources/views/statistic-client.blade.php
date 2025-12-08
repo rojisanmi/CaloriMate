@@ -1,4 +1,4 @@
-@extends('layouts.verified-client')
+@extends('layouts.verivied-client')
 
 @section('title','Statistic')
 

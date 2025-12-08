@@ -1,4 +1,4 @@
-@extends('layouts.client')
+@extends('layouts.verivied-client')
 
 @section('title','Client Home')
 

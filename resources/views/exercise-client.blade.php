@@ -1,4 +1,4 @@
-@extends('layouts.verified-client')
+@extends('layouts.verivied-client')
 
 @section('title','Exercise')
 
@@ -28,15 +28,18 @@
                         </h4>
 
                         <div class="mt-2 flex gap-2">
-                            <button
+                            <a href="{{ route('client.exercise.show', $program['id']) }}"
                               class="px-3 py-1 bg-white text-[#2E471F] text-xs rounded-full font-semibold">
                               Lihat Detail
-                            </button>
+                            </a>
 
-                            <button
-                              class="px-3 py-1 bg-[#2E471F] text-white text-xs rounded-full font-semibold">
-                              Mulai Latihan
-                            </button>
+                            <form method="POST" action="{{ route('client.exercise.start', $program['id']) }}" class="inline">
+                              @csrf
+                              <button type="submit"
+                                class="px-3 py-1 bg-[#2E471F] text-white text-xs rounded-full font-semibold">
+                                Mulai Latihan
+                              </button>
+                            </form>
                         </div>
                     </div>
                 </div>

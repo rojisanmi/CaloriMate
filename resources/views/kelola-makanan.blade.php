@@ -1,14 +1,36 @@
+{{-- resources/views/kelola-makanan.blade.php --}}
 @extends('layouts.verivied')
 
 @section('title', 'Kelola Menu Makanan')
 
 @section('content')
+  {{-- ALERT SUCCESS --}}
+  @if (session('ok'))
+    <div id="alert-success"
+         class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999]
+                rounded-lg bg-emerald-600 text-white px-6 py-3 shadow-lg text-center">
+      {{ session('ok') }}
+    </div>
+
+    <script>
+      // otomatis hilang perlahan setelah 3 detik
+      setTimeout(() => {
+        const el = document.getElementById('alert-success');
+        if (el) {
+          el.style.transition = 'opacity 0.4s ease';
+          el.style.opacity = '0';
+          setTimeout(() => el.remove(), 400);
+        }
+      }, 3000);
+    </script>
+  @endif
+
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-3xl font-extrabold text-[#2E471F]">Kelola Menu Makanan</h1>
 
     <a href="{{ route('trainer.foods.create') }}"
        class="inline-flex items-center rounded-lg bg-[#2E7D32] px-4 py-2 text-white font-semibold shadow hover:opacity-90">
-      tambah items
+      Tambah Item
     </a>
   </div>
 
@@ -87,11 +109,18 @@
       </tbody>
     </table>
 
-    {{-- FOOTER: info & pagination --}}
-   {{-- FOOTER: pagination --}}
-    <div class="flex justify-end px-4 py-3">
+    {{-- FOOTER: pagination --}}
+    <div class="flex items-center justify-between px-4 py-3">
+      <div class="text-sm text-gray-600">
+        {{-- info showing X to Y of Z --}}
+        @if(method_exists($foods, 'total'))
+          Menampilkan {{ $foods->firstItem() ?? 0 }} sampai {{ $foods->lastItem() ?? 0 }} dari {{ $foods->total() }} hasil
+        @endif
+      </div>
+
       <div class="inline-flex">
         {{ $foods->appends(['q'=>request('q'),'per_page'=>request('per_page')])->links() }}
       </div>
     </div>
+  </div>
 @endsection
