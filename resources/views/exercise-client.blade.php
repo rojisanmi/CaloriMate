@@ -5,6 +5,27 @@
 @section('content')
 <section class="max-w-6xl mx-auto">
 
+    {{-- POPUP SUCCESS NOTIFICATION --}}
+    @if (session('ok'))
+    <div id="alert-success"
+         class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999]
+                rounded-lg bg-emerald-600 text-white px-6 py-3 shadow-lg text-center">
+      {{ session('ok') }}
+    </div>
+
+    <script>
+      // otomatis hilang perlahan setelah 3 detik
+      setTimeout(() => {
+        const el = document.getElementById('alert-success');
+        if (el) {
+          el.style.transition = 'opacity 0.4s ease';
+          el.style.opacity = '0';
+          setTimeout(() => el.remove(), 400);
+        }
+      }, 3000);
+    </script>
+    @endif
+
     <div class="bg-[#EFE6D2] rounded-[40px] p-10 shadow">
 
         {{-- TITLE --}}
