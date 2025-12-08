@@ -3,6 +3,26 @@
 @section('title', 'Kelola Program Latihan')
 
 @section('content')
+  @if (session('ok'))
+  <div id="alert-success"
+       class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999]
+              rounded-lg bg-green-500 text-white px-6 py-3 shadow-lg
+              text-center animate-fade-in-down">
+    {{ session('ok') }}
+  </div>
+
+  <script>
+    // otomatis hilang perlahan setelah 3 detik
+    setTimeout(() => {
+      const el = document.getElementById('alert-success');
+      if (el) {
+        el.style.transition = 'opacity 0.5s ease';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      }
+    }, 3000);
+  </script>
+  @endif
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-3xl font-extrabold text-[#2E471F]">Kelola Program Latihan</h1>
   </div>
@@ -14,10 +34,8 @@
              placeholder="Cari program"
              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 placeholder-gray-400 focus:border-[#2E471F] focus:outline-none">
     </form>
-     <a href="{{ route('trainer.programs.create') }}"
-       class="inline-flex items-center rounded-lg bg-[#2E7D32] px-4 py-2 text-white font-semibold shadow hover:opacity-90">
-      Tambah Program
-    </a>
+
+   
   </div>
 
   {{-- CARDS GRID --}}
@@ -44,7 +62,6 @@
           <div class="p-5">
             <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ $program->name }}</h3>
 
-            {{-- optional description / excerpt --}}
             @if(!empty($program->description))
               <p class="text-sm text-gray-600 mb-3 line-clamp-3">{{ \Illuminate\Support\Str::limit($program->description, 120) }}</p>
             @else
@@ -63,15 +80,17 @@
                 Lihat Detail
               </a>
 
-              {{-- optional small meta on right --}}
-              <div class="text-xs text-gray-500">
-                {{ $program->duration_minutes ? $program->duration_minutes . 'm' : '' }}
+              {{-- Edit button (menggantikan tampilan durasi kecil) --}}
+              <div class="flex items-center gap-2">
+                <a href="{{ route('trainer.programs.edit', $program) }}"
+                   class="inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold bg-white border border-gray-200 text-gray-700 hover:bg-gray-100">
+                  Edit
+                </a>
               </div>
             </div>
           </div>
         </div>
       @empty
-        {{-- jika gak ada program, kita sudah tetap tampilkan add-card; tapi beri feedback --}}
         <div class="col-span-full text-center py-12 text-gray-500">
           Belum ada program lain selain tombol tambah. Klik <span class="font-semibold text-gray-700">Tambah Program Baru</span> untuk membuatnya.
         </div>
