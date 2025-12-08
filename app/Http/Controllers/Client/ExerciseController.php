@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers\Client;
+
+use App\Http\Controllers\Controller;
+use App\Models\History;
+use App\Models\Program;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
+class ExerciseController extends Controller
+{
+    public function index()
+    {
+        $programs = Program::with('items')->get()->map(function ($program) {
+            return [
+                'id' => $program->program_id,
+                'title' => $program->name,
+                'type' => $program->type,
+                'difficulty' => $program->difficulty,
+                'duration' => $program->duration_minutes,
+                'image' => 'images/exercise-default.png',
+            ];
+        });
+
+        return view('exercise-client', compact('programs'));
+    }
+
+    public function show(int $id)
+    {
+        $program = Program::with('items')->findOrFail($id);
+
+        return view('exercise-detail-client', compact('program'));
+    }
+
+    public function start(int $id)
+    {
+        $username = Session::get('user_id');
+        $program = Program::with('items')->findOrFail($id);
+
+        $totalCaloriesBurned = $program->items->sum(function ($item) {
+            return $this->estimateCaloriesBurned($item->duration_minutes, $item->intensity_level);
+        });
+
+        $history = History::firstOrCreate(
+            ['username' => $username, 'date' => today()],
+            ['calori_in' => 0, 'calori_out' => 0]
+        );
+
+        $history->program_id = $program->program_id;
+        $history->calori_out += $totalCaloriesBurned;
+        $history->save();
+
+        return redirect()
+            ->route('client.exercise')
+            ->with('ok', "Latihan '{$program->name}' selesai! Kalori terbakar: {$totalCaloriesBurned} kkal");
+    }
+
+    private function estimateCaloriesBurned(int $durationMinutes, string $intensityLevel): int
+    {
+        $caloriesPerMinute = match (strtolower($intensityLevel)) {
+            'low', 'rendah' => 4,
+            'medium', 'sedang' => 7,
+            'high', 'tinggi' => 10,
+            default => 5,
+        };
+
+        return $durationMinutes * $caloriesPerMinute;
+    }
+}

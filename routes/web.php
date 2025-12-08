@@ -9,6 +9,7 @@ use App\Http\Controllers\ItemsLatihanController;
 use App\Http\Controllers\Client\DiaryController;
 use App\Http\Controllers\Client\HistoryController;
 use App\Http\Controllers\Client\StatisticController;
+use App\Http\Controllers\Client\ExerciseController;
 
 
 
@@ -63,4 +64,8 @@ Route::prefix('client')->name('client.')->middleware(['auth.required', 'role:1']
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
 
     Route::get('/statistic', [StatisticController::class, 'index'])->name('statistic');
+
+    Route::get('/exercise', [ExerciseController::class, 'index'])->name('exercise');
+    Route::get('/exercise/{id}', [ExerciseController::class, 'show'])->name('exercise.show');
+    Route::post('/exercise/{id}/start', [ExerciseController::class, 'start'])->name('exercise.start');
 });
