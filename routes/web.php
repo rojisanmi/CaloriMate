@@ -28,7 +28,7 @@ Route::post('/register/client', [ClientRegisterController::class, 'store'])->nam
 Route::prefix('trainer')->name('trainer.')->group(function () {
     Route::resource('foods', FoodController::class);
     Route::resource('programs', ProgramController::class);
-
+     Route::resource('programs.items', ProgramItemController::class)->shallow();
 });
 
 

@@ -11,7 +11,7 @@
 
   {{-- HEADER --}}
   <header class="fixed inset-x-0 top-0 z-60 ml-0 bg-[#2E471F] text-white shadow">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-4">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center">
       <button id="btnOpenSidebar"
               class="inline-flex items-center justify-center h-10 w-10 rounded-md hover:bg-white/10 focus:outline-none"
               aria-label="Open Sidebar">
@@ -24,7 +24,7 @@
          <img
         src="{{ asset('images/logo.png') }}"  {{-- pakai file logomu --}}
         alt="CaloriMate"
-        class="h-8 md:h-9 lg:h-10 w-auto select-none"
+        class="h-8 md:h-12 lg:h-15 w-auto select-none"
         draggable="false"
       />
       </a>
