@@ -24,7 +24,7 @@
          <img
         src="{{ asset('images/logo.png') }}"  {{-- pakai file logomu --}}
         alt="CaloriMate"
-        class="h-8 md:h-9 lg:h-10 w-auto select-none"
+        class="h-14 w-auto"
         draggable="false"
       />
       </a>

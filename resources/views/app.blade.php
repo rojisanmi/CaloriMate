@@ -8,8 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mrs+Sheppards&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mrs+Sheppards&family=Modak&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     .font-latin { font-family: "Mrs Sheppards", cursive; }
+    .font-latin { font-family: "Mrs Sheppards", cursive; }
+  .font-modak { font-family: "Modak", system-ui; }
+  .font-instrument {
+    font-family: 'Instrument Sans', sans-serif;}
+    .font-raleway { font-family: "Raleway", sans-serif; }
+  .font-quicksand { font-family: "Quicksand", sans-serif; }
   </style>
 </head>
 
@@ -24,9 +35,11 @@
   <header class="fixed inset-x-0 top-0 z-50 bg-[#344F1F]/95 backdrop-blur supports-[backdrop-filter]:bg-[#344F1F]/85 shadow-sm">
     <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-20 items-center">
-        {{-- caloriMate --}}
+        {{-- Logo CaloriMate --}}
         <a href="/home" class="shrink-0 flex items-center gap-2">
-          <span class="text-2xl font-extrabold tracking-tight">CaloriMate</span>
+          <img src="{{ asset('images/logo.png') }}" 
+               alt="CaloriMate" 
+               class="h-14 sm:h-16 w-auto object-contain ml-4">
         </a>
 
         {{--  Menu --}}
