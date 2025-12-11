@@ -1,6 +1,11 @@
-
-@extends('layouts.verivied') 
-
+@php
+    if ($user->isClient()) {
+        $layout = 'layouts.verivied-client';
+    } else {
+        $layout = 'layouts.verivied';
+    }
+@endphp
+@extends($layout)
 @section('title', 'Profil Trainer')
 
 @section('content')
