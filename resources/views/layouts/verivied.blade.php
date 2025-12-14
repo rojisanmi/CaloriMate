@@ -33,11 +33,11 @@
   </header>
 
   {{-- MAIN --}}
-  <main class="flex-1 pt-16"> {{-- pt-16 = tinggi header --}}
+  <main class="flex-1 pt-12">
     {{-- Overlay & Sidebar berada di bawah header --}}
     @include('layouts.sidebar')
 
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
       @yield('content')
     </div>
   </main>

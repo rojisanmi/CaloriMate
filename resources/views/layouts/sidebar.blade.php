@@ -43,7 +43,7 @@
     @endphp
 
     <a href="{{ route('trainer.home') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('trainer.home')) }}">Home</a>
-    <a href="{{ url('/profile') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/profile')) }}">Profile</a>
+    <a href="{{ route('profile.trainer.show') }}" class="flex items-center gap-3 {{ $isActive(request()->routeIs('profile.trainer.*')) }}">Profile</a>
     <a href="{{ url('/trainer/foods') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/foods')) }}">Kelola makanan</a>
     <a href="{{ url('/trainer/programs') }}" class="flex items-center gap-3 {{ $isActive(request()->is('trainer/programs')) }}">Kelola latihan</a>
     <form method="POST" action="{{ route('logout') }}" class="mt-4">

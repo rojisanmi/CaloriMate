@@ -58,7 +58,9 @@
 
       {{-- Program cards --}}
       @forelse ($programs as $program)
-        <div class="flex flex-col justify-between rounded-lg border bg-white shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex flex-col justify-between rounded-lg border bg-white shadow-sm 
+            transition-transform duration-300 ease-out 
+            hover:scale-102 hover:shadow-lg">
           <div class="p-5">
             <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ $program->name }}</h3>
 
