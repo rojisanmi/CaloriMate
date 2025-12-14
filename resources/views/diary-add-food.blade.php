@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="max-w-lg mx-auto">
-    <div class="bg-[#EFE6D2] rounded-xl p-6 shadow">
+    <div class="bg-[#FFFFFF] rounded-xl p-6 shadow">
         <h2 class="text-xl font-bold text-[#2E471F] mb-4">
             Tambah Makanan - 
             @switch($category)
