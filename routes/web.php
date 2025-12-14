@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientRegisterController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\ProgramController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilTrainerController;
 use App\Http\Controllers\ItemsLatihanController;
 use App\Http\Controllers\Client\DiaryController;
 use App\Http\Controllers\Client\HistoryController;
@@ -46,10 +46,18 @@ Route::get('/trainer/home', function () {
     return view('trainer_home');
 })->name('trainer.home')->middleware(['auth.required', 'role:2']);
 
-// Profile routes
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+// Profile trainer routes
+Route::prefix('profile/trainer')->group(function () {
+
+    Route::get('/', [ProfilTrainerController::class, 'showTrainer'])
+        ->name('profile.trainer.show');
+
+    Route::post('/', [ProfilTrainerController::class, 'updateTrainer'])
+        ->name('profile.trainer.update');
+});
+
+
+
 
 Route::get('/client/home', function () {
     return view('client_home');

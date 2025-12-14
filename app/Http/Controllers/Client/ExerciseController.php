@@ -53,7 +53,7 @@ class ExerciseController extends Controller
 
         return redirect()
             ->route('client.exercise')
-            ->with('ok', "Latihan '{$program->name}' selesai! Kalori terbakar: {$totalCaloriesBurned} kkal");
+            ->with('ok', "Program latihan '{$program->name}' telah ditambahkan! Kalori terbakar: {$totalCaloriesBurned} kkal");
     }
 
     private function estimateCaloriesBurned(int $durationMinutes, string $intensityLevel): int

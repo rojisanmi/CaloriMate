@@ -1,9 +1,9 @@
-{{-- resources/views/kelola-makanan.blade.php --}}
 @extends('layouts.verivied')
 
 @section('title', 'Kelola Menu Makanan')
 
 @section('content')
+
   {{-- ALERT SUCCESS --}}
   @if (session('ok'))
     <div id="alert-success"
@@ -13,7 +13,6 @@
     </div>
 
     <script>
-      // otomatis hilang perlahan setelah 3 detik
       setTimeout(() => {
         const el = document.getElementById('alert-success');
         if (el) {
@@ -25,41 +24,77 @@
     </script>
   @endif
 
+  {{-- TITLE + ACTION --}}
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-extrabold text-[#2E471F]">Kelola Menu Makanan</h1>
+    <h1 class="text-3xl font-extrabold text-[#2E471F]">
+      Kelola Menu Makanan
+    </h1>
 
-    <a href="{{ route('trainer.foods.create') }}"
-       class="inline-flex items-center rounded-lg bg-[#2E7D32] px-4 py-2 text-white font-semibold shadow hover:opacity-90">
-      Tambah Item
-    </a>
+   
   </div>
 
-  {{-- Filter bar: search + per_page --}}
-  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <form method="GET" action="{{ route('trainer.foods.index') }}" class="w-full sm:max-w-sm">
+  {{-- FILTER BAR --}}
+  <div class="mb-4 flex items-center justify-between gap-4">
+
+    {{-- KIRI: SEARCH --}}
+    <form method="GET"
+          action="{{ route('trainer.foods.index') }}"
+          class="w-full max-w-md">
       <input type="text" name="q" value="{{ request('q') }}"
-             placeholder="Search"
-             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 placeholder-gray-400 focus:border-[#2E471F] focus:outline-none">
+            placeholder="Search"
+            class="w-full rounded-lg border border-gray-300 bg-white
+                    px-4 py-2 text-gray-700 placeholder-gray-400
+                    focus:border-[#2E471F] focus:outline-none">
     </form>
 
-    <form method="GET" action="{{ route('trainer.foods.index') }}" class="flex items-center gap-2">
-      {{-- keep query q when changing per_page --}}
-      <input type="hidden" name="q" value="{{ request('q') }}">
-      <label for="per_page" class="text-sm text-gray-600">Items per page</label>
-      <select id="per_page" name="per_page"
-              class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-[#2E471F] focus:outline-none"
-              onchange="this.form.submit()">
-        @foreach([10,25,50,100] as $n)
-          <option value="{{ $n }}" @selected((int)request('per_page', 10) === $n)>{{ $n }}</option>
-        @endforeach
-      </select>
-    </form>
+    {{-- KANAN: PER PAGE + TAMBAH ITEM --}}
+    <div class="flex items-center gap-3">
+
+      {{-- ITEMS PER PAGE --}}
+      <form method="GET"
+            action="{{ route('trainer.foods.index') }}"
+            class="flex items-center gap-2">
+        <input type="hidden" name="q" value="{{ request('q') }}">
+
+        <label for="per_page"
+              class="text-sm text-gray-600 whitespace-nowrap">
+          Items per page
+        </label>
+
+        <select id="per_page" name="per_page"
+                onchange="this.form.submit()"
+                class="rounded-md border border-gray-300 bg-white
+                      px-3 py-2 text-sm text-gray-700
+                      focus:border-[#2E471F] focus:outline-none">
+          @foreach ([10,25,50,100] as $n)
+            <option value="{{ $n }}"
+              @selected((int)request('per_page', 10) === $n)>
+              {{ $n }}
+            </option>
+          @endforeach
+        </select>
+      </form>
+
+      {{-- TAMBAH ITEM --}}
+      <a href="{{ route('trainer.foods.create') }}"
+        class="inline-flex items-center rounded-lg
+                bg-[#2E7D32] px-4 py-2
+                text-white font-semibold shadow
+                hover:opacity-90 whitespace-nowrap">
+        Tambah Item
+      </a>
+
+    </div>
   </div>
 
   {{-- TABLE --}}
-  <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
+  <div class="relative bg-white shadow-md sm:rounded-lg
+              max-h-[65vh] overflow-y-auto overflow-x-auto">
+
     <table class="w-full text-sm text-left text-gray-600">
-      <thead class="text-xs uppercase bg-gray-50">
+
+      {{-- STICKY HEADER --}}
+      <thead class="text-xs uppercase bg-gray-50 sticky top-0 z-10">
         <tr>
           <th class="px-6 py-3">Nama</th>
           <th class="px-6 py-3">Gramasi</th>
@@ -73,8 +108,8 @@
 
       <tbody>
         @forelse ($foods as $food)
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+          <tr class="border-b hover:bg-gray-50">
+            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
               {{ $food->name }}
             </th>
             <td class="px-6 py-4">{{ $food->grammage }}</td>
@@ -85,14 +120,22 @@
             <td class="px-6 py-4">
               <div class="flex items-center justify-end gap-2">
                 <a href="{{ route('trainer.foods.edit', $food) }}"
-                   class="inline-flex items-center rounded-md px-3 py-1.5 text-xs font-semibold text-white bg-[#2E7D32] hover:opacity-90">
+                   class="inline-flex items-center rounded-md px-3 py-1.5
+                          text-xs font-semibold text-white bg-[#2E7D32]
+                          hover:opacity-90">
                   Edit
                 </a>
-                <form method="POST" action="{{ route('trainer.foods.destroy', $food) }}"
+
+                <form method="POST"
+                      action="{{ route('trainer.foods.destroy', $food) }}"
                       onsubmit="return confirm('Hapus item ini?')">
-                  @csrf @method('DELETE')
+                  @csrf
+                  @method('DELETE')
+
                   <button type="submit"
-                          class="inline-flex items-center rounded-md px-3 py-1.5 text-xs font-semibold text-white bg-red-600 hover:bg-red-700">
+                          class="inline-flex items-center rounded-md px-3 py-1.5
+                                 text-xs font-semibold text-white bg-red-600
+                                 hover:bg-red-700">
                     Delete
                   </button>
                 </form>
@@ -101,7 +144,8 @@
           </tr>
         @empty
           <tr>
-            <td colspan="7" class="px-6 py-10 text-center text-gray-500">
+            <td colspan="7"
+                class="px-6 py-10 text-center text-gray-500">
               Data tidak ditemukan.
             </td>
           </tr>
@@ -109,18 +153,26 @@
       </tbody>
     </table>
 
-    {{-- FOOTER: pagination --}}
-    <div class="flex items-center justify-between px-4 py-3">
+    {{-- FOOTER (PAGINATION) --}}
+    <div class="flex items-center justify-between px-4 py-3
+                bg-white border-t">
+
       <div class="text-sm text-gray-600">
-        {{-- info showing X to Y of Z --}}
         @if(method_exists($foods, 'total'))
-          Menampilkan {{ $foods->firstItem() ?? 0 }} sampai {{ $foods->lastItem() ?? 0 }} dari {{ $foods->total() }} hasil
+          Menampilkan {{ $foods->firstItem() ?? 0 }}
+          sampai {{ $foods->lastItem() ?? 0 }}
+          dari {{ $foods->total() }} hasil
         @endif
       </div>
 
-      <div class="inline-flex">
-        {{ $foods->appends(['q'=>request('q'),'per_page'=>request('per_page')])->links() }}
+      <div>
+        {{ $foods->appends([
+            'q' => request('q'),
+            'per_page' => request('per_page')
+          ])->links() }}
       </div>
+
     </div>
   </div>
+
 @endsection
