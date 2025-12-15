@@ -5,14 +5,14 @@
 @section('content')
 <section class="max-w-5xl mx-auto">
 
-    <div class="bg-[#EFE6D2] rounded-xl p-8 shadow">
+    <div class="bg-[#FFFFFF] rounded-xl p-8 shadow">
 
         {{-- DETAIL STATISTIK --}}
         <h2 class="text-center font-bold text-[#2E471F] mb-4">
             Detail Statistik
         </h2>
 
-        <div class="bg-white rounded-lg p-6 mb-8">
+        <div class="bg-[#F2EAD3] rounded-lg p-6 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
 
                 <div>

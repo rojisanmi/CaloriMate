@@ -5,7 +5,7 @@
 @section('content')
 <section class="max-w-4xl mx-auto">
 
-    <div class="bg-[#EFE6D2] rounded-xl p-8 shadow">
+    <div class="bg-[#FFFFFF] rounded-xl p-8 shadow">
 
         <h2 class="text-2xl font-bold text-[#2E471F] mb-2">{{ $program->name }}</h2>
 

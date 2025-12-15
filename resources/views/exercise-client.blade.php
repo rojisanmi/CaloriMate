@@ -3,7 +3,7 @@
 @section('title','Exercise')
 
 @section('content')
-<section class="max-w-6xl mx-auto">
+<section class="max-w-6xl mx-auto px-4">
 
     {{-- POPUP SUCCESS NOTIFICATION --}}
     @if (session('ok'))
@@ -26,50 +26,66 @@
     </script>
     @endif
 
-    <div class="bg-[#EFE6D2] rounded-[40px] p-10 shadow">
+    <div class="bg-[#FFFFFF] rounded-[40px] p-8 shadow max-w-5xl mx-auto">
 
         {{-- TITLE --}}
-        <h2 class="text-center text-3xl font-extrabold text-[#2E471F] mb-10">
+        <h2 class="text-center text-3xl font-extrabold text-[#2E471F] mb-8">
             Program Latihan
         </h2>
 
-        {{-- PROGRAM GRID --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{-- PROGRAM GRID WITH SCROLLING --}}
+        <div class="overflow-y-auto max-h-[500px] pr-2 scrollbar-thin scrollbar-thumb-[#2E471F] scrollbar-track-gray-200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-2">
 
-            @foreach($programs as $program)
-            <div class="bg-[#F4A938] rounded-xl p-4 text-white shadow">
-
-                <div class="flex items-center gap-4">
-                    <img src="{{ asset($program['image']) }}"
-                         class="w-14 h-14 rounded-full object-cover">
-
-                    <div>
-                        <h4 class="font-bold leading-tight">
+                @foreach($programs as $program)
+                <a href="{{ route('client.exercise.show', $program['id']) }}" 
+                class="group block bg-gradient-to-br from-[#F4A938] to-[#E89820] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 min-h-[180px] flex items-center">
+                    
+                    {{-- Card Content --}}
+                    <div class="p-8 w-full">
+                        <h4 class="font-bold text-2xl text-white mb-4 group-hover:text-[#2E471F] transition-colors">
                             {{ $program['title'] }}
                         </h4>
-
-                        <div class="mt-2 flex gap-2">
-                            <a href="{{ route('client.exercise.show', $program['id']) }}"
-                              class="px-3 py-1 bg-white text-[#2E471F] text-xs rounded-full font-semibold">
-                              Lihat Detail
-                            </a>
-
-                            <form method="POST" action="{{ route('client.exercise.start', $program['id']) }}" class="inline">
-                              @csrf
-                              <button type="submit"
-                                class="px-3 py-1 bg-[#2E471F] text-white text-xs rounded-full font-semibold">
-                                Mulai Latihan
-                              </button>
-                            </form>
+                        
+                        <div class="flex items-center justify-between mt-6">
+                            <span class="text-white/90 text-sm font-medium">
+                                Lihat Detail
+                            </span>
+                            <svg class="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </div>
                     </div>
-                </div>
+
+                </a>
+                @endforeach
 
             </div>
-            @endforeach
-
         </div>
+
     </div>
 
 </section>
+
+<style>
+    /* Custom Scrollbar */
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #2E471F;
+        border-radius: 10px;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: #1a2912;
+    }
+</style>
 @endsection

@@ -6,6 +6,7 @@ use App\Http\Controllers\FoodController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProfilTrainerController;
 use App\Http\Controllers\ItemsLatihanController;
+use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\DiaryController;
 use App\Http\Controllers\Client\HistoryController;
 use App\Http\Controllers\Client\StatisticController;
@@ -54,6 +55,16 @@ Route::prefix('profile/trainer')->group(function () {
 
     Route::post('/', [ProfilTrainerController::class, 'updateTrainer'])
         ->name('profile.trainer.update');
+});
+
+// Profile client routes
+Route::prefix('profile/client')->group(function () {
+
+    Route::get('/', [ProfileController::class, 'show'])
+        ->name('profile.client.show');
+
+    Route::post('/', [ProfileController::class, 'update'])
+        ->name('profile.client.update');
 });
 
 
