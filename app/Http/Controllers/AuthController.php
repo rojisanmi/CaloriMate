@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -90,7 +91,7 @@ class AuthController extends Controller
         
         'username' => 'required|string|max:20|unique:user,username',
         'email'    => 'required|email|max:255|unique:user,email',
-        'password' => 'required|string|min:6|confirmed',
+        'password' => Hash::make($step1['password']),
     ]);
 
   

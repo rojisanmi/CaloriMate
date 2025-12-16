@@ -33,6 +33,41 @@ class ExerciseController extends Controller
         return view('exercise-detail-client', compact('program'));
     }
 
+    /**
+     * Halaman menjalankan program latihan per item dengan timer & navigasi.
+     */
+    public function play(Request $request, int $id)
+    {
+        $program = Program::with('items')->findOrFail($id);
+        $items = $program->items;
+
+        if ($items->isEmpty()) {
+            return redirect()
+                ->route('client.exercise.show', $program->program_id)
+                ->with('ok', 'Program ini belum memiliki daftar latihan.');
+        }
+
+        $totalSteps = $items->count();
+        $step = (int) $request->integer('step', 0);
+        if ($step < 0) {
+            $step = 0;
+        }
+        if ($step >= $totalSteps) {
+            $step = $totalSteps - 1;
+        }
+
+        $currentItem = $items[$step];
+        $durationSeconds = max(1, $currentItem->duration_minutes * 60);
+
+        return view('exercise-run-client', [
+            'program' => $program,
+            'item' => $currentItem,
+            'step' => $step,
+            'totalSteps' => $totalSteps,
+            'durationSeconds' => $durationSeconds,
+        ]);
+    }
+
     public function start(int $id)
     {
         $username = Session::get('user_id');

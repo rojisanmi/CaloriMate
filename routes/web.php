@@ -86,5 +86,6 @@ Route::prefix('client')->name('client.')->middleware(['auth.required', 'role:1']
 
     Route::get('/exercise', [ExerciseController::class, 'index'])->name('exercise');
     Route::get('/exercise/{id}', [ExerciseController::class, 'show'])->name('exercise.show');
+    Route::get('/exercise/{id}/play', [ExerciseController::class, 'play'])->name('exercise.play');
     Route::post('/exercise/{id}/start', [ExerciseController::class, 'start'])->name('exercise.start');
 });

@@ -1,9 +1,13 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Model
 {
+    use Notifiable;
+    
     public $timestamps = false;
     protected $table = 'user';
     protected $primaryKey = 'username';
@@ -11,6 +15,10 @@ class User extends Model
     protected $keyType = 'string';
 
     protected $fillable = ['email', 'password', 'role', 'username'];
+
+    protected $hidden = [
+        'password',
+    ];
 
     public function client()
     {

@@ -55,13 +55,10 @@
                class="flex-1 text-center py-3 rounded-lg border border-[#2E471F] text-[#2E471F] font-semibold hover:bg-gray-100">
                 Kembali
             </a>
-            <form method="POST" action="{{ route('client.exercise.start', $program->program_id) }}" class="flex-1">
-                @csrf
-                <button type="submit"
-                    class="w-full py-3 rounded-lg bg-[#2E471F] text-white font-semibold hover:opacity-90">
-                    Mulai Latihan
-                </button>
-            </form>
+            <a href="{{ route('client.exercise.play', $program->program_id) }}"
+               class="flex-1 text-center py-3 rounded-lg bg-[#2E471F] text-white font-semibold hover:opacity-90">
+                Mulai Latihan
+            </a>
         </div>
     </div>
 
