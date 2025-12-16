@@ -34,10 +34,9 @@ class ProfileController extends Controller
         $user = $this->authClient();
 
         $validated = $request->validate([
-            'nama'   => 'required|string|max:100',
             'bb'     => 'required|numeric|min:1',
             'tb'     => 'required|numeric|min:1',
-            'avatar' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'umur'   => 'required|integer|min:1',
         ]);
 
         if ($request->hasFile('avatar')) {
@@ -47,8 +46,14 @@ class ProfileController extends Controller
 
         $user->client()->updateOrCreate(
             ['username' => $user->username],
-            $validated
+            [
+                'bb'     => $validated['bb'],
+                'tb'     => $validated['tb'],
+                'umur'  => $validated['umur'],
+                'gender' => $request->gender ?? $user->client->gender ?? null,
+            ]
         );
+        
 
         return back()->with('ok', 'Profil client berhasil disimpan');
     }
