@@ -43,13 +43,13 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Match username and plaintext password
+        // Cari user berdasarkan username & role
         $user = User::where('username', $request->username)
-            ->where('password', $request->password)
-            ->where('role', $request->role)
-            ->first();
+        ->where('role', $request->role)
+        ->first();
 
-        if (!$user) {
+        // Cek password hashed
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
         }
 
@@ -87,20 +87,23 @@ class AuthController extends Controller
 
  public function doRegister(Request $request)
 {
+    // 1. Validasi input (HANYA VALIDASI)
     $data = $request->validate([
-        
         'username' => 'required|string|max:20|unique:user,username',
         'email'    => 'required|email|max:255|unique:user,email',
-        'password' => Hash::make($step1['password']),
+        'password' => 'required|string|min:8',
     ]);
 
-  
+    // 2. Hash password SETELAH validasi
+    $data['password'] = Hash::make($data['password']);
+
+    // 3. Simpan ke session (step 1)
     session([
         'reg.step1' => [
             'username' => $data['username'],
             'email'    => $data['email'],
             'password' => $data['password'],
-            'role'     => 1, // client only
+            'role'     => 1, // client
         ],
     ]);
 

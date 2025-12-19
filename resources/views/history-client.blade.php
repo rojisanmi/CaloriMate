@@ -119,6 +119,9 @@
 
             {{-- RESULT LIST --}}
             <div class="mt-8 space-y-4">
+            <h3 class="text-lg font-semibold text-[#2E471F] mb-3">
+                    Riwayat Konsumsi
+                </h3>
 
                 @forelse($histories as $history)
                 <div class="bg-white rounded-lg px-5 py-4 shadow-sm flex justify-between
@@ -132,7 +135,9 @@
                         </p>
                     </div>
 
-                    <div class="text-[#2E471F] font-bold">
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500 mb-1">Kalori Masok</p>
+                        <p class="text-[#2E471F] font-bold">
                         {{ $history['calories'] }} kkal
                     </div>
                 </div>

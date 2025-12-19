@@ -3,34 +3,203 @@
 @section('title','Exercise')
 
 @section('content')
-<section class="max-w-7xl mx-auto px-4 py-8">
 
-    {{-- POPUP SUCCESS NOTIFICATION --}}
-    @if (session('ok'))
-    <div id="alert-success"
-         class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999]
-                rounded-xl bg-emerald-500 text-white px-6 py-4 shadow-2xl text-center
-                border border-emerald-400 backdrop-blur-sm animate-slide-down">
-      <div class="flex items-center gap-3">
-        <svg class="w-5 h-5 animate-bounce-subtle" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-        </svg>
-        <span class="font-medium">{{ session('ok') }}</span>
-      </div>
+<style>
+    /* Animation Keyframes */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes popIn {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50px) scale(0.3) rotate(-10deg);
+        }
+        50% {
+            transform: translate(-50%, 0) scale(1.1) rotate(5deg);
+        }
+        70% {
+            transform: translate(-50%, 0) scale(0.95) rotate(-2deg);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1) rotate(0deg);
+        }
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translate(-50%, 0px);
+        }
+        50% {
+            transform: translate(-50%, -8px);
+        }
+    }
+
+    @keyframes sparkle {
+        0%, 100% {
+            opacity: 0;
+            transform: scale(0) rotate(0deg);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1) rotate(180deg);
+        }
+    }
+
+    @keyframes slideOutRight {
+        0% {
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(50%, 0) scale(0.8);
+        }
+    }
+
+    @keyframes shrink {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+
+    /* Animation Classes */
+    .animate-fade-in-down {
+        animation: fadeInDown 0.6s ease-out;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out both;
+    }
+
+    .flash-message {
+        animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+    }
+
+    .flash-message:hover {
+        animation: float 1.5s ease-in-out infinite;
+    }
+
+    .flash-message::before,
+    .flash-message::after {
+        content: '✨';
+        position: absolute;
+        font-size: 20px;
+        animation: sparkle 1.5s ease-in-out infinite;
+    }
+
+    .flash-message::before {
+        top: -10px;
+        left: 10px;
+        animation-delay: 0.3s;
+    }
+
+    .flash-message::after {
+        bottom: -10px;
+        right: 10px;
+        animation-delay: 0.6s;
+    }
+
+    .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #10b981, #34d399);
+        border-radius: 0 0 0 16px;
+        animation: shrink 4s linear forwards;
+    }
+
+    /* Custom Scrollbar - Modern & Minimal */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #2E471F;
+        border-radius: 100px;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #1a2912;
+        opacity: 1;
+    }
+
+    /* Line clamp utility */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Smooth page entrance */
+    @media (prefers-reduced-motion: no-preference) {
+        * {
+            scroll-behavior: smooth;
+        }
+    }
+</style>
+
+{{-- FLASH MESSAGE SUCCESS --}}
+@if(session('ok'))
+    <div id="flash-message"
+         class="flash-message fixed top-4 left-1/2 -translate-x-1/2 z-50
+                max-w-md w-[90%] sm:w-full relative overflow-hidden
+                bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 
+                text-white
+                px-6 py-4 rounded-2xl shadow-2xl
+                flex items-center gap-3">
+        
+        <span class="text-3xl animate-bounce">🎉</span>
+        <span class="text-sm font-bold flex-1">{{ session('ok') }}</span>
+        <button onclick="closeFlash()" 
+                class="text-white/80 hover:text-white transition-colors text-xl font-bold">
+            ×
+        </button>
+        
+        <div class="progress-bar"></div>
     </div>
 
     <script>
-      setTimeout(() => {
-        const el = document.getElementById('alert-success');
-        if (el) {
-          el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-          el.style.opacity = '0';
-          el.style.transform = 'translate(-50%, -20px)';
-          setTimeout(() => el.remove(), 400);
+        function closeFlash() {
+            const flash = document.getElementById('flash-message');
+            if (flash) {
+                flash.style.animation = 'slideOutRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+                setTimeout(() => flash.remove(), 500);
+            }
         }
-      }, 3000);
+
+        setTimeout(closeFlash, 4000);
     </script>
-    @endif
+@endif
+
+<section class="max-w-7xl mx-auto px-4 py-8">
 
     {{-- HEADER SECTION --}}
     <div class="mb-10 animate-fade-in-down">
@@ -107,101 +276,4 @@
 
 </section>
 
-<style>
-    /* Animation Keyframes */
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translate(-50%, -30px);
-        }
-        to {
-            opacity: 1;
-            transform: translate(-50%, 0);
-        }
-    }
-
-    @keyframes bounceSubtle {
-        0%, 100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-3px);
-        }
-    }
-
-    /* Animation Classes */
-    .animate-fade-in-down {
-        animation: fadeInDown 0.6s ease-out;
-    }
-
-    .animate-fade-in-up {
-        animation: fadeInUp 0.6s ease-out both;
-    }
-
-    .animate-slide-down {
-        animation: slideDown 0.5s ease-out;
-    }
-
-    .animate-bounce-subtle {
-        animation: bounceSubtle 1s ease-in-out 2;
-    }
-
-    /* Custom Scrollbar - Modern & Minimal */
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #2E471F;
-        border-radius: 100px;
-        opacity: 0.5;
-        transition: opacity 0.3s ease;
-    }
-    
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #1a2912;
-        opacity: 1;
-    }
-
-    /* Line clamp utility */
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    /* Smooth page entrance */
-    @media (prefers-reduced-motion: no-preference) {
-        * {
-            scroll-behavior: smooth;
-        }
-    }
-</style>
 @endsection

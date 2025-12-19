@@ -38,14 +38,32 @@ class DiaryController extends Controller
     public function showAddFood(string $category)
     {
         $validCategories = ['breakfast', 'lunch', 'dinner', 'snack'];
-        if (!in_array($category, $validCategories)) {
-            abort(404);
-        }
-
-        $foods = Food::orderBy('name')->get();
-
-        return view('diary-add-food', compact('category', 'foods'));
+    if (!in_array($category, $validCategories)) {
+        abort(404);
     }
+
+    $foods = Food::orderBy('name')->get();
+
+    $username = Session::get('user_id');
+
+    $history = History::where('username', $username)
+        ->whereDate('date', today())
+        ->first();
+
+    $consumptions = [];
+    if ($history) {
+        $consumptions = FoodConsumption::with('food')
+            ->where('history_id', $history->history_id)
+            ->where('category', $category)
+            ->get();
+    }
+
+    return view('diary-add-food', compact(
+        'category',
+        'foods',
+        'consumptions'
+    ));
+}
 
     public function storeFood(Request $request)
     {

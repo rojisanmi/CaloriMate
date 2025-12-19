@@ -174,15 +174,15 @@
     </div>
 
     {{-- Gelombang Orange di Bawah - TIDAK DIUBAH --}}
-    <div class="absolute -bottom-10 left-0 right-0 w-full z-0 pointer-events-none">
-        {{-- SVG Gelombang --}}
-        <svg class="block w-full h-[550px] -mb-[1px]" viewBox="0 0 1800 550" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path 
-                fill="#F5A623" 
-                fill-opacity="1" 
-                d="M0,160 C240,100 480,220 720,180 C960,140 1200,200 1800,160 L1800,550 L0,550 Z">
-            </path>
-        </svg>
-    </div>
+    <div class="absolute -bottom-10 -left-20 -right-20 w-[calc(100%+160px)] z-0 pointer-events-none">
+    {{-- SVG Gelombang --}}
+    <svg class="block w-full h-[550px] -mb-[1px]" viewBox="-200 0 2200 550" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path 
+            fill="#F5A623" 
+            fill-opacity="1" 
+            d="M-200,160 C40,100 280,220 520,180 C760,140 1000,200 1800,160 C2000,140 2200,160 2200,160 L2200,550 L-200,550 Z">
+        </path>
+    </svg>
+</div>
 </section>
 @endsection

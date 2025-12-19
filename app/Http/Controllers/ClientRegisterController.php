@@ -63,7 +63,7 @@ class ClientRegisterController extends Controller
 
         Session::forget('reg.step1');
 
-        return redirect()->route('home')->with('status', 'Registrasi selesai. Silakan login.');
+        return redirect()->route('home')->with('status', 'Registrasi selesai. Silahkan login.');
 
     }
 }

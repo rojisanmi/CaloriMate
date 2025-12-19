@@ -47,12 +47,6 @@
           </div>
         @endif
 
-        {{-- Username (locked) --}}
-        <label class="block">
-          <input value="{{ $username }}" readonly
-                 class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 text-base bg-gray-50">
-        </label>
-
         {{-- Tinggi Badan (cm) --}}
         <label class="block">
           <span class="block mb-1 text-sm font-semibold text-[#2d5016]">
