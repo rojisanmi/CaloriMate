@@ -3,9 +3,109 @@
 @section('title', 'Profil Trainer')
 
 @section('content')
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .animate-fade-in-down {
+        animation: fadeInDown 0.6s ease-out;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    .animate-slide-in-left {
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    .animate-slide-in-right {
+        animation: slideInRight 0.6s ease-out;
+    }
+
+    .animate-delay-1 {
+        animation-delay: 0.1s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .animate-delay-2 {
+        animation-delay: 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .animate-delay-3 {
+        animation-delay: 0.3s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .animate-delay-4 {
+        animation-delay: 0.4s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+</style>
 
 @if (session('ok'))
-  <div class="mb-6 rounded-lg bg-green-500 text-white px-4 py-3">
+  <div class="mb-6 rounded-lg bg-green-500 text-white px-4 py-3 animate-fade-in-down">
     {{ session('ok') }}
   </div>
 @endif
@@ -17,11 +117,11 @@
 @csrf
 
 <div class="max-w-4xl mx-auto p-6 lg:p-8 mt-8">
-  <div class="bg-white p-6 rounded-xl shadow-lg">
+  <div class="bg-white p-6 rounded-xl shadow-lg animate-scale-in">
     <div class="flex flex-col lg:flex-row lg:items-start gap-8">
 
       {{-- LEFT: Avatar --}}
-      <div class="lg:w-1/3 flex flex-col items-center">
+      <div class="lg:w-1/3 flex flex-col items-center animate-slide-in-left animate-delay-1">
         @php
           $avatar = $user->trainer->avatar ?? null;
           $avatarUrl = $avatar ? asset($avatar) : null;
@@ -35,15 +135,10 @@
             No Avatar
           </div>
         @endif
-
-        <p class="mt-4 font-bold text-lg text-[#2E4F2A]">
-          {{ $user->trainer->nama ?? $user->username }}
-        </p>
-        <p class="text-sm text-gray-500">@{{ $user->username }}</p>
       </div>
 
       {{-- RIGHT: FORM --}}
-      <div class="lg:w-2/3 w-full space-y-4">
+      <div class="lg:w-2/3 w-full space-y-4 animate-slide-in-right animate-delay-2">
 
         {{-- Nama --}}
         <div>
@@ -51,7 +146,7 @@
           <input type="text"
                  name="nama"
                  value="{{ old('nama', $user->trainer->nama ?? '') }}"
-                 class="w-full mt-1 px-3 py-2 border rounded-md">
+                 class="w-full mt-1 px-3 py-2 border rounded-md transition-all duration-200 focus:ring-2 focus:ring-[#2E4F2A] focus:border-transparent">
         </div>
 
         {{-- Username --}}
@@ -87,7 +182,7 @@
           <input type="text"
                  name="keahlian"
                  value="{{ old('keahlian', $user->trainer->keahlian ?? '') }}"
-                 class="w-full mt-1 px-3 py-2 border rounded-md">
+                 class="w-full mt-1 px-3 py-2 border rounded-md transition-all duration-200 focus:ring-2 focus:ring-[#2E4F2A] focus:border-transparent">
         </div>
 
         {{-- Sertifikasi --}}
@@ -109,7 +204,7 @@
 
             {{-- CUSTOM FILE INPUT --}}
             <label class="flex flex-col items-center px-4 py-3 bg-white rounded-md 
-               shadow cursor-pointer border border-gray-300 hover:bg-gray-100">
+               shadow cursor-pointer border border-gray-300 hover:bg-gray-100 transition-all duration-200 hover:shadow-md">
                 <span class="text-sm text-gray-600">Klik untuk memilih file sertifikasi</span>
                 <input type="file"
                       name="sertifikasi"
@@ -119,9 +214,11 @@
         </div>
 
         {{-- Save --}}
-        <div class="pt-6 flex justify-end">
+        <div class="pt-6 flex justify-end animate-fade-in-up animate-delay-3">
           <button type="submit"
-                  class="px-6 py-2 bg-[#2E7D32] text-white font-semibold rounded-md hover:opacity-90">
+                  class="px-6 py-2 bg-[#2E7D32] text-white font-semibold rounded-md 
+                  transition-all duration-200 hover:bg-[#1B5E20] hover:shadow-lg hover:-translate-y-1 
+                  active:scale-95">
             Simpan Perubahan
           </button>
         </div>
