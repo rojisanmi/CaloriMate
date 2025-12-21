@@ -3,7 +3,7 @@
 @section('title', 'Login')
 
 @section('content')
-  <a href="{{ url('/login') }}" class="absolute left-4 top-4 md:left-8 md:top-6 z-20 flex items-center justify-center
+  <a href="{{ url('/login/client') }}" class="absolute left-4 top-4 md:left-8 md:top-6 z-20 flex items-center justify-center
               w-10 h-10 md:w-12 md:h-12 bg-[#2d5016] rounded-lg hover:bg-[#3d6020] transition">
     <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
