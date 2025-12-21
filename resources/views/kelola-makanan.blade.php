@@ -3,12 +3,113 @@
 @section('title', 'Kelola Menu Makanan')
 
 @section('content')
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .animate-fade-in-down {
+        animation: fadeInDown 0.6s ease-out;
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    .animate-slide-in-left {
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    .animate-slide-in-right {
+        animation: slideInRight 0.6s ease-out;
+    }
+
+    .animate-delay-1 {
+        animation-delay: 0.1s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .animate-delay-2 {
+        animation-delay: 0.2s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .animate-delay-3 {
+        animation-delay: 0.3s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+
+    .animate-delay-4 {
+        animation-delay: 0.4s;
+        opacity: 0;
+        animation-fill-mode: forwards;
+    }
+</style>
 
   {{-- ALERT SUCCESS --}}
   @if (session('ok'))
     <div id="alert-success"
          class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999]
-                rounded-lg bg-emerald-600 text-white px-6 py-3 shadow-lg text-center">
+                rounded-lg bg-emerald-600 text-white px-6 py-3 shadow-lg text-center
+                animate-fade-in-down">
       {{ session('ok') }}
     </div>
 
@@ -25,16 +126,14 @@
   @endif
 
   {{-- TITLE + ACTION --}}
-  <div class="flex items-center justify-between mb-6">
+  <div class="flex items-center justify-between mb-6 animate-fade-in-down">
     <h1 class="text-3xl font-extrabold text-[#2E471F]">
       Kelola Menu Makanan
     </h1>
-
-   
   </div>
 
   {{-- FILTER BAR --}}
-  <div class="mb-4 flex items-center justify-between gap-4">
+  <div class="mb-4 flex items-center justify-between gap-4 animate-slide-in-left animate-delay-1">
 
     {{-- KIRI: SEARCH --}}
     <form method="GET"
@@ -44,7 +143,8 @@
             placeholder="Search"
             class="w-full rounded-lg border border-gray-300 bg-white
                     px-4 py-2 text-gray-700 placeholder-gray-400
-                    focus:border-[#2E471F] focus:outline-none">
+                    focus:border-[#2E471F] focus:outline-none
+                    transition-all duration-200 focus:ring-2 focus:ring-[#2E471F]/30">
     </form>
 
     {{-- KANAN: PER PAGE + TAMBAH ITEM --}}
@@ -65,7 +165,8 @@
                 onchange="this.form.submit()"
                 class="rounded-md border border-gray-300 bg-white
                       px-3 py-2 text-sm text-gray-700
-                      focus:border-[#2E471F] focus:outline-none">
+                      focus:border-[#2E471F] focus:outline-none
+                      transition-all duration-200">
           @foreach ([10,25,50,100] as $n)
             <option value="{{ $n }}"
               @selected((int)request('per_page', 10) === $n)>
@@ -80,7 +181,9 @@
         class="inline-flex items-center rounded-lg
                 bg-[#2E7D32] px-4 py-2
                 text-white font-semibold shadow
-                hover:opacity-90 whitespace-nowrap">
+                hover:bg-[#1B5E20] hover:shadow-lg hover:-translate-y-0.5
+                transition-all duration-200 whitespace-nowrap
+                active:scale-95">
         Tambah Item
       </a>
 
@@ -89,7 +192,8 @@
 
   {{-- TABLE --}}
   <div class="relative bg-white shadow-md sm:rounded-lg
-              max-h-[65vh] overflow-y-auto overflow-x-auto">
+              max-h-[65vh] overflow-y-auto overflow-x-auto
+              animate-scale-in animate-delay-2">
 
     <table class="w-full text-sm text-left text-gray-600">
 
@@ -108,7 +212,7 @@
 
       <tbody>
         @forelse ($foods as $food)
-          <tr class="border-b hover:bg-gray-50">
+          <tr class="border-b hover:bg-gray-50 transition-colors duration-150">
             <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
               {{ $food->name }}
             </th>
@@ -122,7 +226,8 @@
                 <a href="{{ route('trainer.foods.edit', $food) }}"
                    class="inline-flex items-center rounded-md px-3 py-1.5
                           text-xs font-semibold text-white bg-[#2E7D32]
-                          hover:opacity-90">
+                          hover:bg-[#1B5E20] hover:shadow-md
+                          transition-all duration-200 active:scale-95">
                   Edit
                 </a>
 
@@ -135,7 +240,8 @@
                   <button type="submit"
                           class="inline-flex items-center rounded-md px-3 py-1.5
                                  text-xs font-semibold text-white bg-red-600
-                                 hover:bg-red-700">
+                                 hover:bg-red-700 hover:shadow-md
+                                 transition-all duration-200 active:scale-95">
                     Delete
                   </button>
                 </form>

@@ -1,4 +1,4 @@
-@extends('layouts.verivied')
+{{-- @extends('layouts.verivied')
 
 @section('content')
 <div class="profile-edit">
@@ -59,4 +59,4 @@
         </div>
     @endif
 </div>
-@endsection
+@endsection --}}
