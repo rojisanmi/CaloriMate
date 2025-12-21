@@ -40,7 +40,7 @@ class HistoryController extends Controller
             ->orderBy('date', 'asc') // asc supaya enak diolah ke chart
             ->get();
 
-        // ====== DATA UNTUK LIST (detail makanan) – tetap seperti sebelumnya ======
+        // DATA UNTUK LIST (detail makanan) – tetap seperti sebelumnya
         $historiesForList = $historiesCollection->sortByDesc('date');
 
         $histories = $historiesForList->flatMap(function ($history) {
@@ -53,7 +53,7 @@ class HistoryController extends Controller
             });
         });
 
-        // ====== DATA UNTUK CHART (kalori masuk & keluar) ======
+        //  DATA UNTUK CHART (kalori masuk & keluar
         $chartData = [
             'labels' => [],
             'calori_in' => [],
@@ -136,7 +136,7 @@ class HistoryController extends Controller
             }
         }
 
-        // ====== DATA AKTIVITAS LATIHAN (untuk ditampilkan di bawah chart) ======
+        // DATA AKTIVITAS LATIHAN (untuk ditampilkan di bawah chart) 
         $activities = $historiesCollection
             ->filter(function (History $history) {
                 return $history->calori_out > 0 && $history->program !== null;
@@ -150,7 +150,7 @@ class HistoryController extends Controller
             })
             ->sortByDesc('date')
             ->values();
-
+        
         return view('history-client', compact('histories', 'period', 'chartData', 'activities'));
     }
 }

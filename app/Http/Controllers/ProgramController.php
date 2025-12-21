@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProgramController extends Controller
 {
-    /**
-     * Display a listing of programs.
-     * View: resources/views/kelola-program.blade.php
-     */
+    // Menampilkan daftar program dengan pagination dan pencarian
     public function index(Request $request)
     {
         $q = $request->string('q')->toString();
@@ -27,18 +24,13 @@ class ProgramController extends Controller
         return view('kelola-program', compact('programs'));
     }
 
-    /**
-     * Show the form for creating a new program.
-     * View: resources/views/buat-program.blade.php
-     */
+    // Menampilkan form untuk membuat program baru
     public function create()
     {
         return view('buat-program');
     }
 
-    /**
-     * Store a newly created program in storage.
-     */
+    // Menyimpan program baru ke dalam storage
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -47,7 +39,7 @@ class ProgramController extends Controller
             'difficulty'       => 'nullable|string|max:50',
             'duration_minutes' => 'nullable|integer|min:0',
 
-            // optional: create program with items at once
+            // bisa sekaligus menambah item latihan saat buat program
             'items'                    => 'nullable|array',
             'items.*.exercise_name'    => 'required_with:items|string|max:255',
             'items.*.duration_minutes' => 'nullable|integer|min:0',
@@ -74,10 +66,7 @@ class ProgramController extends Controller
         return redirect()->route('trainer.programs.index')->with('ok', 'Program dibuat');
     }
 
-    /**
-     * Display the specified program and its items.
-     * View returned: resources/views/items-latihan.blade.php
-     */
+    // Menampilkan detail program
     public function show(Program $program, Request $request)
     {
         $q = $request->string('q')->toString();
@@ -94,20 +83,13 @@ class ProgramController extends Controller
         return view('items-latihan', compact('program', 'items'));
     }
 
-    /**
-     * Show the form for editing the specified program.
-     * View: resources/views/edit-programs-latihan.blade.php
-     */
+    // Menampilkan form edit program
     public function edit(Program $program)
     {
         return view('edit-programs-latihan', compact('program'));
     }
 
-    /**
-     * Update the specified program in storage.
-     * Only updates name, type, difficulty, duration_minutes.
-     * AFTER update -> redirect to INDEX (kelola-program).
-     */
+    // Memperbarui program yang ada
     public function update(Request $request, Program $program)
     {
         $data = $request->validate([
@@ -124,16 +106,12 @@ class ProgramController extends Controller
             'duration_minutes' => $data['duration_minutes'] ?? null,
         ]);
 
-        // <-- IMPORTANT: redirect to index (kelola-program) as you asked
         return redirect()->route('trainer.programs.index')->with('ok', 'Program diperbarui');
     }
 
-    /**
-     * Remove the specified program from storage.
-     */
+    // Menghapus program
     public function destroy(Program $program)
     {
-        // delete related items first (if no FK cascade)
         $program->items()->delete();
 
         $program->delete();

@@ -74,7 +74,6 @@
         </div>
 
         <div id="items" class="space-y-3">
-          {{-- Template row gets cloned by JS --}}
         </div>
 
         {{-- Hidden template --}}
@@ -123,7 +122,7 @@
     </form>
   </div>
 
-  {{-- JS for dynamic rows --}}
+ 
   <script>
     (function() {
       let idx = 0;
@@ -141,7 +140,6 @@
 
       document.getElementById('add-row').addEventListener('click', addRow);
 
-      // Start with one empty row
       addRow();
     })();
   </script>

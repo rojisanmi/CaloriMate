@@ -74,7 +74,6 @@
         animation-fill-mode: forwards;
     }
 
-    /* Loading skeleton for chart */
     @keyframes pulse {
         0%, 100% {
             opacity: 1;
@@ -268,29 +267,29 @@ document.addEventListener('DOMContentLoaded', function () {
             responsive: true,
             maintainAspectRatio: true,
             
-            // ANIMASI UTAMA - Ini yang membuat chart animated!
+            
             animation: {
-                animateRotate: true,      // Rotasi saat muncul
-                animateScale: true,       // Scale dari kecil ke besar
-                duration: 2000,           // Durasi 2 detik
-                easing: 'easeInOutQuart', // Easing yang smooth
+                animateRotate: true,      
+                animateScale: true,      
+                duration: 2000,          
+                easing: 'easeInOutQuart', 
                 
-                // Animasi delay per segment (berurutan)
+                
                 delay: (context) => {
                     let delay = 0;
                     if (context.type === 'data' && context.mode === 'default') {
-                        delay = context.dataIndex * 200; // Setiap segment delay 200ms
+                        delay = context.dataIndex * 200; 
                     }
                     return delay;
                 },
                 
-                // Callback saat animasi selesai
+               
                 onComplete: function(animation) {
                     console.log('Chart animation completed!');
                 }
             },
             
-            // Interaksi hover yang smooth
+           
             hover: {
                 mode: 'nearest',
                 intersect: true,
@@ -327,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
                             
-                            // Format label dengan satuan yang sesuai
+                           
                             let unit = '';
                             if (label.includes('Kalori')) {
                                 unit = ' kkal';
@@ -343,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Optional: Tambahkan efek entry yang lebih dramatis
+    
     setTimeout(() => {
         canvas.style.transform = 'scale(1)';
         canvas.style.opacity = '1';

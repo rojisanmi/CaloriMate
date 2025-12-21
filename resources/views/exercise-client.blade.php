@@ -5,7 +5,7 @@
 @section('content')
 
 <style>
-    /* Animation Keyframes */
+    
     @keyframes fadeInDown {
         from {
             opacity: 0;

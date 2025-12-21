@@ -22,7 +22,7 @@
       </button>
       <a href="{{ route('trainer.home') }}" class="text-2xl font-extrabold tracking-tight">
          <img
-        src="{{ asset('images/logo.png') }}"  {{-- pakai file logomu --}}
+        src="{{ asset('images/logo.png') }}"  
         alt="CaloriMate"
         class="h-8 md:h-12 lg:h-15 w-auto select-none"
         draggable="false"
@@ -34,7 +34,7 @@
 
   {{-- MAIN --}}
   <main class="flex-1 pt-12">
-    {{-- Overlay & Sidebar berada di bawah header --}}
+    {{-- Overlay & Sidebar --}}
     @include('layouts.sidebar')
 
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
@@ -47,7 +47,7 @@
     <div class="py-3 text-center text-sm">©CaloriMate</div>
   </footer>
 
-  {{-- Drawer logic: overlay only, no pushing content --}}
+  {{-- Drawer logic --}}
 <script>
   const drawer  = document.getElementById('trainerSidebar');
   const overlay = document.getElementById('sidebarOverlay');

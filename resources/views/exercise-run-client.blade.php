@@ -124,14 +124,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     tick();
-
-    // Navigation logic
+    // Next Button
     const nextBtn = document.getElementById('nextButton');
     if (nextBtn) {
         nextBtn.addEventListener('click', function () {
             const isLast = this.getAttribute('data-is-last') === '1';
             if (isLast) {
-                // Selesaikan program -> simpan ke history lewat route start (POST)
                 const form = document.getElementById('finishForm');
                 if (form) {
                     form.submit();

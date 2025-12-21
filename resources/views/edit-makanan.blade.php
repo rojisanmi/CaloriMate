@@ -1,4 +1,3 @@
-{{-- resources/views/kelola-makanan/edit.blade.php --}}
 @extends('layouts.verivied')
 
 @section('title', 'Edit Makanan')

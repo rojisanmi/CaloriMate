@@ -31,14 +31,20 @@ Route::post('/register', [AuthController::class, 'doRegister'])->name('register.
 Route::get('/register/client', [ClientRegisterController::class, 'show'])->name('register.client.show');
 Route::post('/register/client', [ClientRegisterController::class, 'store'])->name('register.client.store');
 
-Route::prefix('trainer')->name('trainer.')->group(function () {
-    Route::resource('foods', FoodController::class);
-    Route::resource('programs', ProgramController::class);
-    Route::resource('programs.items', ItemsLatihanController::class)->shallow();
-});
+// Trainer routes with middleware
+Route::prefix('trainer')
+    ->name('trainer.')
+    ->middleware(['auth.required', 'role:2'])
+    ->group(function () {
+
+        Route::resource('foods', FoodController::class);
+        Route::resource('programs', ProgramController::class);
+        Route::resource('programs.items', ItemsLatihanController::class)->shallow();
+    });
 
 
-// Role-specific example pages
+
+// User home routes
 Route::get('/user/home', function () {
     return view('user_home');
 })->name('user.home')->middleware(['auth.required', 'role:1']);
@@ -48,7 +54,9 @@ Route::get('/trainer/home', function () {
 })->name('trainer.home')->middleware(['auth.required', 'role:2']);
 
 // Profile trainer routes
-Route::prefix('profile/trainer')->group(function () {
+Route::prefix('profile/trainer')
+    ->middleware(['auth.required', 'role:2'])
+    ->group(function () {
 
     Route::get('/', [ProfilTrainerController::class, 'showTrainer'])
         ->name('profile.trainer.show');
@@ -58,7 +66,9 @@ Route::prefix('profile/trainer')->group(function () {
 });
 
 // Profile client routes
-Route::prefix('profile/client')->group(function () {
+Route::prefix('profile/client')
+    ->middleware(['auth.required', 'role:1'])
+    ->group(function () {
 
     Route::get('/', [ProfileController::class, 'show'])
         ->name('profile.client.show');

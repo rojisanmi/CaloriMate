@@ -41,7 +41,7 @@
 
     {{-- RIGHT mascot --}}
     <div class="relative pt-8 lg:pt-0 flex justify-center lg:justify-end items-end min-h-[400px] sm:min-h-[500px] lg:min-h-full">
-      {{-- Dekor belakang (lingkaran/gelombang) --}} 
+      
       <img
         src="{{ asset('images/bg_circle_landing.png') }}"
         alt=""

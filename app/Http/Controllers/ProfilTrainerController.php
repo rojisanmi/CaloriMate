@@ -8,6 +8,7 @@ use App\Models\User;
 
 class ProfilTrainerController extends Controller
 {
+    // Autentikasi dan mendapatkan user trainer dari session
     private function authTrainer()
     {
         $username = Session::get('user_id');
@@ -22,12 +23,14 @@ class ProfilTrainerController extends Controller
         return $user;
     }
 
+    // Tampilan profil trainer
     public function showTrainer()
     {
         $user = $this->authTrainer();
         return view('profile.trainer', compact('user'));
     }
 
+    // Memperbarui profil trainer
     public function updateTrainer(Request $request)
     {
         $user = $this->authTrainer();

@@ -8,26 +8,19 @@ use Illuminate\Http\Request;
 
 class ItemsLatihanController extends Controller
 {
-    /**
-     * index: redirect ke program show (single source of truth)
-     */
+    // redirect ke halaman show program
     public function index(Program $program, Request $request)
     {
         return redirect()->route('trainer.programs.show', $program);
     }
 
-    /**
-     * show create form
-     * menggunakan view: resources/views/create-items-latihan.blade.php
-     */
+    // menampilkan form create new item
     public function create(Program $program)
     {
         return view('create-items-latihan', compact('program'));
     }
 
-    /**
-     * store new item
-     */
+    // menyimpan item baru
     public function store(Program $program, Request $request)
     {
         $data = $request->validate([
@@ -42,20 +35,14 @@ class ItemsLatihanController extends Controller
                          ->with('ok', 'Item latihan ditambahkan.');
     }
 
-    /**
-     * edit form for an item
-     * menggunakan view: resources/views/edit-items-latihan.blade.php
-     * Note: signature expects ProgramItem $item because routes are shallow for edit/update
-     */
+    // menampilkan form edit item
     public function edit(ProgramItem $item)
     {
         $program = $item->program;
         return view('edit-items-latihan', compact('program', 'item'));
     }
 
-    /**
-     * update item
-     */
+    // memperbarui item
     public function update(Request $request, ProgramItem $item)
     {
         $data = $request->validate([
@@ -70,9 +57,7 @@ class ItemsLatihanController extends Controller
                          ->with('ok', 'Item latihan diperbarui.');
     }
 
-    /**
-     * destroy item
-     */
+    // menghapus item
     public function destroy(ProgramItem $item)
     {
         $program = $item->program;

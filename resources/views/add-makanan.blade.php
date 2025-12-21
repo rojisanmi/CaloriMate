@@ -12,16 +12,6 @@
     </a>
   </div>
 
-  {{-- Error summary
-  @if ($errors->any())
-    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 text-red-700 px-4 py-3">
-      <ul class="list-disc list-inside">
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
-  @endif --}}
 
   <div class="bg-white shadow-md rounded-lg p-6">
     <form method="POST" action="{{ route('trainer.foods.store') }}" class="space-y-5">

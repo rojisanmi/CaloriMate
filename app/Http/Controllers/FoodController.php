@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 class FoodController extends Controller
 {
+    // Halaman kelola makanan untuk trainer
     public function index(Request $request)
     {
         $q = $request->string('q')->toString();
@@ -20,11 +21,13 @@ class FoodController extends Controller
         return view('kelola-makanan', compact('foods'));
     }
 
+    // Halaman tambah makanan baru
     public function create()
     {
         return view('add-makanan');
     }
 
+    // Proses penyimpanan makanan baru
     public function store(Request $request)
     {
         $data = $request->validate(
@@ -53,12 +56,12 @@ class FoodController extends Controller
             ->with('ok', 'Item ditambahkan');
     }
 
-
+    // Halaman edit makanan
     public function edit(Food $food)
     {
         return view('edit-makanan', compact('food'));
     }
-
+    // Proses update makanan
     public function update(Request $request, Food $food)
     {
         $data = $request->validate(
@@ -92,6 +95,7 @@ class FoodController extends Controller
             ->with('ok', 'Item diupdate');
     }
 
+    // Proses hapus makanan
     public function destroy(Food $food)
     {
         $food->delete();

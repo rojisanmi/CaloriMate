@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class ClientRegisterController extends Controller
 {
+    // Tampilan halaman registrasi client
     public function show(Request $request)
     {
+        // Langkah pertama harus sudah diisi
         $step1 = Session::get('reg.step1');
         if (!$step1) {
             return redirect()->route('register.form')
@@ -27,15 +29,16 @@ class ClientRegisterController extends Controller
         return view('register_client', ['username' => $username]);
     }
 
+    // Proses penyimpanan data registrasi client
     public function store(Request $request)
     {   
-        
+        // Langkah pertama harus sudah diisi
         $step1 = Session::get('reg.step1');
         if (!$step1) {
             return redirect()->route('register.form')
                 ->withErrors(['username' => 'Sesi kedaluwarsa. Silakan daftar lagi.']);
         }
-
+        // 2. Validasi input (VALIDASI SELURUH INPUT)
         $data = $request->validate([
             'tinggi_badan' => 'required|numeric|min:100|max:300',
             'berat_badan'  => 'required|numeric|min:40|max:500',
@@ -43,7 +46,7 @@ class ClientRegisterController extends Controller
             'umur'         => 'required|integer|min:5|max:120',
         ]);
 
-
+        // 3. Simpan ke database (user + client) dalam transaksi
         DB::transaction(function () use ($step1, $data) {
             $user = User::create([
                 'username' => $step1['username'],

@@ -3,7 +3,7 @@
 @section('title', 'Login Trainer')
 
 @section('content')
-  {{-- Tombol back ke halaman pilih role login --}}
+
   <a href="{{ url('/login') }}"
      class="absolute left-4 top-4 md:left-8 md:top-6 z-20 flex items-center justify-center
             w-10 h-10 md:w-12 md:h-12 bg-[#2d5016] rounded-lg hover:bg-[#3d6020] transition">
@@ -15,7 +15,7 @@
   <div class="rounded-3xl overflow-hidden mx-auto w-full max-w-4xl
             grid grid-cols-1 lg:grid-cols-2 shadow-lg bg-white">
 
-    {{-- KIRI: panel hijau + dekor + maskot --}}
+    {{-- KIRI--}}
     <div class="relative bg-[#2d5016] text-white px-6 pt-6 pb-2 flex items-end">
       <img src="{{ asset('images/group-54.png') }}" alt="" aria-hidden="true"
            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
@@ -24,7 +24,7 @@
            class="relative z-10 w-full max-w-[360px] h-auto mx-auto select-none">
     </div>
 
-    {{-- KANAN: form login --}}
+    {{-- KANAN --}}
     <div class="bg-white px-8 md:px-10 lg:px-12
                 pt-6 md:pt-8 lg:pt-5
                 pb-10 lg:pb-14 grid place-items-center">

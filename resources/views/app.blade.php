@@ -31,7 +31,7 @@
     {{-- no navbar --}}
 @else
 
-  {{-- 1) NAVBAR fixed di atas --}}
+  {{-- NAVBAR --}}
   <header class="fixed inset-x-0 top-0 z-50 bg-[#344F1F]/95 backdrop-blur supports-[backdrop-filter]:bg-[#344F1F]/85 shadow-sm">
     <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-20 items-center">
@@ -65,13 +65,12 @@
   </header>
 @endif
 
-  {{-- 2) MAIN CONTENT AREA --}}
-  {{-- PAGE CONTENT: padding top buat ruang navbar (h-20 ≈ 80px => pt-24 aman) --}}
+ {{-- MAIN CONTENT AREA --}}
   <main class="{{ View::hasSection('hide_nav') ? 'pt-6' : 'pt-24' }} mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full flex-1">
     @yield('content')
   </main>
 
-  {{-- 3) FOOTER full-bleed, selalu di bawah --}}
+  {{-- FOOTER --}}
   <footer class="mt-auto w-full bg-white">
     {{-- teks/copyright --}}
     <div class="py-3 text-center text-lg opacity-75 text-black">©CaloriMate</div>

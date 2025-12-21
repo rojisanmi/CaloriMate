@@ -153,7 +153,7 @@
 
 </section>
 
-{{-- Chart.js & Dropdown Script --}}
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdownMenu.classList.remove('opacity-100', 'visible', 'scale-100');
         dropdownIcon.style.transform = 'rotate(0deg)';
     }
-    // ====== CHART LOGIC ======
+    
     const chartElement = document.getElementById('historyChart');
     if (chartElement) {
         const rawData = @json($chartData ?? ['labels' => [], 'calori_in' => [], 'calori_out' => []]);

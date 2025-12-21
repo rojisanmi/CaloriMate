@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 class StatisticController extends Controller
 {
+    // Halaman statistik harian client
     public function index()
     {
         $username = Session::get('user_id');
@@ -105,6 +106,7 @@ class StatisticController extends Controller
         ]);
     }
 
+    // Estimasi kalori terbakar berdasarkan durasi dan tingkat intensitas
     private function estimateCaloriesBurned(int $durationMinutes, string $intensityLevel): int
     {
         $caloriesPerMinute = match (strtolower($intensityLevel)) {

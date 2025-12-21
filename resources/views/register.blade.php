@@ -3,7 +3,7 @@
 @section('title', 'Register')
 
 @section('content')
-{{-- tombol back (opsional, tetap ada seperti kode temanmu) --}}
+
 <a href="{{ route('home') }}"
    class="absolute left-4 top-4 md:left-8 md:top-6 z-20 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#2d5016] rounded-lg hover:bg-[#3d6020] transition">
   <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -11,7 +11,7 @@
   </svg>
 </a>
 
-{{-- KARTU: match login --}}
+
 <div class="rounded-3xl overflow-hidden mx-auto w-full max-w-5xl
             grid grid-cols-1 lg:grid-cols-2 shadow-lg bg-white">
 

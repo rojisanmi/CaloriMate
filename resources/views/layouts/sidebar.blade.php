@@ -2,21 +2,21 @@
   $name = session('user_name', 'Trainer');
 @endphp
 
-{{-- OVERLAY: tutup seluruh layar (termasuk header) --}}
+{{-- OVERLAY --}}
 <div id="sidebarOverlay"
      class="fixed inset-0 z-[90] bg-black/30 transition-opacity duration-200
             opacity-0 pointer-events-none"></div>
 
-{{-- DRAWER: dari atas sampai bawah, di atas header --}}
+{{-- DRAWER --}}
 <aside id="trainerSidebar"
   class="fixed inset-y-0 left-0 z-[100] h-screen w-[300px] bg-white shadow-xl
          pt-6 pb-6 pl-4 pr-4 transform -translate-x-full transition-transform duration-200
          rounded-none lg:rounded-r-lg">
 
-  {{-- header sidebar: hamburger di KIRI lalu nama --}}
+  {{-- header sidebar:--}}
   <div class="sticky top-0 bg-white pb-4">
     <div class="px-1">
-      {{-- HAMBURGER (untuk close) --}}
+      {{-- HAMBURGER  --}}
       <button id="btnToggleSidebarInside"
               class="inline-flex items-center justify-center h-10 w-10 rounded-md hover:bg-gray-100 focus:outline-none"
               aria-label="Close Sidebar">

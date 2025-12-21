@@ -22,7 +22,7 @@
       </button>
       <a href="{{ route('client.home') }}" class="text-2xl font-extrabold tracking-tight">
          <img
-        src="{{ asset('images/logo.png') }}"  {{-- pakai file logomu --}}
+        src="{{ asset('images/logo.png') }}"  
         alt="CaloriMate"
         class="h-14 w-auto"
         draggable="false"
@@ -33,8 +33,8 @@
   </header>
 
   {{-- MAIN --}}
-  <main class="flex-1 pt-16"> {{-- pt-16 = tinggi header --}}
-    {{-- Overlay & Sidebar berada di bawah header --}}
+  <main class="flex-1 pt-16"> 
+    {{-- Overlay & Sidebar --}}
     @include('layouts.sidebar-client')
 
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -47,7 +47,7 @@
     <div class="py-3 text-center text-sm">©CaloriMate</div>
   </footer>
 
-  {{-- Drawer logic: overlay only, no pushing content --}}
+  {{-- Drawer logic--}}
 <script>
   const drawer  = document.getElementById('clientSidebar');
   const overlay = document.getElementById('sidebarClientOverlay');

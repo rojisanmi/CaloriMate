@@ -2,18 +2,18 @@
   $name = session('user_name', 'Client');
 @endphp
 
-{{-- OVERLAY: tutup seluruh layar (termasuk header) --}}
+{{-- OVERLAY --}}
 <div id="sidebarClientOverlay"
      class="fixed inset-0 z-[90] bg-black/30 transition-opacity duration-200
             opacity-0 pointer-events-none"></div>
 
-{{-- DRAWER: dari atas sampai bawah, di atas header --}}
+{{-- DRAWER --}}
 <aside id="clientSidebar"
   class="fixed inset-y-0 left-0 z-[100] h-screen w-[300px] bg-white shadow-xl
          pt-6 pb-6 pl-4 pr-4 transform -translate-x-full transition-transform duration-200
          rounded-none lg:rounded-r-lg">
 
-  {{-- header sidebar: hamburger di KIRI lalu nama --}}
+  {{--  hamburger di KIRI lalu nama --}}
   <div class="sticky top-0 bg-white pb-4">
     <div class="px-1">
       {{-- HAMBURGER (untuk close) --}}

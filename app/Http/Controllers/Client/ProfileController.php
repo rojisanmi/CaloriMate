@@ -9,6 +9,7 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
+    // Autentikasi dan mendapatkan user client dari session
     private function authClient()
     {
         $username = Session::get('user_id');
@@ -22,13 +23,13 @@ class ProfileController extends Controller
 
         return $user;
     }
-
+    // Tampilan profil client
     public function show()
     {
         $user = $this->authClient();
         return view('profile.client', compact('user'));
     }
-
+    // Memperbarui profil client
     public function update(Request $request)
     {
         $user = $this->authClient();

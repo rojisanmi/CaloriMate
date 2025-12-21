@@ -10,27 +10,23 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    // Tampilan halaman login
     public function showLogin()
     {
-        // if (Session::has('user_id')) {
-        //     // Route by role if already logged in
-        //     return (int) Session::get('user_role') === 2
-        //         ? redirect()->route('trainer.home')
-        //         : redirect()->route('user.home');
-        // }
+       
         return view('login');
     }
-
+    // Tampilan halaman login user
     public function showLoginUser()
     {
         return view('login_user');
     }
-
+    // Tampilan halaman login trainer
     public function showLoginTrainer()
     {
         return view('login_trainer');
     }
-    
+    // proses login client dan trainer
     public function doLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -43,38 +39,54 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Cari user berdasarkan username & role
         $user = User::where('username', $request->username)
-        ->where('role', $request->role)
-        ->first();
+            ->where('role', $request->role)
+            ->first();
 
-        // Cek password hashed
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user) {
             return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
         }
 
-        // Regenerate session (security best practice)
+        $valid = false;
+
+        try {
+            // NORMAL CASE (bcrypt / argon)
+            $valid = Hash::check($request->password, $user->password);
+        } catch (\Exception $e) {
+            // LEGACY CASE (plain text)
+            if ($request->password === $user->password) {
+                $user->password = Hash::make($request->password);
+                $user->save();
+                $valid = true;
+            }
+        }
+
+        if (!$valid) {
+            return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
+        }
+
+        // Regenerate session
         $request->session()->regenerate();
 
         Session::put('user_id', $user->username);
         Session::put('user_role', $user->role);
         Session::put('user_name', $user->username);
 
-        // Redirect by role
         return (int) $user->role === 2
             ? redirect()->route('trainer.home')
             : redirect()->route('client.home');
     }
 
-
+    // proses logout
     public function logout(Request $request)
     {
-        // Proper logout in L11
+        // Proper logout
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login.show')->with('status', 'Logged out.');
     }
 
+    // Tampilan halaman register
     public function showRegister()
     {
         if (Session::has('user_id')) {
@@ -85,31 +97,29 @@ class AuthController extends Controller
         return view('register');
     }
 
- public function doRegister(Request $request)
-{
-    // 1. Validasi input (HANYA VALIDASI)
-    $data = $request->validate([
-        'username' => 'required|string|max:20|unique:user,username',
-        'email'    => 'required|email|max:255|unique:user,email',
-        'password' => 'required|string|min:8',
-    ]);
+    // proses register 
+    public function doRegister(Request $request)
+    {
+        // 1. Validasi input (HANYA VALIDASI)
+        $data = $request->validate([
+            'username' => 'required|string|max:20|unique:user,username',
+            'email'    => 'required|email|max:255|unique:user,email',
+            'password' => 'required|string|min:8',
+        ]);
 
-    // 2. Hash password SETELAH validasi
-    $data['password'] = Hash::make($data['password']);
+        // 2. Hash password SETELAH validasi
+        $data['password'] = Hash::make($data['password']);
 
-    // 3. Simpan ke session (step 1)
-    session([
-        'reg.step1' => [
-            'username' => $data['username'],
-            'email'    => $data['email'],
-            'password' => $data['password'],
-            'role'     => 1, // client
-        ],
-    ]);
+        // 3. Simpan ke session (step 1)
+        session([
+            'reg.step1' => [
+                'username' => $data['username'],
+                'email'    => $data['email'],
+                'password' => $data['password'],
+                'role'     => 1, // client
+            ],
+        ]);
 
-    return redirect()->route('register.client.show');
-}
-
-
-
+        return redirect()->route('register.client.show');
+    }
 }
