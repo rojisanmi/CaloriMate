@@ -18,7 +18,7 @@ Route::get("/", function () {
     return view('home');
 })->name('home');
 
-Route::get('/login/user', [AuthController::class, 'showLoginUser'])->name('login.user');
+Route::get('/login/client', [AuthController::class, 'showLoginClient'])->name('login.client');
 Route::get('/login/trainer', [AuthController::class, 'showLoginTrainer'])->name('login.trainer');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login.show');

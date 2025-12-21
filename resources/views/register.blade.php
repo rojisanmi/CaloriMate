@@ -94,6 +94,15 @@
             Selanjutnya
           </button>
         </div>
+        <div class="flex justify-center pt-4">
+          <p class="text-sm text-gray-600">
+            Sudah punya akun?
+            <a href="{{ route('login.client') }}"
+              class="font-semibold text-[#2d5016] hover:underline hover:text-[#3d6020] transition">
+              Login
+            </a>
+          </p>
+        </div>
       </form>
     </div>
   </div>
