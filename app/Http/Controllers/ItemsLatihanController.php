@@ -25,7 +25,7 @@ class ItemsLatihanController extends Controller
     {
         $data = $request->validate([
             'exercise_name'   => 'required|string|max:255',
-            'duration_minutes'=> 'nullable|integer|min:0',
+            'duration_minutes'=> 'nullable|integer|min:1',
             'intensity_level' => 'nullable|string|max:50',
         ]);
 
@@ -47,7 +47,7 @@ class ItemsLatihanController extends Controller
     {
         $data = $request->validate([
             'exercise_name'   => 'required|string|max:255',
-            'duration_minutes'=> 'nullable|integer|min:0',
+            'duration_minutes'=> 'nullable|integer|min:1',
             'intensity_level' => 'nullable|string|max:50',
         ]);
 

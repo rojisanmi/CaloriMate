@@ -23,16 +23,19 @@ class FoodConsumption extends Model
         'portions' => 'integer',
     ];
 
+    // Relasi ke tabel history  
     public function history()
     {
         return $this->belongsTo(History::class, 'history_id', 'history_id');
     }
 
+    // Relasi ke tabel food
     public function food()
     {
         return $this->belongsTo(Food::class, 'food_id', 'food_id');
     }
 
+    // Hitung total kalori dari konsumsi makanan ini
     public function getTotalCalories(): float
     {
         return $this->food->calories_per_portion * $this->portions;

@@ -12,6 +12,8 @@ class ProgramItem extends Model
 
     protected $fillable = ['program_id', 'exercise_name', 'duration_minutes', 'intensity_level'];
 
+    // Relasi ke tabel program
+    // Setiap program item belongs to satu program
     public function program()
     {
         return $this->belongsTo(Program::class, 'program_id', 'program_id');

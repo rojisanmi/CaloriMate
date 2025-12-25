@@ -18,11 +18,13 @@ class Food extends Model
         'total_carbo',
         'total_protein',
     ];
+    // Relasi ke tabel food_consumptions
     public function foodConsumptions()
     {
         return $this->hasMany(FoodConsumption::class, 'food_id', 'food_id');
     }
 
+    // Hitung kalori berdasarkan porsi dalam gram
     public function calculateCalories(float $portionGrams): float
     {
         if ($this->grammage <= 0)

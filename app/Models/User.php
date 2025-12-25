@@ -20,36 +20,43 @@ class User extends Model
         'password',
     ];
 
+    // Relasi dengan model Client 
     public function client()
     {
         return $this->hasOne(Client::class, 'username', 'username');
     }
 
+    // Relasi dengan model Trainer
     public function trainer()
     {
         return $this->hasOne(Trainer::class, 'username', 'username');
     }
 
+    // Relasi dengan model History
     public function histories()
     {
         return $this->hasMany(History::class, 'username', 'username');
     }
     
+    // Role 1 untuk client
     public function isClient(): bool
     {
         return (int) $this->role === 1;
     }
 
+    // Role 2 untuk trainer
     public function isTrainer(): bool
     {
         return (int) $this->role === 2;
     }
 
+    // Verifikasi password
     public function verifyPassword(string $password): bool
     {
         return $this->password === $password;
     }
 
+    // Autentikasi user
     public static function authenticate(string $username, string $password): ?self
     {
         $user = self::where('username', $username)->first();
@@ -60,6 +67,8 @@ class User extends Model
 
         return null;
     }
+
+    // Aksesor untuk mendapatkan label peran
     public function getRoleLabelAttribute()
     {
         return match((int) $this->role) {

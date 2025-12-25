@@ -13,38 +13,43 @@ class Trainer extends Model
     protected $keyType = 'string';
     protected $fillable = ['username', 'nama', 'keahlian', 'sertifikasi'];
 
-    // Relationships
+    // Relasi ke tabel user
     public function user()
     {
         return $this->belongsTo(User::class, 'username', 'username');
     }
 
-    // Business Logic Methods
+    // Create program
     public function createProgram(array $data): Program
     {
         return Program::create($data);
     }
 
+    // Update program
     public function updateProgram(Program $program, array $data): bool
     {
         return $program->update($data);
     }
 
+    // Delete program
     public function deleteProgram(Program $program): bool
     {
         return $program->delete();
     }
 
+    // Create food
     public function createFood(array $data): Food
     {
         return Food::create($data);
     }
 
+    // Update food
     public function updateFood(Food $food, array $data): bool
     {
         return $food->update($data);
     }
 
+    // Delete food
     public function deleteFood(Food $food): bool
     {
         return $food->delete();
