@@ -43,7 +43,11 @@ class ClientRegisterController extends Controller
             'tinggi_badan' => 'required|numeric|min:100|max:300',
             'berat_badan'  => 'required|numeric|min:40|max:500',
             'gender'       => 'required|in:L,P',
-            'umur'         => 'required|integer|min:5|max:120',
+            'umur'         => 'required|integer|min:17|max:120',
+        ], [
+            'tinggi_badan.min' => 'Tinggi Badan minimal 100 cm.',
+            'berat_badan.min' => 'Berat Badan minimal 40 kg.',
+            'umur.min' => 'Umur minimal 17 tahun.',
         ]);
 
         // 3. Simpan ke database (user + client) dalam transaksi
