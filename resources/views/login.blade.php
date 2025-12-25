@@ -43,7 +43,7 @@
             Login as Trainer
           </a>
           <div class="text-sm text-[#2E4F2A]/70">Or</div>
-          <a href="{{ url('/login/user') }}"
+          <a href="{{ url('/login/client') }}"
              class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90">
             Login as Client
           </a>
