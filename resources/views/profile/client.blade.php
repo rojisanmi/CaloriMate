@@ -76,12 +76,25 @@
         </div>
 
         {{-- Umur --}}
-        <div class="animate-slide-up" style="animation-delay: 0.5s">
-          <label class="font-semibold text-[#2E471F]">Umur</label>
-          <input type="number" name="umur" min="1"
-                 value="{{ old('umur', $user->client->umur ?? '') }}"
-                 class="w-full mt-1 px-3 py-2 border rounded-md transition-all duration-200 focus:ring-2 focus:ring-[#2E471F]/50 focus:border-[#2E471F]">
-        </div>
+<div class="animate-slide-up" style="animation-delay: 0.5s">
+    <label class="font-semibold text-[#2E471F]">Umur</label>
+
+    <input type="number" 
+           name="umur" 
+           min="1"
+           value="{{ old('umur', $user->client->umur ?? '') }}"
+           class="w-full mt-1 px-3 py-2 border rounded-md transition-all duration-200
+                  focus:ring-2 focus:ring-[#2E471F]/50 focus:border-[#2E471F]
+                  @error('umur') border-red-500 @enderror">
+
+    {{-- ERROR KHUSUS UMUR --}}
+    @error('umur')
+        <p class="text-sm text-red-600 mt-1">
+            {{ $message }}
+        </p>
+    @enderror
+</div>
+
 
         {{-- Berat & Tinggi Badan --}}
         <div class="grid grid-cols-2 gap-4 animate-slide-up" style="animation-delay: 0.6s">
@@ -90,6 +103,12 @@
             <input type="number" name="bb"
                    value="{{ old('bb', $user->client->bb ?? '') }}"
                    class="w-full mt-1 px-3 py-2 border rounded-md transition-all duration-200 focus:ring-2 focus:ring-[#2E471F]/50 focus:border-[#2E471F]">
+
+                   @error('bb')
+        <p class="text-sm text-red-600 mt-1">
+            {{ $message }}
+        </p>
+    @enderror
           </div>
 
           <div>
@@ -97,6 +116,12 @@
             <input type="number" name="tb"
                    value="{{ old('tb', $user->client->tb ?? '') }}"
                    class="w-full mt-1 px-3 py-2 border rounded-md transition-all duration-200 focus:ring-2 focus:ring-[#2E471F]/50 focus:border-[#2E471F]">
+
+                   @error('tb')
+        <p class="text-sm text-red-600 mt-1">
+            {{ $message }}
+        </p>
+    @enderror
           </div>
         </div>
 

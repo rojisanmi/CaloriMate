@@ -82,4 +82,9 @@ class Client extends Model
             ->with(['program', 'foodConsumptions.food'])
             ->first();
     }
+
+    public static function isValidAge(int $umur): bool
+    {
+    return $umur >= 17;
+    }
 }
