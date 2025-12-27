@@ -105,7 +105,8 @@
 </style>
 
 @if (session('ok'))
-  <div class="mb-6 rounded-lg bg-green-500 text-white px-4 py-3 animate-fade-in-down">
+  <div id="successAlert"
+       class="mb-6 rounded-lg bg-green-500 text-white px-4 py-3 animate-fade-in-down">
     {{ session('ok') }}
   </div>
 @endif
@@ -229,18 +230,45 @@
 </div>
 
 <script>
-document.getElementById('sertifikasiInput').addEventListener('change', function (event) {
-    const file = event.target.files[0];
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Success alert
+    const alert = document.getElementById('successAlert');
+
+    if (alert) {
+        setTimeout(() => {
+            alert.classList.add(
+                'transition-all',
+                'duration-500',
+                'opacity-0',
+                '-translate-y-2'
+            );
+
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, 3000); // 3 detik
+    }
+
+   // Preview Gambar Sertifikasi
+    const input = document.getElementById('sertifikasiInput');
     const preview = document.getElementById('previewImage');
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            preview.src = e.target.result;
-            preview.classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
+    if (input) {
+        input.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     }
+
 });
 </script>
 </form>
