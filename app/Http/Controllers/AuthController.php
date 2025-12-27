@@ -17,9 +17,9 @@ class AuthController extends Controller
         return view('login');
     }
     // Tampilan halaman login user
-    public function showLoginUser()
+    public function showLoginClient()
     {
-        return view('login_user');
+        return view('login_client');
     }
     // Tampilan halaman login trainer
     public function showLoginTrainer()

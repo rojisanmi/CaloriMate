@@ -12,6 +12,8 @@ class Program extends Model
 
     protected $fillable = ['name', 'type', 'difficulty', 'duration_minutes'];
 
+    // Relasi ke tabel program_items
+    // Setiap program memiliki banyak program items
     public function items()
     {
         return $this->hasMany(ProgramItem::class, 'program_id', 'program_id');

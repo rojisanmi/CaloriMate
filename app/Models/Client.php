@@ -13,39 +13,41 @@ class Client extends Model
     protected $keyType = 'string';
     protected $fillable = ['username', 'tb', 'bb', 'gender', 'umur'];
 
-    // Relationships
+    // relasi dengan model User
     public function user()
     {
         return $this->belongsTo(User::class, 'username', 'username');
     }
-
+    // relasi dengan model History
     public function histories()
     {
         return $this->hasMany(History::class, 'username', 'username');
     }
 
     // Business Logic Methods
-    public function calculateBMI(): float
-    {
-        if ($this->tb <= 0)
-            return 0;
-        $heightInMeters = $this->tb / 100;
-        return round($this->bb / ($heightInMeters * $heightInMeters), 2);
-    }
+    // public function calculateBMI(): float
+    // {
+    //     if ($this->tb <= 0)
+    //         return 0;
+    //     $heightInMeters = $this->tb / 100;
+    //     return round($this->bb / ($heightInMeters * $heightInMeters), 2);
+    // }
 
-    public function getBMICategory(): string
-    {
-        $bmi = $this->calculateBMI();
 
-        if ($bmi < 18.5)
-            return 'Underweight';
-        if ($bmi < 25)
-            return 'Normal';
-        if ($bmi < 30)
-            return 'Overweight';
-        return 'Obese';
-    }
+    // public function getBMICategory(): string
+    // {
+    //     $bmi = $this->calculateBMI();
 
+    //     if ($bmi < 18.5)
+    //         return 'Underweight';
+    //     if ($bmi < 25)
+    //         return 'Normal';
+    //     if ($bmi < 30)
+    //         return 'Overweight';
+    //     return 'Obese';
+    // }
+
+    // Hitung Basal Metabolic Rate (BMR)
     public function calculateBMR(): float
     {
         // Mifflin-St Jeor Equation
@@ -56,6 +58,7 @@ class Client extends Model
         }
     }
 
+    // Hitung kebutuhan kalori harian berdasarkan level aktivitas
     public function calculateDailyCalories(string $activityLevel = 'sedentary'): float
     {
         $bmr = $this->calculateBMR();
@@ -70,11 +73,13 @@ class Client extends Model
         return round($bmr * ($multipliers[$activityLevel] ?? 1.2), 2);
     }
 
+    // Update profile
     public function updateProfile(array $data): bool
     {
         return $this->update($data);
     }
 
+    // Dapatkan history hari ini beserta program dan konsumsi makanannya
     public function getTodayHistory()
     {
         return $this->histories()
