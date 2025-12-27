@@ -51,7 +51,6 @@ class ProgramController extends Controller
                 'name'             => $data['name'],
                 'type'             => $data['type'] ?? null,
                 'difficulty'       => $data['difficulty'] ?? null,
-                'duration_minutes' => $data['duration_minutes'] ?? null,
             ]);
 
             foreach ($data['items'] ?? [] as $row) {
@@ -96,7 +95,6 @@ class ProgramController extends Controller
             'name'             => 'required|string|max:100',
             'type'             => 'nullable|string|max:50',
             'difficulty'       => 'nullable|string|max:50',
-            'duration_minutes' => 'nullable|integer|min:0',
         ]);
 
         $program->update([

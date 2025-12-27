@@ -204,7 +204,7 @@
                 <span class="font-medium">Tipe:</span> {{ $program->type ?? '-' }}<br>
                 <span class="font-medium">Tingkat:</span> {{ $program->difficulty ?? '-' }}<br>
                 <span class="font-medium">Durasi:</span>
-                {{ $program->duration_minutes ? $program->duration_minutes . ' menit' : '-' }}
+                {{ $program->total_duration > 0 ? $program->total_duration . ' menit' : '-' }}
               </p>
             @endif
           </div>
