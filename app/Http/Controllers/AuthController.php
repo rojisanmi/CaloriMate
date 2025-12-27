@@ -68,9 +68,10 @@ class AuthController extends Controller
         // Regenerate session
         $request->session()->regenerate();
 
-        Session::put('user_id', $user->username);
-        Session::put('user_role', $user->role);
-        Session::put('user_name', $user->username);
+        $request->session()->put('user_id', $user->username);
+        $request->session()->put('user_role', $user->role);
+        $request->session()->put('user_name', $user->username);
+
 
         return (int) $user->role === 2
             ? redirect()->route('trainer.home')

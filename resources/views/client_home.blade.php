@@ -128,7 +128,7 @@
         <div class="flex-1 text-center lg:text-left mb-12 lg:mb-0 max-w-2xl">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#000000] animate-fadeInDown"
                 style="font-family: 'Raleway', sans-serif; font-weight: 600;">
-                Hello <span class="text-[#F5A623]">{{ $user->name ?? 'User' }}</span>,
+                Hello <span class="text-[#F5A623]">{{ session('user_name', 'User') }}</span>,
             </h1>
 
             <p class="mt-6 text-xl sm:text-2xl lg:text-3xl text-[#4A4A4A] animate-fadeInDown delay-200"
