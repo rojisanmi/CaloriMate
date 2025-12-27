@@ -54,13 +54,6 @@
           </select>
           @error('difficulty') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1">Durasi Total (menit)</label>
-          <input type="number" min="1" name="duration_minutes" value="{{ old('duration_minutes') }}"
-                 class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-800 focus:border-[#2E471F] focus:outline-none">
-          @error('duration_minutes') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
       </div>
 
       {{-- Program Items --}}
@@ -95,9 +88,9 @@
                 <select name="__NAME__[intensity_level]"
                         class="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-800 focus:border-[#2E471F] focus:outline-none">
                   <option value="">Pilih</option>
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
+                  <option value="Rendah">Rendah</option>
+                  <option value="Sedang">Sedang</option>
+                  <option value="Tinggi">Tinggi</option>
                 </select>
               </div>
               <button type="button"

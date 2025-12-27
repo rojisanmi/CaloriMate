@@ -9,7 +9,7 @@
       <p class="text-sm text-gray-600 mt-1">
         Tipe: {{ $program->type ?? '-' }} &middot;
         Tingkat: {{ $program->difficulty ?? '-' }} &middot;
-        Durasi: {{ $program->duration_minutes ? $program->duration_minutes . ' menit' : '-' }}
+        Durasi: {{ $program->total_duration > 0 ? $program->total_duration . ' menit' : '-' }}
       </p>
     </div>
   </div>
