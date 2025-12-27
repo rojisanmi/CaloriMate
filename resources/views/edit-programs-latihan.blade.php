@@ -45,14 +45,6 @@
           </select>
           @error('difficulty') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
         </div>
-
-        {{-- Durasi --}}
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Durasi Total (menit)</label>
-          <input type="number" name="duration_minutes" min="0" value="{{ old('duration_minutes', $program->duration_minutes) }}"
-                 class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 focus:border-[#2E471F] focus:outline-none">
-          @error('duration_minutes') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
-        </div>
       </div>
 
       {{-- Aksi --}}
