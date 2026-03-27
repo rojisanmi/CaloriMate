@@ -1,66 +1,93 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CaloriMate
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Project Badge](https://img.shields.io/badge/Status-Work%20in%20Progress-orange)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-## About Laravel
+## 📌 Ringkasan
+CaloriMate adalah aplikasi manajemen nutrisi & latihan berbasis web yang dibangun dengan Laravel (PHP). Aplikasi ini dibuat untuk:
+- membantu trainer membuat dan mengelola database makanan, program olahraga, dan item latihan;
+- membantu client mencatat konsumsi makanan, memantau histori, dan menjalankan program olahraga secara lebih terstruktur;
+- memberi metrik kemajuan kesehatan dan aktivitas fisik.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🎯 Fitur Utama
+1. Autentikasi dan otorisasi:
+   - role `trainer` & `client`
+   - middleware `auth.required`, `role:1` (client), `role:2` (trainer)
+2. Trainer:
+   - CRUD `foods`
+   - CRUD `programs`
+   - CRUD `program items` (item latihan per program)
+   - Profil trainer (update data trainer)
+3. Client:
+   - Dashboard client (`/client/home`)
+   - Diary makanan:
+     - tambah catatan makanan (`/client/diary/add/{category}`)
+     - simpan / hapus makanan harian
+   - Riwayat konsumsi (`/client/history`)
+   - Statistik kalori / aktivitas (`/client/statistic`)
+   - Program olahraga interaktif:
+     - daftar latihan (`/client/exercise`)
+     - detail latihan (`/client/exercise/{id}`)
+     - mulai / play latihan
+   - Profil client (update data pengguna)
+4. Guest:
+   - Beranda umum (`/`)
+   - Login dan register (umum, trainer, client)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🗂️ Struktur Utama
+- `app/Models`: `User`, `Client`, `Trainer`, `Food`, `Program`, `ProgramItem`, `FoodConsumption`, `History`
+- `app/Http/Controllers`: pengelolaan otentikasi, profil, diary, history, statistik, exercise dll.
+- `resources/views`: blade view untuk semua interface (auth, client, trainer, formulir CRUD, dll)
+- `routes/web.php`: routing utama app
+- `database/migrations`: skema DB untuk users, clients, trainers, foods, programs, program_items, food_consumptions, histories, notifications, sessions
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Instalasi & Setup (lokal)
+1. Clone repositori:
+   - `git clone <url-repo>`
+   - `cd CaloriMate`
+2. Install dependensi PHP & JS:
+   - `composer install`
+   - `npm install`
+3. Copy `.env`:
+   - `cp .env.example .env` (atau `copy .env.example .env` di Windows)
+   - set `APP_URL`, `DB_CONNECTION`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
+4. Generate key aplikasi:
+   - `php artisan key:generate`
+5. Migrasi database & seeding (opsional):
+   - `php artisan migrate`
+   - `php artisan db:seed` (jika data sample ada/diatur)
+6. Jalankan build aset:
+   - `npm run dev`
+7. Jalankan server:
+   - `php artisan serve`
+   - buka `http://127.0.0.1:8000`
 
-## Learning Laravel
+## ⚙️ Roles dan Akses
+- `role=1` => Client
+- `role=2` => Trainer
+- Akses proteksi ada di middleware:
+  - `auth.required`
+  - `role:1`, `role:2`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🧪 Testing
+- Jalankan unit/feature test:
+  - `php artisan test`
+- file test ada di `tests/Feature` dan `tests/Unit`
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🧾 Kontribusi
+1. Fork repo ini.
+2. Buat branch fitur: `feature/nama-fitur`
+3. Commit perubahan dengan pesan jelas.
+4. Push dan buat Pull Request.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ✅ Tips Pengembangan
+- Gunakan `php artisan route:list` untuk cek route.
+- Gunakan `php artisan migrate:fresh --seed` untuk reset DB selama pengembangan.
+- Untuk debugging tampilan, periksa `resources/views` dan `app/Http/Controllers`.
 
-## Laravel Sponsors
+## 📄 Lisensi
+Proyek ini dirilis di bawah lisensi MIT.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
+> CaloriMate memudahkan trainer dan client berkolaborasi untuk mencapai target nutrisi dan kebugaran dengan cara yang terstruktur, modern, dan user-friendly.
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
