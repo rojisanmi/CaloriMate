@@ -11,6 +11,9 @@ use App\Http\Controllers\Client\DiaryController;
 use App\Http\Controllers\Client\HistoryController;
 use App\Http\Controllers\Client\StatisticController;
 use App\Http\Controllers\Client\ExerciseController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TrainerHomeController;
+use App\Http\Controllers\Client\HomeController;
 
 
 
@@ -20,6 +23,7 @@ Route::get("/", function () {
 
 Route::get('/login/client', [AuthController::class, 'showLoginClient'])->name('login.client');
 Route::get('/login/trainer', [AuthController::class, 'showLoginTrainer'])->name('login.trainer');
+Route::get('/login/admin', [AuthController::class, 'showLoginAdmin'])->name('login.admin');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login.show');
 Route::post('/login', [AuthController::class, 'doLogin'])->name('login.do');
@@ -30,6 +34,20 @@ Route::post('/register', [AuthController::class, 'doRegister'])->name('register.
 
 Route::get('/register/client', [ClientRegisterController::class, 'show'])->name('register.client.show');
 Route::post('/register/client', [ClientRegisterController::class, 'store'])->name('register.client.store');
+
+// Admin routes
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth.required', 'role:0'])
+    ->group(function () {
+        Route::get('/home', [AdminController::class, 'home'])->name('home');
+        Route::get('/trainers', [AdminController::class, 'indexTrainers'])->name('trainers.index');
+        Route::get('/trainers/create', [AdminController::class, 'createTrainer'])->name('trainers.create');
+        Route::post('/trainers', [AdminController::class, 'storeTrainer'])->name('trainers.store');
+        Route::get('/trainers/{username}/edit', [AdminController::class, 'editTrainer'])->name('trainers.edit');
+        Route::put('/trainers/{username}', [AdminController::class, 'updateTrainer'])->name('trainers.update');
+        Route::delete('/trainers/{username}', [AdminController::class, 'destroyTrainer'])->name('trainers.destroy');
+    });
 
 // Trainer routes with middleware
 Route::prefix('trainer')
@@ -49,9 +67,8 @@ Route::get('/user/home', function () {
     return view('user_home');
 })->name('user.home')->middleware(['auth.required', 'role:1']);
 
-Route::get('/trainer/home', function () {
-    return view('trainer_home');
-})->name('trainer.home')->middleware(['auth.required', 'role:2']);
+Route::get('/trainer/home', [TrainerHomeController::class, 'index'])
+    ->name('trainer.home')->middleware(['auth.required', 'role:2']);
 
 // Profile trainer routes
 Route::prefix('profile/trainer')
@@ -80,9 +97,9 @@ Route::prefix('profile/client')
 
 
 
-Route::get('/client/home', function () {
-    return view('client_home');
-})->name('client.home')->middleware(['auth.required', 'role:1']);
+Route::get('/client/home', [HomeController::class, 'index'])
+    ->name('client.home')
+    ->middleware(['auth.required', 'role:1']);
 
 Route::prefix('client')->name('client.')->middleware(['auth.required', 'role:1'])->group(function () {
     Route::get('/diary', [DiaryController::class, 'index'])->name('diary');

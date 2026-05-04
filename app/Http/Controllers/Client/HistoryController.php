@@ -13,144 +13,91 @@ class HistoryController extends Controller
     public function index(Request $request)
     {
         $username = Session::get('user_id');
-        // period untuk chart & list:
-        // - daily   : 7 hari terakhir
-        // - weekly  : beberapa minggu terakhir
-        // - monthly : beberapa bulan terakhir
-        $period = $request->get('period', 'daily');
 
-        // Tentukan rentang tanggal maksimal yang dibutuhkan
-        $startDate = match ($period) {
-            'daily' => Carbon::today()->subDays(6),   // 7 hari (hari ini + 6 hari ke belakang)
-            'weekly' => Carbon::today()->subWeeks(7), // 8 minggu ke belakang
-            'monthly' => Carbon::today()->subMonths(5), // 6 bulan ke belakang
-            // fallback untuk nilai lama supaya tidak error
-            '1_day' => Carbon::today(),
-            '7_days' => Carbon::today()->subDays(6),
-            '1_month' => Carbon::today()->subMonth(),
-            default => Carbon::today()->subDays(6),
-        };
+        $dateFrom = $request->filled('date_from')
+            ? Carbon::parse($request->get('date_from'))->startOfDay()
+            : Carbon::today()->subDays(6);
 
-        $today = Carbon::today();
+        $dateTo = $request->filled('date_to')
+            ? Carbon::parse($request->get('date_to'))->endOfDay()
+            : Carbon::today();
 
-        // Ambil seluruh history dalam rentang yang dibutuhkan (untuk chart & aktivitas)
+        if ($dateFrom->gt($dateTo)) {
+            $dateFrom = $dateTo->copy()->subDays(6);
+        }
+
         $historiesCollection = History::where('username', $username)
-            ->whereDate('date', '>=', $startDate)
+            ->whereDate('date', '>=', $dateFrom)
+            ->whereDate('date', '<=', $dateTo)
             ->with(['foodConsumptions.food', 'program'])
-            ->orderBy('date', 'asc') // asc supaya enak diolah ke chart
+            ->orderBy('date', 'asc')
             ->get();
 
-        // DATA UNTUK LIST (detail makanan) – tetap seperti sebelumnya
-        $historiesForList = $historiesCollection->sortByDesc('date');
-
-        $histories = $historiesForList->flatMap(function ($history) {
+        $histories = $historiesCollection->sortByDesc('date')->flatMap(function ($history) {
             return $history->foodConsumptions->map(function ($consumption) use ($history) {
                 return [
-                    'name' => $consumption->food->name,
-                    'date' => $history->date,
+                    'name'     => $consumption->food->name,
+                    'date'     => $history->date,
                     'calories' => $consumption->food->calories_per_portion * $consumption->portions,
                 ];
             });
         });
 
-        //  DATA UNTUK CHART (kalori masuk & keluar
-        $chartData = [
-            'labels' => [],
-            'calori_in' => [],
-            'calori_out' => [],
-        ];
+        $diffDays = $dateFrom->diffInDays($dateTo) + 1;
+        $chartData = ['labels' => [], 'calori_in' => [], 'calori_out' => []];
 
-        if ($period === 'daily' || $period === '1_day' || $period === '7_days') {
-            // 7 hari terakhir (harian)
-            $start = $period === '1_day'
-                ? $today // fallback lama: hanya hari ini, tapi kita jadikan 1 bar saja
-                : $today->copy()->subDays(6);
-
-            for ($date = $start->copy(); $date->lte($today); $date->addDay()) {
-                $label = $date->translatedFormat('d M');
-
-                // Filter history yang benar-benar jatuh pada tanggal tersebut
-                $collectionByDate = $historiesCollection->filter(function (History $history) use ($date) {
-                    return Carbon::parse($history->date)->isSameDay($date);
-                });
-
-                // kalori masuk dihitung dari makanan yang dimakan (relasi foodConsumptions)
-                $in = $collectionByDate->sum(function (History $history) {
-                    return $history->getTotalCaloriesConsumed();
-                });
-
-                // kalori keluar dari aktivitas latihan (exercise)
-                $out = $collectionByDate->sum('calori_out');
-
-                $chartData['labels'][] = $label;
-                $chartData['calori_in'][] = $in;
-                $chartData['calori_out'][] = $out;
+        if ($diffDays <= 31) {
+            for ($date = $dateFrom->copy(); $date->lte($dateTo); $date->addDay()) {
+                $day = $historiesCollection->filter(
+                    fn($h) => Carbon::parse($h->date)->isSameDay($date)
+                );
+                $chartData['labels'][]     = $date->translatedFormat('d M');
+                $chartData['calori_in'][]  = $day->sum(fn($h) => $h->getTotalCaloriesConsumed());
+                $chartData['calori_out'][] = $day->sum('calori_out');
             }
-        } elseif ($period === 'weekly') {
-            // Kelompokkan per minggu (8 minggu terakhir)
+        } elseif ($diffDays <= 90) {
             $grouped = [];
             foreach ($historiesCollection as $history) {
-                $date = Carbon::parse($history->date);
-                $yearWeek = $date->format('o-W'); // contoh: 2025-03
-                if (!isset($grouped[$yearWeek])) {
-                    $grouped[$yearWeek] = [
-                        'label' => 'Minggu ' . $date->isoWeek() . ' (' . $date->startOfWeek()->translatedFormat('d M') . ')',
-                        'in' => 0,
-                        'out' => 0,
-                    ];
-                }
-                // kalori masuk dari makanan
-                $grouped[$yearWeek]['in'] += $history->getTotalCaloriesConsumed();
-                // kalori keluar dari latihan
-                $grouped[$yearWeek]['out'] += $history->calori_out;
+                $d   = Carbon::parse($history->date);
+                $key = $d->format('o-W');
+                $grouped[$key] ??= [
+                    'label' => 'Mg ' . $d->isoWeek() . ' (' . $d->copy()->startOfWeek()->translatedFormat('d M') . ')',
+                    'in' => 0, 'out' => 0,
+                ];
+                $grouped[$key]['in']  += $history->getTotalCaloriesConsumed();
+                $grouped[$key]['out'] += $history->calori_out;
             }
-
             foreach ($grouped as $g) {
-                $chartData['labels'][] = $g['label'];
-                $chartData['calori_in'][] = $g['in'];
+                $chartData['labels'][]     = $g['label'];
+                $chartData['calori_in'][]  = $g['in'];
                 $chartData['calori_out'][] = $g['out'];
             }
         } else {
-            // monthly atau 1_month: kelompokkan per bulan (6 bulan terakhir)
             $grouped = [];
             foreach ($historiesCollection as $history) {
-                $date = Carbon::parse($history->date);
-                $yearMonth = $date->format('Y-m');
-                if (!isset($grouped[$yearMonth])) {
-                    $grouped[$yearMonth] = [
-                        'label' => $date->translatedFormat('M Y'),
-                        'in' => 0,
-                        'out' => 0,
-                    ];
-                }
-                // kalori masuk dari makanan
-                $grouped[$yearMonth]['in'] += $history->getTotalCaloriesConsumed();
-                // kalori keluar dari latihan
-                $grouped[$yearMonth]['out'] += $history->calori_out;
+                $d   = Carbon::parse($history->date);
+                $key = $d->format('Y-m');
+                $grouped[$key] ??= ['label' => $d->translatedFormat('M Y'), 'in' => 0, 'out' => 0];
+                $grouped[$key]['in']  += $history->getTotalCaloriesConsumed();
+                $grouped[$key]['out'] += $history->calori_out;
             }
-
             foreach ($grouped as $g) {
-                $chartData['labels'][] = $g['label'];
-                $chartData['calori_in'][] = $g['in'];
+                $chartData['labels'][]     = $g['label'];
+                $chartData['calori_in'][]  = $g['in'];
                 $chartData['calori_out'][] = $g['out'];
             }
         }
 
-        // DATA AKTIVITAS LATIHAN (untuk ditampilkan di bawah chart) 
         $activities = $historiesCollection
-            ->filter(function (History $history) {
-                return $history->calori_out > 0 && $history->program !== null;
-            })
-            ->map(function (History $history) {
-                return [
-                    'date' => $history->date,
-                    'program_name' => $history->program->name ?? 'Program Latihan',
-                    'calories_out' => $history->calori_out,
-                ];
-            })
+            ->filter(fn($h) => $h->calori_out > 0 && $h->program !== null)
+            ->map(fn($h) => [
+                'date'         => $h->date,
+                'program_name' => $h->program->name ?? 'Program Latihan',
+                'calories_out' => $h->calori_out,
+            ])
             ->sortByDesc('date')
             ->values();
-        
-        return view('history-client', compact('histories', 'period', 'chartData', 'activities'));
+
+        return view('history-client', compact('histories', 'chartData', 'activities', 'dateFrom', 'dateTo'));
     }
 }

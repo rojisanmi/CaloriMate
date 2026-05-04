@@ -32,20 +32,25 @@ class FoodController extends Controller
     {
         $data = $request->validate(
             [
-                'name' => ['required', 'string', 'max:100', 'unique:foods,name'],
-                'grammage' => ['required', 'numeric', 'gte:0'],
-                'calories_per_portion' => ['required', 'numeric', 'gte:0'],
-                'total_fat' => ['required', 'numeric', 'gte:0'],
-                'total_carbo' => ['required', 'numeric', 'gte:0'],
-                'total_protein' => ['required', 'numeric', 'gte:0'],
+                'name'                 => ['required', 'string', 'max:100', 'unique:foods,name'],
+                'grammage'             => ['required', 'numeric', 'min:0', 'max:2000'],
+                'calories_per_portion' => ['required', 'numeric', 'min:0', 'max:5000'],
+                'total_fat'            => ['required', 'numeric', 'min:0', 'max:500'],
+                'total_carbo'          => ['required', 'numeric', 'min:0', 'max:500'],
+                'total_protein'        => ['required', 'numeric', 'min:0', 'max:500'],
             ],
             [
-                'name.unique' => 'Nama makanan tersebut sudah ada.',
-                'grammage.gte' => 'Gramasi tidak boleh bernilai negatif.',
-                'calories_per_portion.gte' => 'Kalori per porsi tidak boleh bernilai negatif.',
-                'total_fat.gte' => 'Lemak tidak boleh bernilai negatif.',
-                'total_carbo.gte' => 'Karbo tidak boleh bernilai negatif.',
-                'total_protein.gte' => 'Protein tidak boleh bernilai negatif.',
+                'name.unique'                  => 'Nama makanan tersebut sudah ada.',
+                'grammage.min'                 => 'Gramasi tidak boleh negatif.',
+                'grammage.max'                 => 'Gramasi maksimal 2000 g.',
+                'calories_per_portion.min'     => 'Kalori per porsi tidak boleh negatif.',
+                'calories_per_portion.max'     => 'Kalori per porsi maksimal 5000 kkal.',
+                'total_fat.min'                => 'Lemak tidak boleh negatif.',
+                'total_fat.max'                => 'Lemak maksimal 500 g.',
+                'total_carbo.min'              => 'Karbo tidak boleh negatif.',
+                'total_carbo.max'              => 'Karbo maksimal 500 g.',
+                'total_protein.min'            => 'Protein tidak boleh negatif.',
+                'total_protein.max'            => 'Protein maksimal 500 g.',
             ]
         );
 
@@ -67,24 +72,27 @@ class FoodController extends Controller
         $data = $request->validate(
             [
                 'name' => [
-                    'required',
-                    'string',
-                    'max:100',
+                    'required', 'string', 'max:100',
                     Rule::unique('foods', 'name')->ignore($food->food_id, 'food_id'),
                 ],
-                'grammage' => ['required', 'numeric', 'gte:0'],
-                'calories_per_portion' => ['required', 'numeric', 'gte:0'],
-                'total_fat' => ['required', 'numeric', 'gte:0'],
-                'total_carbo' => ['required', 'numeric', 'gte:0'],
-                'total_protein' => ['required', 'numeric', 'gte:0'],
+                'grammage'             => ['required', 'numeric', 'min:0', 'max:2000'],
+                'calories_per_portion' => ['required', 'numeric', 'min:0', 'max:5000'],
+                'total_fat'            => ['required', 'numeric', 'min:0', 'max:500'],
+                'total_carbo'          => ['required', 'numeric', 'min:0', 'max:500'],
+                'total_protein'        => ['required', 'numeric', 'min:0', 'max:500'],
             ],
             [
-                'name.unique' => 'Nama makanan tersebut sudah ada.',
-                'grammage.gte' => 'Gramasi tidak boleh bernilai negatif.',
-                'calories_per_portion.gte' => 'Kalori per porsi tidak boleh bernilai negatif.',
-                'total_fat.gte' => 'Lemak tidak boleh bernilai negatif.',
-                'total_carbo.gte' => 'Karbo tidak boleh bernilai negatif.',
-                'total_protein.gte' => 'Protein tidak boleh bernilai negatif.',
+                'name.unique'              => 'Nama makanan tersebut sudah ada.',
+                'grammage.min'             => 'Gramasi tidak boleh negatif.',
+                'grammage.max'             => 'Gramasi maksimal 2000 g.',
+                'calories_per_portion.min' => 'Kalori per porsi tidak boleh negatif.',
+                'calories_per_portion.max' => 'Kalori per porsi maksimal 5000 kkal.',
+                'total_fat.min'            => 'Lemak tidak boleh negatif.',
+                'total_fat.max'            => 'Lemak maksimal 500 g.',
+                'total_carbo.min'          => 'Karbo tidak boleh negatif.',
+                'total_carbo.max'          => 'Karbo maksimal 500 g.',
+                'total_protein.min'        => 'Protein tidak boleh negatif.',
+                'total_protein.max'        => 'Protein maksimal 500 g.',
             ]
         );
 

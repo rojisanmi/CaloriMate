@@ -1,315 +1,186 @@
 @extends('layouts.verivied-client')
 
-@section('title','History')
+@section('title','Riwayat')
 
 @section('content')
-<section class="max-w-5xl mx-auto">
 
-    {{-- FILTER & CHART PERIODE --}}
-    <form method="GET" action="{{ route('client.history') }}" id="periodForm">
-        <div class="bg-[#FFFFFF] rounded-xl p-6 shadow mb-6">
+<div class="max-w-4xl mx-auto space-y-6">
 
-            {{-- Custom Dropdown --}}
-            <div class="relative">
-                <input type="hidden" name="period" id="periodInput" value="{{ $period }}">
-                
-                <button type="button" 
-                        id="dropdownButton"
-                        class="w-full px-4 py-3 rounded-lg bg-white border border-gray-300
-                               text-[#2E471F] font-semibold focus:outline-none focus:border-[#2E471F]
-                               flex items-center justify-between transition-all duration-200
-                               hover:border-[#2E471F]">
-                    <span id="selectedText">
-                        @if($period == 'daily' || $period == '1_day' || $period == '7_days')
-                            7 Hari Terakhir (Harian)
-                        @elseif($period == 'weekly')
-                            Mingguan
-                        @else
-                            Bulanan
-                        @endif
-                    </span>
-                    <svg id="dropdownIcon" 
-                         class="w-5 h-5 transition-transform duration-300" 
-                         fill="none" 
-                         stroke="currentColor" 
-                         viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
+  {{-- PAGE HEADER --}}
+  <div class="cm-fadein">
+    <h2 class="font-raleway text-2xl font-bold text-[#2E471F]">Riwayat Aktivitas</h2>
+    <p class="text-sm text-gray-500 mt-1">Pantau pola kalori dan latihan kamu dari waktu ke waktu</p>
+  </div>
 
-                {{-- Dropdown Menu --}}
-                <div id="dropdownMenu" 
-                     class="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg
-                            opacity-0 invisible transform scale-95 origin-top
-                            transition-all duration-300 ease-out">
-                    
-                    <div class="py-1">
-                        <button type="button"
-                                data-value="daily"
-                                data-text="7 Hari Terakhir (Harian)"
-                                class="dropdown-item w-full text-left px-4 py-3 hover:bg-[#F0F4EC] 
-                                       transition-colors duration-150 {{ in_array($period,['daily','1_day','7_days']) ? 'bg-[#F0F4EC] font-semibold' : '' }}">
-                            <span class="text-[#2E471F]">7 Hari Terakhir (Harian)</span>
-                        </button>
-                        
-                        <button type="button"
-                                data-value="weekly"
-                                data-text="Mingguan"
-                                class="dropdown-item w-full text-left px-4 py-3 hover:bg-[#F0F4EC] 
-                                       transition-colors duration-150 {{ $period=='weekly'?'bg-[#F0F4EC] font-semibold':'' }}">
-                            <span class="text-[#2E471F]">Mingguan</span>
-                        </button>
-                        
-                        <button type="button"
-                                data-value="monthly"
-                                data-text="Bulanan"
-                                class="dropdown-item w-full text-left px-4 py-3 hover:bg-[#F0F4EC] 
-                                       transition-colors duration-150 {{ $period=='monthly'?'bg-[#F0F4EC] font-semibold':'' }}">
-                            <span class="text-[#2E471F]">Bulanan</span>
-                        </button>
-                    </div>
-                </div>
+  {{-- DATE RANGE FILTER --}}
+  <form method="GET" action="{{ route('client.history') }}" id="dateRangeForm">
+    <div class="flex flex-wrap items-end gap-3 cm-fadein cm-delay-1">
+
+      <div>
+        <label class="block text-xs font-semibold text-[#2E471F] mb-1.5">Dari</label>
+        <input type="date" name="date_from"
+               value="{{ $dateFrom->format('Y-m-d') }}"
+               max="{{ now()->format('Y-m-d') }}"
+               class="px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-[#2E471F]
+                      text-sm font-semibold shadow-sm focus:outline-none focus:border-[#2E471F]
+                      transition-colors cursor-pointer">
+      </div>
+
+      <div class="flex items-end pb-2.5">
+        <span class="text-sm text-gray-400 font-medium">—</span>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-[#2E471F] mb-1.5">Sampai</label>
+        <input type="date" name="date_to"
+               value="{{ $dateTo->format('Y-m-d') }}"
+               max="{{ now()->format('Y-m-d') }}"
+               class="px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-[#2E471F]
+                      text-sm font-semibold shadow-sm focus:outline-none focus:border-[#2E471F]
+                      transition-colors cursor-pointer">
+      </div>
+
+      <button type="submit"
+              class="px-5 py-2.5 rounded-xl bg-[#2E471F] text-white text-sm font-semibold
+                     hover:bg-[#3d6628] transition shadow-sm">
+        Tampilkan
+      </button>
+
+    </div>
+  </form>
+
+  {{-- CHART --}}
+  <div class="bg-white rounded-2xl p-5 shadow-sm cm-fadein cm-delay-2">
+    <h3 class="font-semibold text-[#2E471F] mb-4">Kalori Masuk &amp; Keluar</h3>
+    <div style="height: 220px; position: relative;">
+      <canvas id="historyChart"></canvas>
+    </div>
+  </div>
+
+  {{-- AKTIVITAS LATIHAN --}}
+  <div class="cm-fadein cm-delay-3">
+    <h3 class="font-semibold text-[#2E471F] mb-3">Aktivitas Latihan</h3>
+    @if(isset($activities) && count($activities))
+      <div class="space-y-3">
+        @foreach($activities as $activity)
+          <div class="bg-white rounded-xl px-5 py-4 shadow-sm flex justify-between items-center
+                      hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div>
+              <p class="font-semibold text-[#2E471F] text-sm">{{ $activity['program_name'] }}</p>
+              <p class="text-xs text-gray-400 mt-0.5">
+                {{ \Carbon\Carbon::parse($activity['date'])->translatedFormat('d F Y') }}
+              </p>
             </div>
-
-            {{-- CHART --}}
-            <div class="mt-8">
-                <h3 class="text-lg font-semibold text-[#2E471F] mb-3">
-                    Visualisasi Kalori Masuk & Keluar
-                </h3>
-                <div class="bg-[#F7F7F7] rounded-xl p-4 md:p-6 border border-gray-100">
-                    <canvas id="historyChart" height="120"></canvas>
-                </div>
+            <div class="text-right">
+              <p class="text-xs text-gray-400 mb-0.5">Kalori Keluar</p>
+              <p class="font-bold text-[#2E471F]">
+                {{ number_format($activity['calories_out'], 0, ',', '.') }} kkal
+              </p>
             </div>
+          </div>
+        @endforeach
+      </div>
+    @else
+      <div class="bg-white rounded-2xl shadow-sm flex flex-col items-center justify-center py-10 text-center">
+        <img src="{{ asset('images/empty/empty-history.png') }}" alt=""
+             class="w-40 h-auto opacity-90 mb-3 select-none">
+        <p class="text-sm text-gray-400">Belum ada aktivitas latihan pada periode ini.</p>
+      </div>
+    @endif
+  </div>
 
-            {{-- AKTIVITAS LATIHAN --}}
-            <div class="mt-8">
-                <h3 class="text-lg font-semibold text-[#2E471F] mb-3">
-                    Aktivitas Latihan
-                </h3>
-
-                @if(isset($activities) && count($activities))
-                    <div class="space-y-3">
-                        @foreach($activities as $activity)
-                            <div class="bg-white rounded-lg px-5 py-4 shadow-sm flex justify-between items-center
-                                        border border-gray-100 hover:shadow-md hover:-translate-y-0.5
-                                        transition-all duration-200">
-                                <div>
-                                    <p class="font-semibold text-[#2E471F]">
-                                        {{ $activity['program_name'] }}
-                                    </p>
-                                    <p class="text-sm text-gray-500">
-                                        {{ \Carbon\Carbon::parse($activity['date'])->translatedFormat('d F Y') }}
-                                    </p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-xs text-gray-500 mb-1">Kalori Keluar</p>
-                                    <p class="text-[#2E471F] font-bold">
-                                        {{ number_format($activity['calories_out'], 0, ',', '.') }} kkal
-                                    </p>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <p class="text-sm text-gray-500">
-                        Belum ada aktivitas latihan pada periode ini.
-                    </p>
-                @endif
-            </div>
-
-            {{-- RESULT LIST --}}
-            <div class="mt-8 space-y-4">
-            <h3 class="text-lg font-semibold text-[#2E471F] mb-3">
-                    Riwayat Konsumsi
-                </h3>
-
-                @forelse($histories as $history)
-                <div class="bg-white rounded-lg px-5 py-4 shadow-sm flex justify-between
-                            transform transition-all duration-300 hover:shadow-md hover:-translate-y-1">
-                    <div>
-                        <p class="font-semibold text-[#2E471F]">
-                            {{ $history['name'] }}
-                        </p>
-                        <p class="text-sm text-gray-500">
-                            {{ \Carbon\Carbon::parse($history['date'])->translatedFormat('d F Y') }}
-                        </p>
-                    </div>
-
-                    <div class="text-right">
-                        <p class="text-xs text-gray-500 mb-1">Kalori Masok</p>
-                        <p class="text-[#2E471F] font-bold">
-                        {{ $history['calories'] }} kkal
-                    </div>
-                </div>
-                @empty
-                <p class="text-center text-gray-500 py-6">
-                    Tidak ada data pada periode ini
-                </p>
-                @endforelse
-
-            </div>
+  {{-- RIWAYAT KONSUMSI --}}
+  <div class="cm-fadein cm-delay-4">
+    <h3 class="font-semibold text-[#2E471F] mb-3">Riwayat Konsumsi</h3>
+    @forelse($histories as $history)
+      <div class="bg-white rounded-xl px-5 py-4 shadow-sm flex justify-between items-center
+                  hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 mb-3">
+        <div>
+          <p class="font-semibold text-[#2E471F] text-sm">{{ $history['name'] }}</p>
+          <p class="text-xs text-gray-400 mt-0.5">
+            {{ \Carbon\Carbon::parse($history['date'])->translatedFormat('d F Y') }}
+          </p>
         </div>
-    </form>
+        <div class="text-right">
+          <p class="text-xs text-gray-400 mb-0.5">Kalori Masuk</p>
+          <p class="font-bold text-[#2E471F]">{{ $history['calories'] }} kkal</p>
+        </div>
+      </div>
+    @empty
+      <div class="bg-white rounded-2xl shadow-sm flex flex-col items-center justify-center py-10 text-center">
+        <img src="{{ asset('images/empty/empty-history.png') }}" alt=""
+             class="w-40 h-auto opacity-90 mb-3 select-none">
+        <p class="text-sm text-gray-400">Tidak ada riwayat konsumsi pada periode ini.</p>
+      </div>
+    @endforelse
+  </div>
 
-</section>
-
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const dropdownButton = document.getElementById('dropdownButton');
-    const dropdownMenu = document.getElementById('dropdownMenu');
-    const dropdownIcon = document.getElementById('dropdownIcon');
-    const selectedText = document.getElementById('selectedText');
-    const periodInput = document.getElementById('periodInput');
-    const form = document.getElementById('periodForm');
-    const dropdownItems = document.querySelectorAll('.dropdown-item');
+document.addEventListener('DOMContentLoaded', function () {
+  // Validasi: date_from tidak boleh lebih dari date_to
+  const fromInput = document.querySelector('[name="date_from"]');
+  const toInput   = document.querySelector('[name="date_to"]');
+  if (fromInput && toInput) {
+    fromInput.addEventListener('change', () => { if (toInput.value && fromInput.value > toInput.value) toInput.value = fromInput.value; });
+    toInput.addEventListener('change',   () => { if (fromInput.value && toInput.value < fromInput.value) fromInput.value = toInput.value; });
+  }
 
-    // Toggle dropdown
-    dropdownButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        toggleDropdown();
-    });
+  // Chart
+  const chartEl = document.getElementById('historyChart');
+  if (!chartEl) return;
 
-    // Handle item selection
-    dropdownItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const value = this.getAttribute('data-value');
-            const text = this.getAttribute('data-text');
-            
-            // Update UI
-            selectedText.textContent = text;
-            periodInput.value = value;
-            
-            // Remove active class from all items
-            dropdownItems.forEach(i => {
-                i.classList.remove('bg-[#F0F4EC]', 'font-semibold');
-            });
-            
-            // Add active class to selected item
-            this.classList.add('bg-[#F0F4EC]', 'font-semibold');
-            
-            // Close dropdown with animation
-            closeDropdown();
-            
-            // Submit form after animation
-            setTimeout(() => {
-                form.submit();
-            }, 200);
-        });
-    });
+  const rawData = @json($chartData ?? ['labels' => [], 'calori_in' => [], 'calori_out' => []]);
+  if (window.historyChartInstance) window.historyChartInstance.destroy();
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
-            closeDropdown();
+  window.historyChartInstance = new Chart(chartEl.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rawData.labels,
+      datasets: [
+        {
+          label: 'Kalori Masuk',
+          data: rawData.calori_in,
+          backgroundColor: 'rgba(245,166,35,0.8)',
+          borderColor: 'rgba(245,166,35,1)',
+          borderWidth: 1,
+          borderRadius: 6,
+          maxBarThickness: 40,
+        },
+        {
+          label: 'Kalori Keluar',
+          data: rawData.calori_out,
+          backgroundColor: 'rgba(46,71,31,0.8)',
+          borderColor: 'rgba(46,71,31,1)',
+          borderWidth: 1,
+          borderRadius: 6,
+          maxBarThickness: 40,
         }
-    });
-
-    // Toggle function
-    function toggleDropdown() {
-        if (dropdownMenu.classList.contains('opacity-0')) {
-            openDropdown();
-        } else {
-            closeDropdown();
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, labels: { usePointStyle: true, font: { family: "'Quicksand',sans-serif" } } },
+        tooltip: {
+          backgroundColor: 'rgba(46,71,31,0.95)',
+          callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} kkal` }
         }
-    }
-
-    // Open dropdown
-    function openDropdown() {
-        dropdownMenu.classList.remove('opacity-0', 'invisible', 'scale-95');
-        dropdownMenu.classList.add('opacity-100', 'visible', 'scale-100');
-        dropdownIcon.style.transform = 'rotate(180deg)';
-    }
-
-    // Close dropdown
-    function closeDropdown() {
-        dropdownMenu.classList.add('opacity-0', 'invisible', 'scale-95');
-        dropdownMenu.classList.remove('opacity-100', 'visible', 'scale-100');
-        dropdownIcon.style.transform = 'rotate(0deg)';
-    }
-    
-    const chartElement = document.getElementById('historyChart');
-    if (chartElement) {
-        const rawData = @json($chartData ?? ['labels' => [], 'calori_in' => [], 'calori_out' => []]);
-
-        const ctx = chartElement.getContext('2d');
-
-        // Destroy old chart if re-rendered via hot reload
-        if (window.historyChartInstance) {
-            window.historyChartInstance.destroy();
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: { callback: v => v + ' kkal', font: { family: "'Quicksand',sans-serif" } }
         }
-
-        window.historyChartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: rawData.labels,
-                datasets: [
-                    {
-                        label: 'Kalori Masuk',
-                        data: rawData.calori_in,
-                        backgroundColor: 'rgba(244, 169, 56, 0.8)',
-                        borderColor: 'rgba(244, 169, 56, 1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                        maxBarThickness: 40,
-                    },
-                    {
-                        label: 'Kalori Keluar',
-                        data: rawData.calori_out,
-                        backgroundColor: 'rgba(46, 71, 31, 0.8)',
-                        borderColor: 'rgba(46, 71, 31, 1)',
-                        borderWidth: 1,
-                        borderRadius: 6,
-                        maxBarThickness: 40,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        labels: {
-                            usePointStyle: true,
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.dataset.label || '';
-                                const value = context.parsed.y || 0;
-                                return `${label}: ${value} kkal`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0,0,0,0.05)',
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value + ' kkal';
-                            }
-                        }
-                    }
-                }
-            }
-        });
+      }
     }
+  });
 });
 </script>
 

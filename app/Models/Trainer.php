@@ -11,7 +11,12 @@ class Trainer extends Model
     protected $primaryKey = 'username';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['username', 'nama', 'keahlian', 'sertifikasi'];
+    protected $fillable = ['username', 'nama', 'keahlian', 'sertifikasi', 'photo_path'];
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo_path ? asset('storage/' . $this->photo_path) : null;
+    }
 
     // Relasi ke tabel user
     public function user()

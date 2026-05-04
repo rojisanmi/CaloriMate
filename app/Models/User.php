@@ -1,6 +1,5 @@
 <?php
 namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -39,13 +38,16 @@ class User extends Authenticatable
         return $this->hasMany(History::class, 'username', 'username');
     }
     
-    // Role 1 untuk client
+    public function isAdmin(): bool
+    {
+        return (int) $this->role === 0;
+    }
+
     public function isClient(): bool
     {
         return (int) $this->role === 1;
     }
 
-    // Role 2 untuk trainer
     public function isTrainer(): bool
     {
         return (int) $this->role === 2;

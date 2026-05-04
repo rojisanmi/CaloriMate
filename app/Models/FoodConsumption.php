@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class FoodConsumption extends Model
 {
     protected $table = 'food_consumptions';
-    protected $primaryKey = 'food_consumption_id';
     public $timestamps = false;
-    public $incrementing = true;
-    protected $keyType = 'int';
+    public $incrementing = false;
+    protected $primaryKey = null;
 
     protected $fillable = [
         'history_id',

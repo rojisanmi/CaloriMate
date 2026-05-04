@@ -11,7 +11,12 @@ class Client extends Model
     protected $primaryKey = 'username';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['username', 'tb', 'bb', 'gender', 'umur'];
+    protected $fillable = ['username', 'tb', 'bb', 'gender', 'umur', 'calorie_target', 'protein_ratio', 'carbo_ratio', 'fat_ratio', 'photo_path'];
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo_path ? asset('storage/' . $this->photo_path) : null;
+    }
 
     // relasi dengan model User
     public function user()
@@ -24,28 +29,43 @@ class Client extends Model
         return $this->hasMany(History::class, 'username', 'username');
     }
 
-    // Business Logic Methods
-    // public function calculateBMI(): float
-    // {
-    //     if ($this->tb <= 0)
-    //         return 0;
-    //     $heightInMeters = $this->tb / 100;
-    //     return round($this->bb / ($heightInMeters * $heightInMeters), 2);
-    // }
+    public function getEffectiveCalorieTarget(): float
+    {
+        if ($this->calorie_target) return (float) $this->calorie_target;
+        return $this->tb && $this->bb && $this->umur && $this->gender
+            ? $this->calculateDailyCalories()
+            : 2000;
+    }
 
+    public function getMacroTargets(): array
+    {
+        $cal = $this->getEffectiveCalorieTarget();
+        $p   = $this->protein_ratio ?? 30;
+        $c   = $this->carbo_ratio   ?? 40;
+        $f   = $this->fat_ratio     ?? 30;
+        return [
+            'protein' => round($cal * ($p / 100) / 4, 1),
+            'carbo'   => round($cal * ($c / 100) / 4, 1),
+            'fat'     => round($cal * ($f / 100) / 9, 1),
+        ];
+    }
 
-    // public function getBMICategory(): string
-    // {
-    //     $bmi = $this->calculateBMI();
+    public function calculateBMI(): ?float
+    {
+        if (!$this->tb || !$this->bb || $this->tb <= 0) return null;
+        $h = $this->tb / 100;
+        return round($this->bb / ($h * $h), 1);
+    }
 
-    //     if ($bmi < 18.5)
-    //         return 'Underweight';
-    //     if ($bmi < 25)
-    //         return 'Normal';
-    //     if ($bmi < 30)
-    //         return 'Overweight';
-    //     return 'Obese';
-    // }
+    public function getBMICategory(): ?string
+    {
+        $bmi = $this->calculateBMI();
+        if ($bmi === null) return null;
+        if ($bmi < 18.5) return 'Underweight';
+        if ($bmi < 25.0) return 'Normal';
+        if ($bmi < 30.0) return 'Overweight';
+        return 'Obese';
+    }
 
     // Hitung Basal Metabolic Rate (BMR)
     public function calculateBMR(): float

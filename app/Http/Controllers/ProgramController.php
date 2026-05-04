@@ -85,24 +85,55 @@ class ProgramController extends Controller
     // Menampilkan form edit program
     public function edit(Program $program)
     {
+        $program->load('items');
         return view('edit-programs-latihan', compact('program'));
     }
 
-    // Memperbarui program yang ada
+    // Memperbarui program yang ada (termasuk dynamic add/update/remove items)
     public function update(Request $request, Program $program)
     {
         $data = $request->validate([
-            'name'             => 'required|string|max:100',
-            'type'             => 'nullable|string|max:50',
-            'difficulty'       => 'nullable|string|max:50',
+            'name'                     => 'required|string|max:100',
+            'type'                     => 'nullable|string|max:50',
+            'difficulty'               => 'nullable|string|max:50',
+
+            'items'                    => 'nullable|array',
+            'items.*.id'               => 'nullable|integer',
+            'items.*.exercise_name'    => 'required_with:items|string|max:255',
+            'items.*.duration_minutes' => 'nullable|integer|min:0',
+            'items.*.intensity_level'  => 'nullable|string|max:50',
         ]);
 
-        $program->update([
-            'name'             => $data['name'],
-            'type'             => $data['type'] ?? null,
-            'difficulty'       => $data['difficulty'] ?? null,
-            'duration_minutes' => $data['duration_minutes'] ?? null,
-        ]);
+        DB::transaction(function () use ($program, $data) {
+            $program->update([
+                'name'       => $data['name'],
+                'type'       => $data['type'] ?? null,
+                'difficulty' => $data['difficulty'] ?? null,
+            ]);
+
+            $submitted = collect($data['items'] ?? []);
+
+            // Hapus items yang tidak ada di submission
+            $submittedIds = $submitted->pluck('id')->filter()->all();
+            $program->items()->whereNotIn('program_item_id', $submittedIds)->delete();
+
+            // Update existing + create new
+            foreach ($submitted as $row) {
+                $payload = [
+                    'exercise_name'    => $row['exercise_name'],
+                    'duration_minutes' => $row['duration_minutes'] ?? null,
+                    'intensity_level'  => $row['intensity_level'] ?? null,
+                ];
+
+                if (!empty($row['id'])) {
+                    $program->items()
+                        ->where('program_item_id', $row['id'])
+                        ->update($payload);
+                } else {
+                    $program->items()->create($payload);
+                }
+            }
+        });
 
         return redirect()->route('trainer.programs.index')->with('ok', 'Program diperbarui');
     }

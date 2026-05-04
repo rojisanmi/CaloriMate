@@ -3,257 +3,230 @@
 @section('title', 'Diary')
 
 @section('content')
-<style>
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes scaleIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    .animate-fade-in-down {
-        animation: fadeInDown 0.6s ease-out;
-    }
-
-    .animate-fade-in-up {
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .animate-scale-in {
-        animation: scaleIn 0.5s ease-out;
-    }
-
-    .animate-delay-1 {
-        animation-delay: 0.1s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    .animate-delay-2 {
-        animation-delay: 0.2s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    .animate-delay-3 {
-        animation-delay: 0.3s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    .animate-delay-4 {
-        animation-delay: 0.4s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    @keyframes popIn {
-        0% {
-            opacity: 0;
-            transform: scale(0.3) rotate(-10deg);
-        }
-        50% {
-            transform: scale(1.1) rotate(5deg);
-        }
-        70% {
-            transform: scale(0.95) rotate(-2deg);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1) rotate(0deg);
-        }
-    }
-
-    @keyframes float {
-        0%, 100% {
-            transform: translateY(0px);
-        }
-        50% {
-            transform: translateY(-8px);
-        }
-    }
-
-    @keyframes sparkle {
-        0%, 100% {
-            opacity: 0;
-            transform: scale(0) rotate(0deg);
-        }
-        50% {
-            opacity: 1;
-            transform: scale(1) rotate(180deg);
-        }
-    }
-
-    @keyframes slideOutRight {
-        0% {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-        }
-        100% {
-            opacity: 0;
-            transform: translateX(120%) scale(0.8);
-        }
-    }
-
-    .flash-message {
-        animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
-    }
-
-    .flash-message:hover {
-        animation: float 1.5s ease-in-out infinite;
-    }
-
-    .flash-message::before,
-    .flash-message::after {
-        content: '✨';
-        position: absolute;
-        font-size: 20px;
-        animation: sparkle 1.5s ease-in-out infinite;
-    }
-
-    .flash-message::before {
-        top: -10px;
-        left: 10px;
-        animation-delay: 0.3s;
-    }
-
-    .flash-message::after {
-        bottom: -10px;
-        right: 10px;
-        animation-delay: 0.6s;
-    }
-
-    .progress-bar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #10b981, #34d399);
-        border-radius: 0 0 0 16px;
-        animation: shrink 4s linear forwards;
-    }
-
-    @keyframes shrink {
-        from { width: 100%; }
-        to { width: 0%; }
-    }
-</style>
-
-<section class="relative text-center px-4 sm:px-6 py-6">
-
-    {{-- ORANGE CURVE TOP --}}
-    <div class="absolute -inset-x-8 -top-24 h-40 sm:h-48 bg-[#F4A938] rounded-b-[60%] -z-10 animate-fade-in-down"></div>
-
-    {{-- FLASH MESSAGE SUCCESS --}}
+{{-- FLASH MESSAGE --}}
 @if(session('ok'))
-    <div id="flash-message"
-         class="flash-message fixed top-4 left-1/2 -translate-x-1/2 z-50
-                max-w-md w-[90%] sm:w-full relative overflow-hidden
-                bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 
-                text-white
-                px-6 py-4 rounded-2xl shadow-2xl
-                flex items-center gap-3">
-        
-        <span class="text-3xl animate-bounce">🎉</span>
-        <span class="text-sm font-bold flex-1">{{ session('ok') }}</span>
-        <button onclick="closeFlash()" 
-                class="text-white/80 hover:text-white transition-colors text-xl font-bold">
-            ×
-        </button>
-        
-        <div class="progress-bar"></div>
-    </div>
-
-    <script>
-        function closeFlash() {
-            const flash = document.getElementById('flash-message');
-            if (flash) {
-                flash.style.animation = 'slideOutRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
-                setTimeout(() => flash.remove(), 500);
-            }
-        }
-
-        setTimeout(closeFlash, 4000);
-    </script>
+<div id="flash-msg"
+     class="fixed top-20 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl
+            bg-[#2E471F] text-white shadow-lg cm-fadein max-w-sm">
+  <svg class="h-5 w-5 text-[#F5A623] flex-shrink-0" fill="none" viewBox="0 0 24 24"
+       stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+  </svg>
+  <span class="text-sm font-medium flex-1">{{ session('ok') }}</span>
+  <button onclick="document.getElementById('flash-msg').remove()"
+          class="text-white/50 hover:text-white transition-colors">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+    </svg>
+  </button>
+</div>
+<script>setTimeout(() => document.getElementById('flash-msg')?.remove(), 4000);</script>
 @endif
 
+{{-- HEADER --}}
+<div class="mb-6 cm-fadein">
+  <h1 class="font-raleway text-2xl sm:text-3xl font-bold text-[#2E471F]">Diary Hari Ini</h1>
+  <p class="text-sm text-gray-500 mt-1">Catat makanan yang kamu konsumsi hari ini</p>
+</div>
 
-    {{-- SUMMARY CARD --}}
-    <div class="relative z-10 flex justify-center mt-2 pt-6 animate-scale-in">
-        <div class="bg-[#2E471F] text-white rounded-xl px-5 sm:px-6 py-4 shadow-lg w-full max-w-[260px] sm:w-[260px]">
-            <p class="text-sm">Sisa Kalori</p>
-            <p class="text-xl font-bold">{{ $remainingCalories }}</p>
-            <div class="h-px bg-white/30 my-2"></div>
-            <p class="text-sm">Konsumsi Kalori</p>
-            <p class="text-xl font-bold">{{ $consumedCalories }}</p>
+{{-- TOP STATS: KALORI + MAKRO --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+
+  {{-- Calorie summary (spans 2 cols on lg) --}}
+  @php $calPct = $dailyCaloriesTarget > 0 ? min(100, ($consumedCalories / $dailyCaloriesTarget) * 100) : 0; @endphp
+  <div class="lg:col-span-2 bg-[#2E471F] text-white rounded-2xl px-6 py-5 shadow cm-fadein">
+    <div class="flex items-center justify-between mb-3">
+      <div>
+        <p class="text-xs text-white/60 uppercase tracking-wider font-semibold">Konsumsi Kalori</p>
+        <p class="text-3xl sm:text-4xl font-bold font-raleway mt-1">
+          {{ round($consumedCalories) }}
+          <span class="text-base font-normal text-white/60">/ {{ round($dailyCaloriesTarget) }} kkal</span>
+        </p>
+      </div>
+      <div class="text-right">
+        <p class="text-xs text-white/60 uppercase tracking-wider font-semibold">Sisa</p>
+        <p class="text-2xl font-bold text-[#F5A623] mt-1">{{ round($remainingCalories) }}</p>
+        <p class="text-xs text-white/40">kkal</p>
+      </div>
+    </div>
+    <div class="h-2.5 rounded-full bg-white/20 overflow-hidden">
+      <div class="h-full rounded-full bg-[#F5A623] transition-all" style="width: {{ $calPct }}%"></div>
+    </div>
+  </div>
+
+  {{-- Macros --}}
+  @php
+    $macros = [
+      ['label' => 'Protein', 'color' => '#3B82F6', 'consumed' => round($consumedProtein, 1), 'target' => $macroTargets['protein']],
+      ['label' => 'Karbo',   'color' => '#22C55E', 'consumed' => round($consumedCarbo, 1),   'target' => $macroTargets['carbo']],
+      ['label' => 'Lemak',   'color' => '#F97316', 'consumed' => round($consumedFat, 1),     'target' => $macroTargets['fat']],
+    ];
+  @endphp
+  <div class="bg-white rounded-2xl px-5 py-4 shadow-sm cm-fadein cm-delay-1">
+    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Target Makro</p>
+    <div class="space-y-2.5">
+      @foreach($macros as $m)
+        @php $pct = $m['target'] > 0 ? min(100, ($m['consumed'] / $m['target']) * 100) : 0; @endphp
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="font-semibold" style="color: {{ $m['color'] }}">{{ $m['label'] }}</span>
+            <span class="text-gray-400">{{ $m['consumed'] }}g / {{ $m['target'] }}g</span>
+          </div>
+          <div class="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+            <div class="h-full rounded-full"
+                 style="width: {{ $pct }}%; background-color: {{ $m['color'] }}"></div>
+          </div>
         </div>
+      @endforeach
+    </div>
+  </div>
+
+</div>
+
+{{-- REKOMENDASI MENU --}}
+@if($calorieGoalReached)
+  <div class="mb-6 flex items-center gap-3 px-5 py-4 bg-emerald-50 border border-emerald-200 rounded-2xl cm-fadein cm-delay-2">
+    <svg class="h-7 w-7 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+    </svg>
+    <div>
+      <p class="font-semibold text-emerald-800 text-sm">Target kalori hari ini sudah tercapai!</p>
+      <p class="text-xs text-emerald-600 mt-0.5">Pertahankan pola makan sehat kamu ya.</p>
+    </div>
+  </div>
+@elseif(count($recommendations) > 0)
+  <div class="mb-6 cm-fadein cm-delay-2">
+    <div class="mb-3">
+      <h2 class="font-raleway text-base font-bold text-[#2E471F] flex items-center gap-2">
+        <svg class="h-5 w-5 text-[#F5A623] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/>
+        </svg>
+        Rekomendasi Makananmu
+      </h2>
+      <p class="text-xs text-gray-400 mt-0.5">Disesuaikan dengan sisa kalori &amp; kebutuhan makromu hari ini</p>
     </div>
 
-    {{-- SEGMENT LIST --}}
-    <div class="relative z-10 mt-12 flex flex-col gap-4 w-full max-w-md mx-auto">
+    <div class="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:-mx-0 sm:px-0"
+         style="scrollbar-width:none; -ms-overflow-style:none;">
+      @php
+        $catLabels = ['breakfast' => 'Sarapan', 'lunch' => 'Makan Siang', 'dinner' => 'Makan Malam', 'snack' => 'Camilan'];
+        $tagColors = [
+          'Tinggi protein' => ['bg' => '#DBEAFE', 'text' => '#1D4ED8'],
+          'Sumber karbo'   => ['bg' => '#DCFCE7', 'text' => '#15803D'],
+          'Sumber lemak'   => ['bg' => '#FEF9C3', 'text' => '#A16207'],
+          'Tinggi kalori'  => ['bg' => '#FEE2E2', 'text' => '#B91C1C'],
+          'Rendah kalori'  => ['bg' => '#F0FDF4', 'text' => '#166534'],
+          'Seimbang'       => ['bg' => '#F5F3FF', 'text' => '#6D28D9'],
+          'Cocok untukmu'  => ['bg' => '#EFE6D2', 'text' => '#2E471F'],
+        ];
+      @endphp
 
-        @php
-            $segments = [
-                ['label' => 'Makan Pagi', 'icon' => '🌅', 'category' => 'breakfast'],
-                ['label' => 'Makan Siang', 'icon' => '☀️', 'category' => 'lunch'],
-                ['label' => 'Makan Malam', 'icon' => '🌇', 'category' => 'dinner'],
-                ['label' => 'Camilan/Lainnya', 'icon' => '🌙', 'category' => 'snack'],
-            ];
-        @endphp
+      @foreach($recommendations as $rec)
+        @php $rf = $rec['food']; $rtag = $rec['tag']; $rtc = $tagColors[$rtag] ?? $tagColors['Cocok untukmu']; @endphp
+        <div class="flex-shrink-0 w-44 bg-white rounded-2xl shadow-sm p-4 flex flex-col gap-2.5
+                    hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+          <p class="font-semibold text-[#2E471F] text-sm leading-tight line-clamp-2 min-h-[2.5rem]">
+            {{ $rf->name }}
+          </p>
+          <div class="flex items-baseline gap-1">
+            <span class="text-xl font-bold text-[#F5A623]">{{ $rf->calories_per_portion }}</span>
+            <span class="text-xs text-gray-400">kkal</span>
+          </div>
+          <div class="flex flex-wrap gap-1 text-[10px] font-semibold">
+            <span class="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full">P {{ round($rf->total_protein ?? 0) }}g</span>
+            <span class="bg-green-50 text-green-600 px-1.5 py-0.5 rounded-full">K {{ round($rf->total_carbo ?? 0) }}g</span>
+            <span class="bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded-full">L {{ round($rf->total_fat ?? 0) }}g</span>
+          </div>
+          <span class="inline-flex self-start text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style="background-color: {{ $rtc['bg'] }}; color: {{ $rtc['text'] }}">
+            {{ $rtag }}
+          </span>
+          <form action="{{ route('client.diary.store') }}" method="POST" class="mt-auto">
+            @csrf
+            <input type="hidden" name="food_id" value="{{ $rf->food_id }}">
+            <input type="hidden" name="portions" value="1">
+            <input type="hidden" name="category" value="{{ $defaultCategory }}">
+            <button type="submit"
+                    class="w-full py-2 rounded-xl bg-[#2E471F] text-white text-xs font-semibold
+                           hover:bg-[#3d6628] active:scale-95 transition-all">
+              + {{ $catLabels[$defaultCategory] }}
+            </button>
+          </form>
+        </div>
+      @endforeach
+    </div>
+  </div>
+@endif
 
-        @foreach($segments as $index => $segment)
-            <div class="flex items-center justify-between bg-white px-4 sm:px-5 py-3 sm:py-4 rounded-xl 
-                shadow transition-all duration-200 ease-out
-                hover:shadow-xl hover:-translate-y-1 hover:ring-1 hover:ring-gray-200
-                animate-fade-in-up animate-delay-{{ $index + 1 }}">
-                <div class="flex items-center gap-3 text-[#2E471F] font-semibold">
-                    <span class="text-lg sm:text-xl">{{ $segment['icon'] }}</span>
-                    <span class="text-sm sm:text-base">{{ $segment['label'] }}</span>
+{{-- MEAL SEGMENTS --}}
+@php
+  $segments = [
+    ['label' => 'Makan Pagi',      'category' => 'breakfast', 'icon' => 'icon-breakfast.png'],
+    ['label' => 'Makan Siang',     'category' => 'lunch',     'icon' => 'icon-lunch.png'],
+    ['label' => 'Makan Malam',     'category' => 'dinner',    'icon' => 'icon-dinner.png'],
+    ['label' => 'Camilan',         'category' => 'snack',     'icon' => 'icon-snack.png'],
+  ];
+@endphp
+
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+  @foreach($segments as $i => $seg)
+    @php
+      $foods = $foodsByCategory[$seg['category']] ?? [];
+      $totalCal = 0;
+      foreach ($foods as $f) $totalCal += $f['calories'];
+    @endphp
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden flex flex-col cm-fadein cm-delay-{{ $i + 1 }}">
+
+      {{-- Header --}}
+      <div class="p-5 border-b border-gray-50">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="h-12 w-12 rounded-xl bg-[#EFE6D2] flex items-center justify-center flex-shrink-0 p-2">
+            <img src="{{ asset('images/categories/' . $seg['icon']) }}" alt="{{ $seg['label'] }}"
+                 class="h-full w-full object-contain select-none">
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-[#2E471F] text-base truncate">{{ $seg['label'] }}</p>
+            <p class="text-xs text-gray-400">
+              {{ count($foods) }} item &middot; {{ round($totalCal) }} kkal
+            </p>
+          </div>
+        </div>
+        <a href="{{ route('client.diary.add', $seg['category']) }}"
+           class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl
+                  bg-[#2E471F] text-white text-sm font-semibold
+                  hover:bg-[#3d6628] hover:shadow-md transition-all duration-200">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+          Tambah Makanan
+        </a>
+      </div>
+
+      {{-- Foods list --}}
+      <div class="flex-1 p-5 pt-3">
+        @if(count($foods) > 0)
+          <ul class="space-y-2">
+            @foreach($foods as $f)
+              <li class="flex items-start justify-between gap-2 text-sm">
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-gray-700 truncate">{{ $f['name'] }}</p>
+                  <p class="text-xs text-gray-400">{{ $f['portions'] }} porsi</p>
                 </div>
-
-                {{-- ADD BUTTON --}}
-                <a href="{{ route('client.diary.add', $segment['category']) }}"
-                   class="h-7 w-7 flex items-center justify-center rounded-md bg-[#2E471F] text-white font-bold text-lg
-                  transition-all duration-200 ease-in-out
-                  hover:bg-[#3D6B2A] hover:shadow-[0_0_8px_2px_rgba(46,71,31,0.6)]
-                  active:scale-95
-                  focus:outline-none focus:ring-2 focus:ring-[#2E471F] focus:ring-opacity-50">
-                    +
-                </a>
-            </div>
-        @endforeach
+                <span class="text-xs font-semibold text-[#F5A623] whitespace-nowrap">
+                  {{ round($f['calories']) }} kkal
+                </span>
+              </li>
+            @endforeach
+          </ul>
+        @else
+          <p class="text-xs text-gray-300 italic text-center py-4">Belum ada makanan</p>
+        @endif
+      </div>
 
     </div>
+  @endforeach
+</div>
 
-    {{-- ORANGE CURVE BOTTOM --}}
-    <div class="absolute -inset-x-8 -bottom-8 sm:-bottom-10 h-16 sm:h-20 bg-[#F4A938] rounded-t-[60%] -z-10 animate-fade-in-up"></div>
-
-</section>
 @endsection

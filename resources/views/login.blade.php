@@ -4,16 +4,17 @@
 
 @section('content')
   
-  <a href="{{ route('home') }}" 
-     class="absolute left-4 top-4 md:left-8 md:top-6 z-20 flex items-center justify-center 
-            w-10 h-10 md:w-12 md:h-12 bg-[#2d5016] rounded-lg hover:bg-[#3d6020] transition">
-    <svg class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+  <a href="{{ route('home') }}"
+     class="absolute left-4 top-4 md:left-8 md:top-6 z-20 inline-flex items-center gap-2
+            bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-[#2E471F]
+            shadow hover:shadow-md hover:bg-white transition-all duration-150">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
     </svg>
+    Kembali
   </a>
 
-  <div class="rounded-3xl overflow-hidden mx-auto w-full max-w-5xl 
-              lg:max-h-[480px] grid grid-cols-1 lg:grid-cols-2 shadow-lg bg-white">
+  <div class="auth-card rounded-3xl overflow-hidden mx-auto w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 shadow-xl bg-white">
     {{-- KIRI --}}
     <div
       class="relative bg-[#344F1F] text-white flex items-end

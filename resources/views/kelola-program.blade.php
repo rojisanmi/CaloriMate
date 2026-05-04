@@ -3,249 +3,132 @@
 @section('title', 'Kelola Program Latihan')
 
 @section('content')
-<style>
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+{{-- FLASH --}}
+@if(session('ok'))
+<div id="flash-msg"
+     class="fixed top-20 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl
+            bg-[#2E471F] text-white shadow-lg cm-fadein max-w-sm">
+  <svg class="h-5 w-5 text-[#F5A623] flex-shrink-0" fill="none" viewBox="0 0 24 24"
+       stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+  </svg>
+  <span class="text-sm font-medium flex-1">{{ session('ok') }}</span>
+  <button onclick="document.getElementById('flash-msg').remove()"
+          class="text-white/50 hover:text-white transition-colors">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+    </svg>
+  </button>
+</div>
+<script>setTimeout(() => document.getElementById('flash-msg')?.remove(), 4000);</script>
+@endif
 
-    @keyframes scaleIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    .animate-fade-in-down {
-        animation: fadeInDown 0.6s ease-out;
-    }
-
-    .animate-fade-in-up {
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    .animate-scale-in {
-        animation: scaleIn 0.5s ease-out;
-    }
-
-    .animate-slide-in-left {
-        animation: slideInLeft 0.6s ease-out;
-    }
-
-    .animate-delay-1 {
-        animation-delay: 0.1s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    .animate-delay-2 {
-        animation-delay: 0.2s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    .animate-delay-3 {
-        animation-delay: 0.3s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    .animate-delay-4 {
-        animation-delay: 0.4s;
-        opacity: 0;
-        animation-fill-mode: forwards;
-    }
-
-    /* Staggered animation for cards */
-    .card-stagger {
-        opacity: 0;
-        animation: scaleIn 0.5s ease-out forwards;
-    }
-
-    .card-stagger:nth-child(1) { animation-delay: 0.1s; }
-    .card-stagger:nth-child(2) { animation-delay: 0.15s; }
-    .card-stagger:nth-child(3) { animation-delay: 0.2s; }
-    .card-stagger:nth-child(4) { animation-delay: 0.25s; }
-    .card-stagger:nth-child(5) { animation-delay: 0.3s; }
-    .card-stagger:nth-child(6) { animation-delay: 0.35s; }
-    .card-stagger:nth-child(7) { animation-delay: 0.4s; }
-    .card-stagger:nth-child(8) { animation-delay: 0.45s; }
-    .card-stagger:nth-child(n+9) { animation-delay: 0.5s; }
-</style>
-
-  {{-- ALERT SUCCESS --}}
-  @if (session('ok'))
-    <div id="alert-success"
-         class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999]
-                rounded-lg bg-green-500 text-white px-6 py-3 shadow-lg text-center
-                animate-fade-in-down">
-      {{ session('ok') }}
-    </div>
-
-    <script>
-      setTimeout(() => {
-        const el = document.getElementById('alert-success');
-        if (el) {
-          el.style.transition = 'opacity 0.5s ease';
-          el.style.opacity = '0';
-          setTimeout(() => el.remove(), 500);
-        }
-      }, 3000);
-    </script>
-  @endif
-
-  {{-- TITLE --}}
-  <div class="mb-6 animate-fade-in-down">
-    <h1 class="text-3xl font-extrabold text-[#2E471F]">
-      Kelola Program Latihan
-    </h1>
+{{-- HEADER --}}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 cm-fadein">
+  <div>
+    <h1 class="font-raleway text-2xl font-bold text-[#2E471F]">Kelola Program Latihan</h1>
+    <p class="text-sm text-gray-400 mt-0.5">Buat dan atur program latihan untuk klien</p>
   </div>
+</div>
 
-  {{-- SEARCH BAR --}}
-  <div class="mb-6 animate-slide-in-left animate-delay-1">
-    <form method="GET"
-          action="{{ route('trainer.programs.index') }}"
-          class="w-full max-w-sm">
+{{-- SEARCH --}}
+<div class="mb-5 cm-fadein cm-delay-1">
+  <form method="GET" action="{{ route('trainer.programs.index') }}">
+    <div class="relative max-w-sm">
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+      </svg>
       <input type="text" name="q" value="{{ request('q') }}"
-             placeholder="Cari program"
-             class="w-full rounded-lg border border-gray-300 bg-white
-                    px-4 py-2 text-gray-700 placeholder-gray-400
-                    focus:border-[#2E471F] focus:outline-none
-                    transition-all duration-200 focus:ring-2 focus:ring-[#2E471F]/30">
-    </form>
-  </div>
+             placeholder="Cari program..."
+             class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-700
+                    placeholder-gray-400 focus:border-[#2E471F] focus:ring-2 focus:ring-[#2E471F]/20 focus:outline-none
+                    transition-all duration-150">
+    </div>
+  </form>
+</div>
+
+{{-- PROGRAM GRID --}}
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 cm-fadein cm-delay-2">
+
+  {{-- ADD CARD --}}
+  <a href="{{ route('trainer.programs.create') }}"
+     class="group flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200
+            p-8 hover:border-[#2E471F] hover:bg-[#2E471F]/5 transition-all duration-200 min-h-[160px]">
+    <div class="h-11 w-11 rounded-full border-2 border-gray-200 group-hover:border-[#2E471F]
+                flex items-center justify-center mb-3 transition-colors duration-200">
+      <svg class="h-6 w-6 text-gray-400 group-hover:text-[#2E471F] transition-colors duration-200"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+      </svg>
+    </div>
+    <p class="text-sm font-semibold text-gray-500 group-hover:text-[#2E471F] transition-colors duration-200 text-center">
+      Tambah Program
+    </p>
+  </a>
 
   {{-- PROGRAM CARDS --}}
-  <div class="bg-white p-6 rounded-lg shadow-md
-              max-h-[65vh] overflow-y-auto
-              animate-fade-in-up animate-delay-2">
+  @forelse($programs as $program)
+    <div class="flex flex-col bg-white rounded-2xl shadow-sm border border-gray-100
+                hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
 
-    {{-- CARDS GRID --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {{-- Top accent --}}
+      <div class="h-1 bg-gradient-to-r from-[#2E471F] to-[#F5A623] rounded-t-2xl"></div>
 
-      {{-- ADD CARD --}}
-      <a href="{{ route('trainer.programs.create') }}"
-         class="group flex items-center justify-center rounded-lg
-                border-2 border-dashed border-gray-300 p-6
-                cursor-pointer hover:border-green-600 
-                transition-all duration-300 hover:shadow-lg hover:scale-[1.02]
-                card-stagger">
-        <div class="text-center">
-          <div class="mx-auto mb-3 h-12 w-12 flex items-center justify-center
-                      rounded-full border border-gray-300
-                      group-hover:border-green-600 transition-all duration-300
-                      group-hover:scale-110">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="h-7 w-7 text-gray-500 group-hover:text-green-600 transition-colors duration-300"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-          </div>
-          <div class="text-sm font-semibold text-gray-700 group-hover:text-green-600 transition-colors duration-300">
-            Tambah Program Baru
-          </div>
-          <div class="text-xs text-gray-400 mt-1">
-            Klik untuk membuat program latihan
-          </div>
+      <div class="flex-1 p-5">
+        <div class="h-10 w-10 rounded-xl bg-[#F5A623]/15 flex items-center justify-center mb-3">
+          <svg class="h-5 w-5 text-[#F5A623]" fill="none" viewBox="0 0 24 24"
+               stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+          </svg>
         </div>
-      </a>
 
-      {{-- PROGRAM CARDS --}}
-      @forelse ($programs as $program)
-        <div class="flex flex-col justify-between rounded-lg border bg-white shadow-sm
-                    transition-all duration-300 ease-out
-                    hover:scale-[1.02] hover:shadow-lg
-                    card-stagger">
+        <h3 class="font-bold text-[#2E471F] text-sm leading-snug mb-2 line-clamp-2">
+          {{ $program->name }}
+        </h3>
 
-          <div class="p-5">
-            <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-              {{ $program->name }}
-            </h3>
-
-            @if(!empty($program->description))
-              <p class="text-sm text-gray-600 mb-3 line-clamp-3">
-                {{ \Illuminate\Support\Str::limit($program->description, 120) }}
-              </p>
-            @else
-              <p class="text-sm text-gray-600 mb-3">
-                <span class="font-medium">Tipe:</span> {{ $program->type ?? '-' }}<br>
-                <span class="font-medium">Tingkat:</span> {{ $program->difficulty ?? '-' }}<br>
-                <span class="font-medium">Durasi:</span>
-                {{ $program->total_duration > 0 ? $program->total_duration . ' menit' : '-' }}
-              </p>
-            @endif
-          </div>
-
-          <div class="border-t px-5 py-3 bg-gray-50 rounded-b-lg">
-            <div class="flex items-center justify-between gap-3">
-              <a href="{{ route('trainer.programs.show', $program) }}"
-                 class="inline-flex items-center justify-center rounded-md
-                        px-3 py-2 text-sm font-semibold
-                        bg-[#2E7D32] text-white hover:bg-[#1B5E20]
-                        transition-all duration-200 hover:shadow-md
-                        active:scale-95">
-                Lihat Detail
-              </a>
-
-              <a href="{{ route('trainer.programs.edit', $program) }}"
-                 class="inline-flex items-center rounded-md
-                        px-3 py-2 text-sm font-semibold
-                        bg-white border border-gray-200
-                        text-gray-700 hover:bg-gray-100 hover:shadow-md
-                        transition-all duration-200 active:scale-95">
-                Edit
-              </a>
-            </div>
-          </div>
-
+        <div class="space-y-0.5 text-xs text-gray-400">
+          @if($program->type)
+            <p><span class="font-medium text-gray-600">Tipe:</span> {{ $program->type }}</p>
+          @endif
+          @if($program->difficulty)
+            <p><span class="font-medium text-gray-600">Tingkat:</span> {{ $program->difficulty }}</p>
+          @endif
+          @if($program->total_duration > 0)
+            <p><span class="font-medium text-gray-600">Durasi:</span> {{ $program->total_duration }} mnt</p>
+          @endif
         </div>
-      @empty
-        <div class="col-span-full text-center py-12 text-gray-500">
-          Belum ada program selain tombol tambah.
-        </div>
-      @endforelse
+      </div>
+
+      <div class="px-5 py-3 border-t border-gray-100 flex items-center gap-2">
+        <a href="{{ route('trainer.programs.show', $program) }}"
+           class="flex-1 text-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#2E471F] text-white
+                  hover:bg-[#3d6628] transition-colors duration-150">
+          Detail
+        </a>
+        <a href="{{ route('trainer.programs.edit', $program) }}"
+           class="flex-1 text-center px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200
+                  text-gray-600 hover:bg-gray-50 transition-colors duration-150">
+          Edit
+        </a>
+      </div>
 
     </div>
+  @empty
+    {{-- empty state is handled by the Add card always being visible --}}
+  @endforelse
 
-    {{-- PAGINATION --}}
-    @if(method_exists($programs, 'links'))
-      <div class="mt-6">
-        {{ $programs->appends(['q' => request('q')])->links() }}
-      </div>
-    @endif
+</div>
 
+{{-- PAGINATION --}}
+@if(method_exists($programs, 'links') && $programs->lastPage() > 1)
+  <div class="mt-6">
+    {{ $programs->appends(['q' => request('q')])->links() }}
   </div>
+@endif
+
 @endsection

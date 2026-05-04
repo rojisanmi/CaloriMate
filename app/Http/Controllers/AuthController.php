@@ -26,6 +26,12 @@ class AuthController extends Controller
     {
         return view('login_trainer');
     }
+
+    // Tampilan halaman login admin
+    public function showLoginAdmin()
+    {
+        return view('login_admin');
+    }
     // proses login client dan trainer
     public function doLogin(Request $request)
     {
@@ -44,7 +50,7 @@ class AuthController extends Controller
             ->first();
 
         if (!$user) {
-            return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
+            return back()->withErrors(['login' => 'Username atau password salah.'])->withInput();
         }
 
         $valid = false;
@@ -62,7 +68,7 @@ class AuthController extends Controller
         }
 
         if (!$valid) {
-            return back()->withErrors(['username' => 'Invalid credentials'])->withInput();
+            return back()->withErrors(['login' => 'Username atau password salah.'])->withInput();
         }
 
         // Regenerate session
@@ -73,9 +79,11 @@ class AuthController extends Controller
         $request->session()->put('user_name', $user->username);
 
 
-        return (int) $user->role === 2
-            ? redirect()->route('trainer.home')
-            : redirect()->route('client.home');
+        return match((int) $user->role) {
+            0 => redirect()->route('admin.home'),
+            2 => redirect()->route('trainer.home'),
+            default => redirect()->route('client.home'),
+        };
     }
 
     // proses logout
@@ -105,7 +113,17 @@ class AuthController extends Controller
         $data = $request->validate([
             'username' => 'required|string|max:20|unique:user,username',
             'email'    => 'required|email|max:255|unique:user,email',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'username.max'      => 'Username maksimal 20 karakter.',
+            'username.unique'   => 'Username sudah digunakan, coba yang lain.',
+            'email.required'    => 'Email wajib diisi.',
+            'email.email'       => 'Format email tidak valid.',
+            'email.unique'      => 'Email sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min'      => 'Password minimal 8 karakter.',
+            'password.confirmed'=> 'Konfirmasi password tidak cocok.',
         ]);
 
         // 2. Hash password SETELAH validasi

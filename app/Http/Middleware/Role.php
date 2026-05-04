@@ -10,7 +10,7 @@ class Role
     public function handle($request, Closure $next, ...$roles)
     {
         $current = Session::get('user_role');
-        if (!$current || !in_array($current, $roles)) {
+        if (!Session::has('user_role') || !in_array((string) $current, $roles)) {
             abort(403, 'Forbidden');
         }
         return $next($request);
