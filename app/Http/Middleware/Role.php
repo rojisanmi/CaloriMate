@@ -9,10 +9,19 @@ class Role
 {
     public function handle($request, Closure $next, ...$roles)
     {
-        $current = Session::get('user_role');
-        if (!Session::has('user_role') || !in_array((string) $current, $roles)) {
-            abort(403, 'Forbidden');
+        // 1. Cek dari request user (untuk API/Sanctum)
+        if ($request->user()) {
+            if (in_array((string) $request->user()->role, $roles)) {
+                return $next($request);
+            }
         }
-        return $next($request);
+
+        // 2. Cek dari Session (untuk Web)
+        $current = Session::get('user_role');
+        if (Session::has('user_role') && in_array((string) $current, $roles)) {
+            return $next($request);
+        }
+
+        abort(403, 'Forbidden');
     }
 }

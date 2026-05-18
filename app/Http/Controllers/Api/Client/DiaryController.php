@@ -46,7 +46,7 @@ class DiaryController extends Controller
             'daily_target' => $dailyCaloriesTarget,
             'consumed_calories' => $consumedCalories,
             'remaining_calories' => $remainingCalories,
-            'consumptions' => $consumptions,
+            'consumptions' => empty($consumptions) ? (object)[] : $consumptions,
         ]);
     }
 

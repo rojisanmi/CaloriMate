@@ -1,43 +1,68 @@
 <?php
+
 namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
-    
+    use HasApiTokens, HasFactory, Notifiable;
+
     public $timestamps = false;
+
     protected $table = 'user';
+
     protected $primaryKey = 'username';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
-    protected $fillable = ['email', 'password', 'role', 'username'];
+    protected $fillable = [
+        'username',
+        'email',
+        'password',
+        'role'
+    ];
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
-    // Relasi dengan model Client 
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
+
+    // =========================
+    // RELATIONSHIPS
+    // =========================
+
     public function client()
     {
         return $this->hasOne(Client::class, 'username', 'username');
     }
 
-    // Relasi dengan model Trainer
     public function trainer()
     {
         return $this->hasOne(Trainer::class, 'username', 'username');
     }
 
-    // Relasi dengan model History
     public function histories()
     {
         return $this->hasMany(History::class, 'username', 'username');
     }
-    
+
+    // =========================
+    // ROLE CHECKERS
+    // =========================
+
     public function isAdmin(): bool
     {
         return (int) $this->role === 0;
@@ -53,28 +78,13 @@ class User extends Authenticatable
         return (int) $this->role === 2;
     }
 
-    // Verifikasi password
-    public function verifyPassword(string $password): bool
+    // =========================
+    // ACCESSORS
+    // =========================
+
+    public function getRoleLabelAttribute(): string
     {
-        return $this->password === $password;
-    }
-
-    // Autentikasi user
-    public static function authenticate(string $username, string $password): ?self
-    {
-        $user = self::where('username', $username)->first();
-
-        if ($user && $user->verifyPassword($password)) {
-            return $user;
-        }
-
-        return null;
-    }
-
-    // Aksesor untuk mendapatkan label peran
-    public function getRoleLabelAttribute()
-    {
-        return match((int) $this->role) {
+        return match ((int) $this->role) {
             1 => 'Client',
             2 => 'Trainer',
             default => 'Unknown',
