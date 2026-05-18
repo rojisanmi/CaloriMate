@@ -11,7 +11,7 @@ class Client extends Model
     protected $primaryKey = 'username';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['username', 'tb', 'bb', 'gender', 'umur', 'calorie_target', 'protein_ratio', 'carbo_ratio', 'fat_ratio', 'photo_path'];
+    protected $fillable = ['username', 'tb', 'bb', 'gender', 'umur', 'calorie_target', 'protein_ratio', 'carbo_ratio', 'fat_ratio', 'photo_path', 'food_reminder_time', 'exercise_reminder_time'];
 
     public function getPhotoUrlAttribute(): ?string
     {

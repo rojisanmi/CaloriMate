@@ -74,7 +74,7 @@
 
         <div class="flex items-center gap-2 mt-3">
           <label class="cursor-pointer">
-            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" class="hidden" id="photoInput">
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" capture="environment" class="hidden" id="photoInput">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2E471F] text-white text-xs font-semibold
                          hover:bg-[#3d6628] transition-colors shadow-sm">
               <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -178,7 +178,7 @@
       </svg>
       Pilih file sertifikasi
       <input type="file" name="sertifikasi" class="hidden" id="sertifikasiInput"
-             accept="image/jpeg,image/png,image/jpg,application/pdf">
+             accept="image/jpeg,image/png,image/jpg,application/pdf" capture="environment">
     </label>
     @error('sertifikasi') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
   </div>

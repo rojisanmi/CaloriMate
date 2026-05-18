@@ -63,6 +63,7 @@ CaloriMate adalah aplikasi manajemen nutrisi & latihan berbasis web yang dibangu
    - buka `http://127.0.0.1:8000`
 
 ## ⚙️ Roles dan Akses
+- `role=0` => Admin
 - `role=1` => Client
 - `role=2` => Trainer
 - Akses proteksi ada di middleware:

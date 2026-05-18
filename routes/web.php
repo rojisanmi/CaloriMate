@@ -11,6 +11,7 @@ use App\Http\Controllers\Client\DiaryController;
 use App\Http\Controllers\Client\HistoryController;
 use App\Http\Controllers\Client\StatisticController;
 use App\Http\Controllers\Client\ExerciseController;
+use App\Http\Controllers\Client\NotificationController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TrainerHomeController;
 use App\Http\Controllers\Client\HomeController;
@@ -115,4 +116,7 @@ Route::prefix('client')->name('client.')->middleware(['auth.required', 'role:1']
     Route::get('/exercise/{id}', [ExerciseController::class, 'show'])->name('exercise.show');
     Route::get('/exercise/{id}/play', [ExerciseController::class, 'play'])->name('exercise.play');
     Route::post('/exercise/{id}/start', [ExerciseController::class, 'start'])->name('exercise.start');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });

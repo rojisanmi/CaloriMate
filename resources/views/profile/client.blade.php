@@ -55,7 +55,7 @@
 
         <div class="flex items-center gap-2 mt-3">
           <label class="cursor-pointer">
-            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" class="hidden" id="photoInput">
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" capture="environment" class="hidden" id="photoInput">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2E471F] text-white text-xs font-semibold
                          hover:bg-[#3d6628] transition-colors shadow-sm">
               <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -119,6 +119,32 @@
         @error('umur') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
       </div>
 
+    </div>
+  </div>
+
+  {{-- PENGINGAT CARD --}}
+  <div class="bg-white rounded-2xl shadow-sm p-6 cm-fadein cm-delay-2">
+    <h2 class="font-raleway font-bold text-[#2E471F] text-lg mb-1">Pengaturan Pengingat</h2>
+    <p class="text-xs text-gray-400 mb-5">Atur jam kapan kamu ingin diingatkan untuk mencatat makanan atau berolahraga.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-semibold text-[#2E471F] mb-1.5">Pengingat Input Makanan</label>
+        <input type="time" name="food_reminder_time"
+               value="{{ old('food_reminder_time', $user->client->food_reminder_time ? \Carbon\Carbon::parse($user->client->food_reminder_time)->format('H:i') : '') }}"
+               class="w-full px-4 py-2.5 rounded-xl border {{ $errors->has('food_reminder_time') ? 'border-red-400 bg-red-50' : 'border-gray-200' }} text-gray-700 text-sm
+                      focus:border-[#2E471F] focus:ring-2 focus:ring-[#2E471F]/20 focus:outline-none transition-all duration-150">
+        @error('food_reminder_time') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-[#2E471F] mb-1.5">Pengingat Jadwal Olahraga</label>
+        <input type="time" name="exercise_reminder_time"
+               value="{{ old('exercise_reminder_time', $user->client->exercise_reminder_time ? \Carbon\Carbon::parse($user->client->exercise_reminder_time)->format('H:i') : '') }}"
+               class="w-full px-4 py-2.5 rounded-xl border {{ $errors->has('exercise_reminder_time') ? 'border-red-400 bg-red-50' : 'border-gray-200' }} text-gray-700 text-sm
+                      focus:border-[#2E471F] focus:ring-2 focus:ring-[#2E471F]/20 focus:outline-none transition-all duration-150">
+        @error('exercise_reminder_time') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+      </div>
     </div>
   </div>
 

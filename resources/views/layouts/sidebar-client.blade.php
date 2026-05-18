@@ -62,17 +62,17 @@
   </div>
 
   {{-- USER INFO --}}
-  <div class="px-5 py-4 border-b border-white/10 flex-shrink-0">
+  <a href="{{ route('profile.client.show') }}" class="px-5 py-4 border-b border-white/10 flex-shrink-0 hover:bg-white/5 transition-colors block group">
     <div class="flex items-center gap-3">
-      <div class="h-10 w-10 rounded-full bg-[#F5A623] flex items-center justify-center flex-shrink-0 shadow-sm">
+      <div class="h-10 w-10 rounded-full bg-[#F5A623] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
         <span class="text-xs font-bold text-[#2E471F] tracking-wide">{{ $initials }}</span>
       </div>
       <div class="min-w-0">
-        <p class="text-white font-semibold text-sm leading-tight truncate">{{ $username }}</p>
-        <p class="text-white/50 text-xs mt-0.5">Client</p>
+        <p class="text-white font-semibold text-sm leading-tight truncate group-hover:text-[#F5A623] transition-colors">{{ $username }}</p>
+        <p class="text-white/50 text-xs mt-0.5">Lihat Profil</p>
       </div>
     </div>
-  </div>
+  </a>
 
   {{-- NAV ITEMS --}}
   <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">

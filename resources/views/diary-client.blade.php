@@ -229,4 +229,144 @@
   @endforeach
 </div>
 
+{{-- MAPS: RESTORAN SEHAT TERDEKAT --}}
+<div class="mt-8 mb-6 cm-fadein cm-delay-4">
+  <div class="mb-4">
+    <h2 class="font-raleway text-lg font-bold text-[#2E471F] flex items-center gap-2">
+      <svg class="h-6 w-6 text-[#F5A623]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+      </svg>
+      Restoran Sehat Terdekat
+    </h2>
+    <p class="text-sm text-gray-500 mt-1">Temukan tempat makan sehat di sekitarmu.</p>
+  </div>
+  
+  <div class="bg-white rounded-2xl shadow-sm p-2">
+    <div id="diaryMap" class="w-full h-80 rounded-xl z-0"></div>
+    <button id="recenterDiaryMap" class="absolute bottom-4 right-4 z-10 bg-white p-2 rounded-full shadow-md text-[#2E471F] hover:text-[#F5A623] hover:bg-gray-50 transition-colors hidden" title="Pusatkan ke lokasi saya">
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22a10 10 0 100-20 10 10 0 000 20z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8" />
+      </svg>
+    </button>
+    <div id="mapLoading" class="w-full h-80 absolute top-0 left-0 flex items-center justify-center bg-white/80 rounded-xl z-10">
+      <div class="text-[#2E471F] flex flex-col items-center">
+        <svg class="animate-spin h-8 w-8 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="text-sm font-semibold">Mencari lokasi Anda...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const mapLoading = document.getElementById('mapLoading');
+    if (!navigator.geolocation) {
+        mapLoading.innerHTML = '<span class="text-red-500 font-semibold">Geolocation tidak didukung oleh browser Anda.</span>';
+        return;
+    }
+
+    // Geolocation options for better accuracy
+    const geoOptions = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+    };
+
+    navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        mapLoading.style.display = 'none';
+        
+        // Fix for default Leaflet icon paths
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+        });
+
+        const map = L.map('diaryMap').setView([lat, lon], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Recenter button logic
+        const recenterBtn = document.getElementById('recenterDiaryMap');
+        recenterBtn.classList.remove('hidden');
+        recenterBtn.addEventListener('click', () => {
+            map.flyTo([lat, lon], 14);
+        });
+
+        // Marker User
+        L.marker([lat, lon]).addTo(map)
+         .bindPopup('<b>Lokasi Anda</b>')
+         .openPopup();
+
+        // Query Overpass API for restaurants (around 15km) - broadened for better results
+        const overpassQuery = `
+            [out:json];
+            (
+              node["amenity"="restaurant"]["diet:vegan"="yes"](around:15000,${lat},${lon});
+              node["amenity"="restaurant"]["diet:vegetarian"="yes"](around:15000,${lat},${lon});
+              node["amenity"="restaurant"]["health_food"="yes"](around:15000,${lat},${lon});
+              node["shop"="health_food"](around:15000,${lat},${lon});
+              node["amenity"="restaurant"](around:5000,${lat},${lon});
+              node["amenity"="cafe"](around:5000,${lat},${lon});
+            );
+            out body;
+        `;
+        const overpassUrl = 'https://overpass-api.de/api/interpreter';
+        
+        fetch(overpassUrl, {
+            method: 'POST',
+            body: overpassQuery
+        })
+        .then(res => res.json())
+        .then(data => {
+            data.elements.forEach(el => {
+                if (el.lat && el.lon && el.tags && el.tags.name) {
+                    const name = el.tags.name;
+                    const hours = el.tags.opening_hours || 'Tersedia info di Google Maps';
+                    
+                    const popupContent = `
+                        <div class="text-center">
+                            <h3 class="font-bold text-[#2E471F] mb-1">${name}</h3>
+                            <p class="text-xs text-gray-500 mb-3">Jam Buka: ${hours}</p>
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=${el.lat},${el.lon}" target="_blank" 
+                               class="inline-block bg-[#2E471F] text-white text-xs px-3 py-1.5 rounded-full hover:bg-[#3d6628] transition-colors">
+                               Navigasi ke sini
+                            </a>
+                        </div>
+                    `;
+                    
+                    // Create green icon for healthy restaurant
+                    const greenIcon = new L.Icon({
+                      iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-green.png',
+                      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                      iconSize: [25, 41],
+                      iconAnchor: [12, 41],
+                      popupAnchor: [1, -34],
+                      shadowSize: [41, 41]
+                    });
+
+                    L.marker([el.lat, el.lon], {icon: greenIcon}).addTo(map)
+                     .bindPopup(popupContent);
+                }
+            });
+        })
+        .catch(err => console.error("Error fetching Overpass API:", err));
+
+    }, (error) => {
+        mapLoading.innerHTML = '<span class="text-red-500 font-semibold px-4 text-center">Gagal mendeteksi lokasi. Pastikan izin lokasi diaktifkan.</span>';
+    }, geoOptions);
+});
+</script>
+
 @endsection
