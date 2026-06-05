@@ -296,12 +296,15 @@ class DiaryController extends Controller
         };
     }
 
+    /**
+     * Kembalikan kategori default berdasarkan jam saat ini (WIB).
+     */
     private function getDefaultCategory(): string
     {
         $hour = now()->hour;
-        if ($hour >= 5 && $hour < 10)  return 'breakfast';
-        if ($hour >= 10 && $hour < 15) return 'lunch';
-        if ($hour >= 15 && $hour < 18) return 'snack';
+        if ($hour >= 5  && $hour < 10)  return 'breakfast';
+        if ($hour >= 10 && $hour < 15)  return 'lunch';
+        if ($hour >= 15 && $hour < 18)  return 'snack';
         return 'dinner';
     }
 }
