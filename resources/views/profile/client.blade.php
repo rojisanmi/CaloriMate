@@ -37,17 +37,34 @@
   {{-- AVATAR CARD --}}
   <div class="bg-white rounded-2xl shadow-sm p-6 cm-fadein cm-delay-1">
     <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-      <div id="avatarPreview"
-           class="h-24 w-24 rounded-full bg-[#EFE6D2] flex items-center justify-center flex-shrink-0
-                  ring-4 ring-[#F5A623]/20 overflow-hidden">
-        @if($user->client && $user->client->photo_url)
-          <img src="{{ $user->client->photo_url }}" alt="{{ $user->username }}" class="h-full w-full object-cover">
-        @else
+      {{-- Avatar: klik untuk buka lightbox jika ada foto --}}
+      @if($user->client && $user->client->photo_url)
+        <button type="button" id="avatarBtn" onclick="openLightbox()"
+                title="Lihat foto lebih besar"
+                class="relative h-24 w-24 rounded-full flex-shrink-0 ring-4 ring-[#F5A623]/20
+                       overflow-hidden group cursor-zoom-in focus:outline-none">
+          <div id="avatarPreview" class="h-full w-full">
+            <img src="{{ $user->client->photo_url }}" alt="{{ $user->username }}"
+                 class="h-full w-full object-cover">
+          </div>
+          {{-- overlay hint --}}
+          <div class="absolute inset-0 bg-black/40 flex items-center justify-center
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-full">
+            <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6"/>
+            </svg>
+          </div>
+        </button>
+      @else
+        <div id="avatarPreview"
+             class="h-24 w-24 rounded-full bg-[#EFE6D2] flex items-center justify-center flex-shrink-0
+                    ring-4 ring-[#F5A623]/20 overflow-hidden">
           <span class="text-3xl font-bold text-[#2E471F] font-raleway">
             {{ strtoupper(substr($user->username, 0, 2)) }}
           </span>
-        @endif
-      </div>
+        </div>
+      @endif
 
       <div class="flex-1">
         <p class="font-bold text-[#2E471F] text-lg">{{ $user->username }}</p>
@@ -260,6 +277,47 @@
 
 </form>
 
+{{-- LIGHTBOX MODAL --}}
+@if($user->client && $user->client->photo_url)
+<div id="photoLightbox"
+     class="fixed inset-0 z-[9999] flex items-center justify-center p-4
+            bg-black/80 backdrop-blur-sm
+            opacity-0 pointer-events-none transition-opacity duration-300"
+     onclick="if(event.target===this) closeLightbox()">
+
+  <div id="lightboxInner"
+       class="relative max-w-lg w-full max-h-[90vh]
+              scale-90 transition-transform duration-300">
+
+    {{-- Tombol tutup --}}
+    <button onclick="closeLightbox()"
+            class="absolute -top-3 -right-3 z-10 h-8 w-8 rounded-full
+                   bg-white shadow-lg flex items-center justify-center
+                   hover:bg-gray-100 transition-colors"
+            title="Tutup">
+      <svg class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24"
+           stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    {{-- Foto besar --}}
+    <div class="rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/20">
+      <img id="lightboxImg"
+           src="{{ $user->client->photo_url }}"
+           alt="Foto {{ $user->username }}"
+           class="w-full h-auto max-h-[85vh] object-contain bg-black">
+    </div>
+
+    {{-- Caption --}}
+    <div class="mt-3 text-center">
+      <p class="text-white font-semibold text-sm">{{ $user->username }}</p>
+      <p class="text-white/60 text-xs">Foto Profil</p>
+    </div>
+  </div>
+</div>
+@endif
+
 <script>
 function applyPreset(p, c, f) {
   document.getElementById('protein_ratio').value = p;
@@ -304,10 +362,43 @@ document.getElementById('photoInput')?.addEventListener('change', function(e) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (evt) => {
+    const src = evt.target.result;
     document.getElementById('avatarPreview').innerHTML =
-      `<img src="${evt.target.result}" alt="Preview" class="h-full w-full object-cover">`;
+      `<img src="${src}" alt="Preview" class="h-full w-full object-cover">`;
+    // Sync ke lightbox jika ada
+    const lbImg = document.getElementById('lightboxImg');
+    if (lbImg) lbImg.src = src;
   };
   reader.readAsDataURL(file);
+});
+
+// Lightbox
+function openLightbox() {
+  const lb = document.getElementById('photoLightbox');
+  const inner = document.getElementById('lightboxInner');
+  if (!lb) return;
+  lb.classList.remove('opacity-0', 'pointer-events-none');
+  lb.classList.add('opacity-100');
+  inner.classList.remove('scale-90');
+  inner.classList.add('scale-100');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('photoLightbox');
+  const inner = document.getElementById('lightboxInner');
+  if (!lb) return;
+  lb.classList.remove('opacity-100');
+  lb.classList.add('opacity-0');
+  inner.classList.remove('scale-100');
+  inner.classList.add('scale-90');
+  document.body.style.overflow = '';
+  setTimeout(() => lb.classList.add('pointer-events-none'), 300);
+}
+
+// Tutup lightbox dengan tombol Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
 });
 </script>
 
