@@ -1,6 +1,6 @@
 @extends('auth')
 
-@section('title','Login')
+@section('title','Daftar')
 
 @section('content')
   
@@ -36,18 +36,28 @@
            class="absolute top-6 md:top-8 left-1/2 -translate-x-1/2
                   h-16 md:h-20 lg:h-24 select-none" />
       <div class="w-full max-w-sm text-center pt-12 md:pt-28 lg:pt-20">
-        <h2 class="text-3xl md:text-4xl font-bold text-[#2E4F2A] mb-6">Login</h2>
+        <h2 class="text-3xl md:text-4xl font-bold text-[#2E4F2A] mb-6">Daftar</h2>
 
         <div class="space-y-4">
-          <a href="{{ url('/login/trainer') }}"
-             class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90">
-            Masuk sebagai Trainer
+          <a href="{{ route('register.trainer.form') }}"
+             class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90 transition">
+            Daftar sebagai Trainer
           </a>
           <div class="text-sm text-[#2E4F2A]/70">Atau</div>
-          <a href="{{ url('/login/client') }}"
-             class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90">
-            Masuk sebagai Client
+          <a href="{{ route('register.form') }}"
+             class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90 transition">
+            Daftar sebagai Client
           </a>
+        </div>
+
+        <div class="mt-6">
+          <p class="text-sm text-gray-600">
+            Sudah punya akun?
+            <a href="{{ route('login.show') }}"
+               class="font-semibold text-[#2d5016] hover:underline hover:text-[#3d6020] transition">
+              Masuk
+            </a>
+          </p>
         </div>
       </div>
     </div>

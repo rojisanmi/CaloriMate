@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Trainer;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -45,8 +47,12 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Admin (role 0) boleh login dari halaman manapun
         $user = User::where('username', $request->username)
-            ->where('role', $request->role)
+            ->where(function ($query) use ($request) {
+                $query->where('role', $request->role)
+                      ->orWhere('role', 0); // admin selalu diizinkan
+            })
             ->first();
 
         if (!$user) {
@@ -95,7 +101,18 @@ class AuthController extends Controller
         return redirect()->route('login.show')->with('status', 'Logged out.');
     }
 
-    // Tampilan halaman register
+    // Tampilan halaman pilihan register (trainer / client)
+    public function showRegisterChoice()
+    {
+        if (Session::has('user_id')) {
+            return (int) Session::get('user_role') === 2
+                ? redirect()->route('trainer.home')
+                : redirect()->route('client.home');
+        }
+        return view('register_choice');
+    }
+
+    // Tampilan halaman register client (form step 1)
     public function showRegister()
     {
         if (Session::has('user_id')) {
@@ -104,6 +121,65 @@ class AuthController extends Controller
                 : redirect()->route('client.home');
         }
         return view('register');
+    }
+
+    // Tampilan halaman register trainer
+    public function showRegisterTrainer()
+    {
+        if (Session::has('user_id')) {
+            return (int) Session::get('user_role') === 2
+                ? redirect()->route('trainer.home')
+                : redirect()->route('client.home');
+        }
+        return view('register_trainer');
+    }
+
+    // proses register trainer
+    public function doRegisterTrainer(Request $request)
+    {
+        $data = $request->validate([
+            'username' => 'required|string|max:20|unique:user,username',
+            'email'    => 'required|email|max:255|unique:user,email',
+            'password' => 'required|string|min:8|confirmed',
+            'nama'     => 'required|string|max:100',
+            'keahlian' => 'required|string|max:255',
+        ], [
+            'username.required' => 'Username wajib diisi.',
+            'username.max'      => 'Username maksimal 20 karakter.',
+            'username.unique'   => 'Username sudah digunakan, coba yang lain.',
+            'email.required'    => 'Email wajib diisi.',
+            'email.email'       => 'Format email tidak valid.',
+            'email.unique'      => 'Email sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min'      => 'Password minimal 8 karakter.',
+            'password.confirmed'=> 'Konfirmasi password tidak cocok.',
+            'nama.required'     => 'Nama lengkap wajib diisi.',
+            'keahlian.required' => 'Keahlian wajib diisi.',
+        ]);
+
+        DB::transaction(function () use ($data) {
+            User::create([
+                'username' => $data['username'],
+                'email'    => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role'     => 2,
+            ]);
+
+            Trainer::create([
+                'username' => $data['username'],
+                'nama'     => $data['nama'],
+                'keahlian' => $data['keahlian'],
+            ]);
+        });
+
+        // Auto-login setelah register
+        $request->session()->regenerate();
+        $request->session()->put('user_id',   $data['username']);
+        $request->session()->put('user_role', 2);
+        $request->session()->put('user_name', $data['username']);
+
+        return redirect()->route('trainer.home')
+            ->with('ok', 'Registrasi berhasil. Selamat datang di CaloriMate!');
     }
 
     // proses register 

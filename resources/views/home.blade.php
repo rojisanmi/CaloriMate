@@ -30,7 +30,7 @@
         </a>
         <a href="{{ url('/login') }}"
            class="inline-flex items-center rounded-full border-2 border-white/60 px-7 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">
-          Login
+          Masuk
         </a>
       </div>
 
@@ -239,7 +239,7 @@
     </div>
 
     <p class="mt-6 text-xs text-gray-400 font-quicksand">
-      Dikembangkan oleh mahasiswa S1 Informatika — Telkom University &middot; 2025
+      Dikembangkan oleh mahasiswa S1 Informatika — Telkom University &middot; 2026
     </p>
   </div>
 </section>

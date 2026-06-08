@@ -42,7 +42,7 @@
   </main>
 
   <footer class="mt-auto w-full bg-white">
-    <div class="py-3 text-center text-sm text-gray-400">©2025 CaloriMate · Telkom University</div>
+    <div class="py-3 text-center text-sm text-gray-400">2026 CaloriMate · Telkom University</div>
   </footer>
 
 </body>

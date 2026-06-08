@@ -1,6 +1,7 @@
 @php
   $username = session('user_name', 'Client');
   $initials = strtoupper(substr($username, 0, 2));
+  $sidebarClientPhoto = optional(\App\Models\Client::where('username', session('user_id'))->first())->photo_url;
 
   $navItems = [
     [
@@ -64,8 +65,12 @@
   {{-- USER INFO --}}
   <a href="{{ route('profile.client.show') }}" class="px-5 py-4 border-b border-white/10 flex-shrink-0 hover:bg-white/5 transition-colors block group">
     <div class="flex items-center gap-3">
-      <div class="h-10 w-10 rounded-full bg-[#F5A623] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-        <span class="text-xs font-bold text-[#2E471F] tracking-wide">{{ $initials }}</span>
+      <div class="h-10 w-10 rounded-full bg-[#F5A623] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+        @if($sidebarClientPhoto)
+          <img src="{{ $sidebarClientPhoto }}" alt="{{ $username }}" class="h-full w-full object-cover">
+        @else
+          <span class="text-xs font-bold text-[#2E471F] tracking-wide">{{ $initials }}</span>
+        @endif
       </div>
       <div class="min-w-0">
         <p class="text-white font-semibold text-sm leading-tight truncate group-hover:text-[#F5A623] transition-colors">{{ $username }}</p>

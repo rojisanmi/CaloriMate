@@ -301,7 +301,7 @@ class DiaryController extends Controller
      */
     private function getDefaultCategory(): string
     {
-        $hour = now()->hour;
+        $hour = now('Asia/Jakarta')->hour;
         if ($hour >= 5  && $hour < 10)  return 'breakfast';
         if ($hour >= 10 && $hour < 15)  return 'lunch';
         if ($hour >= 15 && $hour < 18)  return 'snack';

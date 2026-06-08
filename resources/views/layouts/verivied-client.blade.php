@@ -246,7 +246,7 @@
 
   {{-- FOOTER --}}
   <footer class="mt-auto w-full bg-[#2E471F]">
-    <div class="py-3 text-center text-xs text-white/50">©2025 CaloriMate · Telkom University</div>
+    <div class="py-3 text-center text-xs text-white/50">2026 CaloriMate · Telkom University</div>
   </footer>
 
   @include('layouts._delete-modal')
