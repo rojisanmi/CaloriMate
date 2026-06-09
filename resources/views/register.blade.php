@@ -4,7 +4,7 @@
 
 @section('content')
 
-<a href="{{ route('register.choice') }}"
+<a href="{{ route('home') }}"
    class="absolute left-4 top-4 md:left-8 md:top-6 z-20 inline-flex items-center gap-2
           bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-[#2E471F]
           shadow hover:shadow-md hover:bg-white transition-all duration-150">
