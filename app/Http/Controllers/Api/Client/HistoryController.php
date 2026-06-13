@@ -31,7 +31,7 @@ class HistoryController extends Controller
 
         $historiesCollection = History::where('username', $username)
             ->whereDate('date', '>=', $startDate)
-            ->with(['foodConsumptions.food', 'program'])
+            ->with(['foodConsumptions.food', 'historyPrograms.program.items'])
             ->orderBy('date', 'asc')
             ->get();
 
@@ -108,12 +108,22 @@ class HistoryController extends Controller
         }
 
         $activities = $historiesCollection
-            ->filter(fn(History $h) => $h->calori_out > 0 && $h->program !== null)
-            ->map(fn(History $h) => [
-                'date' => $h->date,
-                'program_name' => $h->program->name ?? 'Program Latihan',
-                'calories_out' => $h->calori_out,
-            ])
+            ->filter(fn(History $h) => $h->calori_out > 0 && $h->historyPrograms->isNotEmpty())
+            ->flatMap(function (History $h) {
+                return $h->historyPrograms->map(function ($hp) use ($h) {
+                    $programCalories = 0;
+                    if ($hp->program && $hp->program->items) {
+                        $programCalories = $hp->program->items->sum(function ($item) {
+                            return $this->estimateCaloriesBurned($item->duration_minutes, $item->intensity_level);
+                        });
+                    }
+                    return [
+                        'date' => $h->date,
+                        'program_name' => $hp->program->name ?? 'Program Latihan',
+                        'calories_out' => $programCalories > 0 ? $programCalories : $h->calori_out,
+                    ];
+                });
+            })
             ->sortByDesc('date')
             ->values();
 
@@ -123,5 +133,16 @@ class HistoryController extends Controller
             'chart_data' => $chartData,
             'activities' => $activities
         ]);
+    }
+
+    private function estimateCaloriesBurned(int $durationMinutes, ?string $intensityLevel): int
+    {
+        $caloriesPerMinute = match (strtolower($intensityLevel ?? '')) {
+            'low', 'rendah' => 4,
+            'medium', 'sedang' => 7,
+            'high', 'tinggi' => 10,
+            default => 5,
+        };
+        return $durationMinutes * $caloriesPerMinute;
     }
 }

@@ -89,8 +89,10 @@ class DiaryController extends Controller
             ->first();
 
         if ($existing) {
-            $existing->portions += $data['portions'];
-            $existing->save();
+            FoodConsumption::where('history_id', $history->history_id)
+                ->where('food_id', $data['food_id'])
+                ->where('category', $data['category'])
+                ->update(['portions' => $existing->portions + $data['portions']]);
         } else {
             FoodConsumption::create([
                 'history_id' => $history->history_id,
@@ -140,7 +142,10 @@ class DiaryController extends Controller
             $history->calori_in = max(0, $history->calori_in);
             $history->save();
 
-            $consumption->delete();
+            FoodConsumption::where('history_id', $history->history_id)
+                ->where('food_id', $data['food_id'])
+                ->where('category', $data['category'])
+                ->delete();
 
             return response()->json(['message' => 'Food removed successfully']);
         }

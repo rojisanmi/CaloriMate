@@ -30,8 +30,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login.show');
 Route::post('/login', [AuthController::class, 'doLogin'])->name('login.do');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/register', [AuthController::class, 'showRegisterChoice'])->name('register.choice');
-Route::get('/register/form', [AuthController::class, 'showRegister'])->name('register.form');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register.form');
 Route::post('/register', [AuthController::class, 'doRegister'])->name('register.do');
 
 Route::get('/register/trainer', [AuthController::class, 'showRegisterTrainer'])->name('register.trainer.form');

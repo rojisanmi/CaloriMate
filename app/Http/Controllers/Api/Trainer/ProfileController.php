@@ -30,6 +30,8 @@ class ProfileController extends Controller
             'nama'        => 'required|string|max:100',
             'keahlian'    => 'required|string|max:255',
             'sertifikasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'photo'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'avatar'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         if ($request->hasFile('sertifikasi')) {
@@ -38,6 +40,15 @@ class ProfileController extends Controller
             // Keep the old sertifikasi if it's not present but was provided previously.
             unset($validated['sertifikasi']);
         }
+
+        $photoFile = $request->file('photo') ?? $request->file('avatar');
+        if ($photoFile) {
+            if ($user->trainer && $user->trainer->photo_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->trainer->photo_path);
+            }
+            $validated['photo_path'] = $photoFile->store('avatars', 'public');
+        }
+        unset($validated['photo'], $validated['avatar']);
 
         $user->trainer()->updateOrCreate(
             ['username' => $user->username],

@@ -1,7 +1,9 @@
 @php
-  $username = session('user_name', 'Trainer');
-  $initials = strtoupper(substr($username, 0, 2));
-  $sidebarTrainerPhoto = optional(\App\Models\Trainer::where('username', session('user_id'))->first())->photo_url;
+  $sidebarTrainer = \App\Models\Trainer::where('username', session('user_id'))->first();
+  $trainerName = $sidebarTrainer ? $sidebarTrainer->nama : session('user_name', 'Trainer');
+  $username = session('user_id', 'trainer');
+  $initials = strtoupper(substr($trainerName, 0, 2));
+  $sidebarTrainerPhoto = optional($sidebarTrainer)->photo_url;
 
   $navItems = [
     [
@@ -61,8 +63,8 @@
         @endif
       </div>
       <div class="min-w-0">
-        <p class="text-white font-semibold text-sm leading-tight truncate group-hover:text-[#F5A623] transition-colors">{{ $username }}</p>
-        <p class="text-white/50 text-xs mt-0.5">Lihat Profil</p>
+        <p class="text-white font-semibold text-sm leading-tight truncate group-hover:text-[#F5A623] transition-colors">{{ $trainerName }}</p>
+        <p class="text-white/50 text-xs mt-0.5">{{ $username }}</p>
       </div>
     </div>
   </a>

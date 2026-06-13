@@ -19,7 +19,7 @@ class StatisticController extends Controller
 
         $todayHistory = History::where('username', $username)
             ->whereDate('date', $today)
-            ->with(['foodConsumptions.food', 'program.items'])
+            ->with(['foodConsumptions.food', 'historyPrograms.program.items'])
             ->first();
 
         $totalKaloriMasuk = 0;
@@ -62,14 +62,17 @@ class StatisticController extends Controller
 
             $totalKaloriKeluar = $todayHistory->calori_out ?? 0;
 
-            if ($todayHistory->program) {
-                $aktivitas = $todayHistory->program->items->map(function ($item) use ($todayHistory) {
-                    return [
-                        'tanggal' => Carbon::parse($todayHistory->date)->translatedFormat('d M Y'),
-                        'nama' => $item->exercise_name,
-                        'waktu_menit' => $item->duration_minutes,
-                        'kalori_terbakar' => $this->estimateCaloriesBurned($item->duration_minutes, $item->intensity_level),
-                    ];
+            if ($todayHistory->historyPrograms && $todayHistory->historyPrograms->isNotEmpty()) {
+                $aktivitas = $todayHistory->historyPrograms->flatMap(function ($historyProgram) use ($todayHistory) {
+                    if (!$historyProgram->program) return collect();
+                    return $historyProgram->program->items->map(function ($item) use ($todayHistory) {
+                        return [
+                            'tanggal' => Carbon::parse($todayHistory->date)->translatedFormat('d M Y'),
+                            'nama' => $item->exercise_name,
+                            'waktu_menit' => $item->duration_minutes,
+                            'kalori_terbakar' => $this->estimateCaloriesBurned($item->duration_minutes, $item->intensity_level),
+                        ];
+                    });
                 });
             }
         }

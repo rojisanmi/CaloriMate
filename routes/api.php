@@ -39,6 +39,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Trainer Routes (role:2)
     Route::middleware('role:2')->prefix('trainer')->name('api.trainer.')->group(function () {
         
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Api\Trainer\DashboardController::class, 'index']);
+
         // Profile Trainer
         Route::get('/profile', [TrainerProfileController::class, 'show']);
         Route::post('/profile', [TrainerProfileController::class, 'update']); // Menggunakan POST untuk multipart/form-data (upload file)
@@ -75,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/exercise/{id}/start', [ExerciseController::class, 'start']);
 
         // Notifications
+        Route::get('/notifications/unread', [ClientNotificationController::class, 'unread']);
         Route::get('/notifications', [ClientNotificationController::class, 'index']);
         Route::post('/notifications/read', [ClientNotificationController::class, 'markAsRead']);
 

@@ -55,7 +55,10 @@ class ExerciseController extends Controller
             ['calori_in' => 0, 'calori_out' => 0]
         );
 
-        $history->program_id = $program->program_id;
+        $history->historyPrograms()->create([
+            'program_id' => $program->program_id
+        ]);
+
         $history->calori_out += $totalCaloriesBurned;
         $history->save();
 

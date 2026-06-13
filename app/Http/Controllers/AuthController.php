@@ -101,17 +101,6 @@ class AuthController extends Controller
         return redirect()->route('login.show')->with('status', 'Logged out.');
     }
 
-    // Tampilan halaman pilihan register (trainer / client)
-    public function showRegisterChoice()
-    {
-        if (Session::has('user_id')) {
-            return (int) Session::get('user_role') === 2
-                ? redirect()->route('trainer.home')
-                : redirect()->route('client.home');
-        }
-        return view('register_choice');
-    }
-
     // Tampilan halaman register client (form step 1)
     public function showRegister()
     {

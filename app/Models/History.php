@@ -42,6 +42,12 @@ class History extends Model
         return $this->hasMany(FoodConsumption::class, 'history_id', 'history_id');
     }
 
+    // Relasi ke tabel history_programs
+    public function historyPrograms()
+    {
+        return $this->hasMany(HistoryProgram::class, 'history_id', 'history_id');
+    }
+
     // Hitung total kalori yang dikonsumsi berdasarkan food consumptions
     public function getTotalCaloriesConsumed(): float
     {
