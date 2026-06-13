@@ -97,17 +97,52 @@ class ProgramController extends Controller
             'name'             => 'required|string|max:100',
             'type'             => 'nullable|string|max:50',
             'difficulty'       => 'nullable|string|max:50',
+
+            'items'                    => 'nullable|array',
+            'items.*.id'               => 'nullable|integer',
+            'items.*.exercise_name'    => 'required_with:items|string|max:255',
+            'items.*.duration_minutes' => 'nullable|integer|min:0',
+            'items.*.intensity_level'  => 'nullable|string|max:50',
         ]);
 
-        $program->update([
-            'name'             => $data['name'],
-            'type'             => $data['type'] ?? null,
-            'difficulty'       => $data['difficulty'] ?? null,
-        ]);
+        DB::transaction(function () use ($program, $data, $request) {
+            $program->update([
+                'name'             => $data['name'],
+                'type'             => $data['type'] ?? null,
+                'difficulty'       => $data['difficulty'] ?? null,
+            ]);
+
+            // Hanya sync items jika field 'items' dikirim (agar update tanpa
+            // items — mis. dari form lama — tidak menghapus item yang ada).
+            if ($request->has('items')) {
+                $submitted = collect($data['items'] ?? []);
+
+                // Hapus items yang tidak ada di submission
+                $submittedIds = $submitted->pluck('id')->filter()->all();
+                $program->items()->whereNotIn('program_item_id', $submittedIds)->delete();
+
+                // Update existing + create new
+                foreach ($submitted as $row) {
+                    $payload = [
+                        'exercise_name'    => $row['exercise_name'],
+                        'duration_minutes' => $row['duration_minutes'] ?? null,
+                        'intensity_level'  => $row['intensity_level'] ?? null,
+                    ];
+
+                    if (!empty($row['id'])) {
+                        $program->items()
+                            ->where('program_item_id', $row['id'])
+                            ->update($payload);
+                    } else {
+                        $program->items()->create($payload);
+                    }
+                }
+            }
+        });
 
         return response()->json([
             'message' => 'Program updated successfully',
-            'data' => $program
+            'data' => $program->load('items')
         ]);
     }
 

@@ -41,6 +41,7 @@ class HistoryController extends Controller
                 return [
                     'name' => $consumption->food->name ?? 'Unknown',
                     'date' => $history->date,
+                    'portions' => $consumption->portions,
                     'calories' => ($consumption->food->calories_per_portion ?? 0) * $consumption->portions,
                 ];
             });
