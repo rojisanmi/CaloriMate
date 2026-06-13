@@ -269,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function () {
       datasets: [{
         data: rawData.values,
         backgroundColor: [
-          'rgba(245, 166, 35, 0.9)',
           'rgba(59, 130, 246, 0.9)',
           'rgba(249, 115, 22, 0.9)',
           'rgba(34, 197, 94, 0.9)',

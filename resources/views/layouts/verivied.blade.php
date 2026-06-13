@@ -78,9 +78,10 @@
 
       {{-- AVATAR DROPDOWN --}}
       @php
-        $uname = session('user_name', 'T');
+        $trainerData = \App\Models\Trainer::where('username', session('user_id'))->first();
+        $uname = $trainerData ? $trainerData->nama : session('user_name', 'T');
         $ini = strtoupper(substr($uname, 0, 2));
-        $trainerPhoto = optional(\App\Models\Trainer::where('username', session('user_id'))->first())->photo_url;
+        $trainerPhoto = optional($trainerData)->photo_url;
       @endphp
       <div class="relative" id="avatarMenuWrap">
         <button id="avatarMenuBtn" type="button"
