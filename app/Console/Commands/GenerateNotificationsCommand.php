@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Client;
 use App\Models\Notification;
+use App\Services\FcmService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -24,6 +25,11 @@ class GenerateNotificationsCommand extends Command
      * The console command description.
      */
     protected $description = 'Generate food and exercise reminder notifications for clients based on their configured reminder times';
+
+    public function __construct(private FcmService $fcm)
+    {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
@@ -63,25 +69,33 @@ class GenerateNotificationsCommand extends Command
                 continue;
             }
 
-            // Check if a food notification already exists for this user today
+            // Cegah duplikat hanya untuk waktu reminder yang SAMA di hari yang sama.
+            // Beda jam = reminder berbeda → tetap dikirim (mendukung ganti jam).
             $alreadyExists = Notification::where('username', $client->username)
                 ->where('type', 'food')
                 ->whereDate('notify_at', $today)
+                ->whereRaw("DATE_FORMAT(notify_at, '%H:%i') = ?", ["{$hour}:{$minute}"])
                 ->exists();
 
             if ($alreadyExists) {
                 continue;
             }
 
+            $title = 'Pengingat Input Makanan';
+            $body = 'Waktunya mencatat makanan kamu! Jangan lupa input makanan hari ini ya 🍽️';
+
             Notification::create([
                 'username'  => $client->username,
-                'title'     => 'Pengingat Input Makanan',
-                'message'   => 'Waktunya mencatat makanan kamu! Jangan lupa input makanan hari ini ya 🍽️',
+                'title'     => $title,
+                'message'   => $body,
                 'type'      => 'food',
                 'icon'      => 'restaurant',
                 'notify_at' => Carbon::now('Asia/Jakarta'),
                 'is_read'   => false,
             ]);
+
+            // Kirim push ke HP client (kalau ada device token terdaftar)
+            $this->fcm->sendToUser($client->username, $title, $body, ['type' => 'food']);
 
             $count++;
         }
@@ -107,25 +121,33 @@ class GenerateNotificationsCommand extends Command
                 continue;
             }
 
-            // Check if an exercise notification already exists for this user today
+            // Cegah duplikat hanya untuk waktu reminder yang SAMA di hari yang sama.
+            // Beda jam = reminder berbeda → tetap dikirim (mendukung ganti jam).
             $alreadyExists = Notification::where('username', $client->username)
                 ->where('type', 'exercise')
                 ->whereDate('notify_at', $today)
+                ->whereRaw("DATE_FORMAT(notify_at, '%H:%i') = ?", ["{$hour}:{$minute}"])
                 ->exists();
 
             if ($alreadyExists) {
                 continue;
             }
 
+            $title = 'Pengingat Jadwal Olahraga';
+            $body = 'Saatnya berolahraga! Ayo jaga kebugaran tubuhmu hari ini 💪';
+
             Notification::create([
                 'username'  => $client->username,
-                'title'     => 'Pengingat Jadwal Olahraga',
-                'message'   => 'Saatnya berolahraga! Ayo jaga kebugaran tubuhmu hari ini 💪',
+                'title'     => $title,
+                'message'   => $body,
                 'type'      => 'exercise',
                 'icon'      => 'fitness_center',
                 'notify_at' => Carbon::now('Asia/Jakarta'),
                 'is_read'   => false,
             ]);
+
+            // Kirim push ke HP client (kalau ada device token terdaftar)
+            $this->fcm->sendToUser($client->username, $title, $body, ['type' => 'exercise']);
 
             $count++;
         }

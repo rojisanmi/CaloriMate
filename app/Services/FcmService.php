@@ -35,7 +35,7 @@ class FcmService
             ->withAndroidConfig([
                 'priority' => 'high',
                 'notification' => [
-                    'channel_id' => 'calorimate_reminders_v2',
+                    'channel_id' => 'calorimate_reminders_v3',
                     'sound' => 'cm',
                 ],
             ]);

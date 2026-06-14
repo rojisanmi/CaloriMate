@@ -79,61 +79,10 @@
 
       {{-- NOTIFICATION & AVATAR WRAPPER --}}
       @php
+        // Notifikasi pengingat (makan/olahraga) dibuat oleh scheduler
+        // App\Console\Commands\GenerateNotificationsCommand yang juga mengirim
+        // push FCM. Blade ini hanya MENAMPILKAN daftar, tidak lagi membuatnya.
         $username = session('user_id');
-        $client = \App\Models\Client::where('username', $username)->first();
-        if ($client) {
-            $now = \Carbon\Carbon::now('Asia/Jakarta');
-            
-            // Check Food Reminder
-            if ($client->food_reminder_time) {
-                $foodTime = \Carbon\Carbon::parse($client->food_reminder_time, 'Asia/Jakarta');
-                if ($now->format('H:i') >= $foodTime->format('H:i')) {
-                    // Cek apakah ada notifikasi untuk waktu spesifik ini hari ini
-                    $exists = \App\Models\Notification::where('username', $username)
-                                ->where('type', 'reminder')
-                                ->where('icon', 'food')
-                                ->whereDate('notify_at', $now->toDateString())
-                                ->whereRaw("DATE_FORMAT(notify_at, '%H:%i') = ?", [$foodTime->format('H:i')])
-                                ->exists();
-                    if (!$exists) {
-                        \App\Models\Notification::insert([
-                            'username' => $username,
-                            'title' => 'Waktunya Makan!',
-                            'message' => 'Jangan lupa catat asupan makananmu di menu Diary agar kalori tetap terkontrol.',
-                            'type' => 'reminder',
-                            'icon' => 'food',
-                            'notify_at' => $now->toDateString() . ' ' . $foodTime->format('H:i:s'),
-                            'is_read' => false,
-                        ]);
-                    }
-                }
-            }
-            
-            // Check Exercise Reminder
-            if ($client->exercise_reminder_time) {
-                $exTime = \Carbon\Carbon::parse($client->exercise_reminder_time, 'Asia/Jakarta');
-                if ($now->format('H:i') >= $exTime->format('H:i')) {
-                    $exists = \App\Models\Notification::where('username', $username)
-                                ->where('type', 'reminder')
-                                ->where('icon', 'exercise')
-                                ->whereDate('notify_at', $now->toDateString())
-                                ->whereRaw("DATE_FORMAT(notify_at, '%H:%i') = ?", [$exTime->format('H:i')])
-                                ->exists();
-                    if (!$exists) {
-                        \App\Models\Notification::insert([
-                            'username' => $username,
-                            'title' => 'Waktunya Olahraga!',
-                            'message' => 'Cek menu Exercise dan selesaikan program latihanmu hari ini.',
-                            'type' => 'reminder',
-                            'icon' => 'exercise',
-                            'notify_at' => $now->toDateString() . ' ' . $exTime->format('H:i:s'),
-                            'is_read' => false,
-                        ]);
-                    }
-                }
-            }
-        }
-
         $unreadCount = \App\Models\Notification::where('username', $username)->where('is_read', false)->count();
         $recentNotifs = \App\Models\Notification::where('username', $username)->orderBy('notify_at', 'desc')->take(3)->get();
       @endphp

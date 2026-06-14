@@ -82,6 +82,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/notifications', [ClientNotificationController::class, 'index']);
         Route::post('/notifications/read', [ClientNotificationController::class, 'markAsRead']);
 
+        // FCM device token (push notification)
+        Route::post('/device-token', [\App\Http\Controllers\Api\Client\DeviceTokenController::class, 'store']);
+        Route::delete('/device-token', [\App\Http\Controllers\Api\Client\DeviceTokenController::class, 'destroy']);
+
         // Recommendations (Intelligent System)
         Route::get('/recommendations/food', [RecommendationController::class, 'food']);
         Route::get('/recommendations/exercise', [RecommendationController::class, 'exercise']);
