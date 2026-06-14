@@ -33,8 +33,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register.form');
 Route::post('/register', [AuthController::class, 'doRegister'])->name('register.do');
 
-Route::get('/register/trainer', [AuthController::class, 'showRegisterTrainer'])->name('register.trainer.form');
-Route::post('/register/trainer', [AuthController::class, 'doRegisterTrainer'])->name('register.trainer.do');
+// Registrasi trainer DIHAPUS — trainer hanya dibuat manual oleh admin
+// (lihat admin.trainers.store). Self-register hanya untuk client.
 
 Route::get('/register/client', [ClientRegisterController::class, 'show'])->name('register.client.show');
 Route::post('/register/client', [ClientRegisterController::class, 'store'])->name('register.client.store');

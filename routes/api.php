@@ -22,7 +22,7 @@ use App\Http\Controllers\Api\Client\RecommendationController;
 // Public Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register/client', [AuthController::class, 'registerClient']);
-Route::post('/register/trainer', [AuthController::class, 'registerTrainer']);
+// Catatan: registrasi trainer DIHAPUS — trainer hanya dibuat manual oleh admin.
 
 // Default user route from Laravel 11
 Route::get('/user', function (Request $request) {
