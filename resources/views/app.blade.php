@@ -71,10 +71,18 @@
         </ul>
 
         {{-- Register --}}
-        <div class="ml-auto">
+        <div class="ml-2">
           <a href="{{ url('/register') }}"
+             class="inline-flex items-center rounded-full bg-[#F5A623] px-6 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition">
+            Daftar
+          </a>
+        </div>
+
+        {{-- Login --}}
+        <div class="ml-4">
+          <a href="{{ url('/login') }}"
              class="inline-flex items-center rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#2E4F2A] shadow-sm hover:opacity-90 transition">
-            Register
+            Masuk
           </a>
         </div>
       </div>

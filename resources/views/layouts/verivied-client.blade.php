@@ -77,6 +77,109 @@
 
       <div class="flex-1"></div>
 
+      {{-- NOTIFICATION & AVATAR WRAPPER --}}
+      @php
+        $username = session('user_id');
+        $client = \App\Models\Client::where('username', $username)->first();
+        if ($client) {
+            $now = \Carbon\Carbon::now('Asia/Jakarta');
+            
+            // Check Food Reminder
+            if ($client->food_reminder_time) {
+                $foodTime = \Carbon\Carbon::parse($client->food_reminder_time, 'Asia/Jakarta');
+                if ($now->format('H:i') >= $foodTime->format('H:i')) {
+                    // Cek apakah ada notifikasi untuk waktu spesifik ini hari ini
+                    $exists = \App\Models\Notification::where('username', $username)
+                                ->where('type', 'reminder')
+                                ->where('icon', 'food')
+                                ->whereDate('notify_at', $now->toDateString())
+                                ->whereRaw("DATE_FORMAT(notify_at, '%H:%i') = ?", [$foodTime->format('H:i')])
+                                ->exists();
+                    if (!$exists) {
+                        \App\Models\Notification::insert([
+                            'username' => $username,
+                            'title' => 'Waktunya Makan!',
+                            'message' => 'Jangan lupa catat asupan makananmu di menu Diary agar kalori tetap terkontrol.',
+                            'type' => 'reminder',
+                            'icon' => 'food',
+                            'notify_at' => $now->toDateString() . ' ' . $foodTime->format('H:i:s'),
+                            'is_read' => false,
+                        ]);
+                    }
+                }
+            }
+            
+            // Check Exercise Reminder
+            if ($client->exercise_reminder_time) {
+                $exTime = \Carbon\Carbon::parse($client->exercise_reminder_time, 'Asia/Jakarta');
+                if ($now->format('H:i') >= $exTime->format('H:i')) {
+                    $exists = \App\Models\Notification::where('username', $username)
+                                ->where('type', 'reminder')
+                                ->where('icon', 'exercise')
+                                ->whereDate('notify_at', $now->toDateString())
+                                ->whereRaw("DATE_FORMAT(notify_at, '%H:%i') = ?", [$exTime->format('H:i')])
+                                ->exists();
+                    if (!$exists) {
+                        \App\Models\Notification::insert([
+                            'username' => $username,
+                            'title' => 'Waktunya Olahraga!',
+                            'message' => 'Cek menu Exercise dan selesaikan program latihanmu hari ini.',
+                            'type' => 'reminder',
+                            'icon' => 'exercise',
+                            'notify_at' => $now->toDateString() . ' ' . $exTime->format('H:i:s'),
+                            'is_read' => false,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        $unreadCount = \App\Models\Notification::where('username', $username)->where('is_read', false)->count();
+        $recentNotifs = \App\Models\Notification::where('username', $username)->orderBy('notify_at', 'desc')->take(3)->get();
+      @endphp
+      <div class="relative flex items-center gap-2" id="navRightMenu">
+        
+        {{-- NOTIFICATION BELL --}}
+        <div class="relative">
+          <button id="notifBtn" type="button" class="relative p-2 text-white/80 hover:text-white transition-colors hover:bg-white/10 rounded-full focus:outline-none">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            @if($unreadCount > 0)
+            <span class="absolute top-1.5 right-2 flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-[#2E471F]"></span>
+            </span>
+            @endif
+          </button>
+          
+          <div id="notifMenu" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 origin-top-right z-50">
+            <div class="px-4 py-2.5 border-b border-gray-100 flex justify-between items-center">
+              <p class="text-sm font-bold text-[#2E471F]">Notifikasi</p>
+              @if($unreadCount > 0)
+              <form action="{{ route('client.notifications.read') }}" method="POST">
+                @csrf
+                <button type="submit" class="text-[10px] text-[#F5A623] hover:underline focus:outline-none">Tandai semua dibaca</button>
+              </form>
+              @endif
+            </div>
+            <div class="max-h-64 overflow-y-auto">
+              @forelse($recentNotifs as $notif)
+                <a href="{{ route('client.notifications') }}" class="block px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors {{ $notif->is_read ? '' : 'bg-orange-50/30' }}">
+                  <p class="text-sm font-bold text-[#2E471F]">{{ $notif->title ?? 'Notifikasi' }}</p>
+                  <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">{{ $notif->message }}</p>
+                  <p class="text-[10px] text-gray-400 mt-1 font-medium">{{ $notif->notify_at ? \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $notif->notify_at->format('Y-m-d H:i:s'), 'Asia/Jakarta')->diffForHumans(\Carbon\Carbon::now('Asia/Jakarta')) : 'Baru saja' }}</p>
+                </a>
+              @empty
+                <p class="text-xs text-center text-gray-400 py-4">Belum ada notifikasi.</p>
+              @endforelse
+            </div>
+            <div class="px-4 py-2 text-center border-t border-gray-100 mt-1">
+              <a href="{{ route('client.notifications') }}" class="text-xs font-semibold text-[#2E471F] hover:text-[#F5A623] transition-colors">Lihat Semua Notifikasi</a>
+            </div>
+          </div>
+        </div>
+
       {{-- AVATAR DROPDOWN --}}
       @php
         $uname = session('user_name', 'C');
@@ -128,6 +231,7 @@
           </div>
         </div>
       </div>
+      </div>
 
     </div>
   </header>
@@ -142,7 +246,7 @@
 
   {{-- FOOTER --}}
   <footer class="mt-auto w-full bg-[#2E471F]">
-    <div class="py-3 text-center text-xs text-white/50">©2025 CaloriMate · Telkom University</div>
+    <div class="py-3 text-center text-xs text-white/50">2026 CaloriMate · Telkom University</div>
   </footer>
 
   @include('layouts._delete-modal')
@@ -166,16 +270,30 @@
     overlay?.addEventListener('click', closeSidebar);
     window.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
 
-    // Avatar dropdown
+    // Dropdown toggles
     const avatarBtn  = document.getElementById('avatarMenuBtn');
     const avatarMenu = document.getElementById('avatarMenu');
+    const notifBtn   = document.getElementById('notifBtn');
+    const notifMenu  = document.getElementById('notifMenu');
+    
     avatarBtn?.addEventListener('click', e => {
       e.stopPropagation();
       avatarMenu.classList.toggle('hidden');
+      if(notifMenu) notifMenu.classList.add('hidden');
     });
+    
+    notifBtn?.addEventListener('click', e => {
+      e.stopPropagation();
+      notifMenu.classList.toggle('hidden');
+      if(avatarMenu) avatarMenu.classList.add('hidden');
+    });
+    
     document.addEventListener('click', e => {
       if (!avatarBtn?.contains(e.target) && !avatarMenu?.contains(e.target)) {
         avatarMenu?.classList.add('hidden');
+      }
+      if (!notifBtn?.contains(e.target) && !notifMenu?.contains(e.target)) {
+        notifMenu?.classList.add('hidden');
       }
     });
   </script>

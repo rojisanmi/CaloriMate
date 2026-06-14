@@ -45,6 +45,23 @@
     </div>
 
     <div>
+      <label class="block text-sm font-semibold text-[#2E471F] mb-1">Sertifikasi</label>
+      @if($trainer->sertifikasi)
+        <div class="mt-2">
+            <a href="{{ asset('storage/' . $trainer->sertifikasi) }}" target="_blank"
+               class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-xl text-sm font-medium hover:bg-blue-100 transition border border-blue-200">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+               </svg>
+               Lihat File Sertifikasi
+            </a>
+        </div>
+      @else
+        <p class="text-sm text-gray-500 italic mt-2">Sertifikasi belum diunggah</p>
+      @endif
+    </div>
+
+    <div>
       <label class="block text-sm font-semibold text-[#2E471F] mb-1">Password Baru</label>
       <input type="password" name="password" minlength="8"
              class="w-full px-4 py-2.5 border-2 {{ $errors->has('password') ? 'border-red-400 bg-red-50' : 'border-gray-200' }} rounded-xl text-sm focus:border-[#2E471F] focus:outline-none transition"

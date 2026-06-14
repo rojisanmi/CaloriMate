@@ -20,7 +20,7 @@ class StatisticController extends Controller
         // Ambil history untuk hari ini lengkap dengan makanan & program latihan
         $todayHistory = History::where('username', $username)
             ->whereDate('date', $today)
-            ->with(['foodConsumptions.food', 'program.items'])
+            ->with(['foodConsumptions.food', 'historyPrograms.program.items'])
             ->first();
 
         $totalKaloriMasuk = 0;
@@ -68,14 +68,17 @@ class StatisticController extends Controller
             $totalKaloriKeluar = $todayHistory->calori_out ?? 0;
 
             // Riwayat aktivitas latihan hari ini (per item latihan)
-            if ($todayHistory->program) {
-                $aktivitas = $todayHistory->program->items->map(function ($item) use ($todayHistory) {
-                    return [
-                        'tanggal' => Carbon::parse($todayHistory->date)->translatedFormat('d M Y'),
-                        'nama' => $item->exercise_name,
-                        'waktu' => $item->duration_minutes . ' menit',
-                        'kalori' => $this->estimateCaloriesBurned($item->duration_minutes, $item->intensity_level),
-                    ];
+            if ($todayHistory->historyPrograms && $todayHistory->historyPrograms->isNotEmpty()) {
+                $aktivitas = $todayHistory->historyPrograms->flatMap(function ($historyProgram) use ($todayHistory) {
+                    if (!$historyProgram->program) return collect();
+                    return $historyProgram->program->items->map(function ($item) use ($todayHistory) {
+                        return [
+                            'tanggal' => Carbon::parse($todayHistory->date)->translatedFormat('d M Y'),
+                            'nama' => $item->exercise_name,
+                            'waktu' => $item->duration_minutes . ' menit',
+                            'kalori' => $this->estimateCaloriesBurned($item->duration_minutes, $item->intensity_level),
+                        ];
+                    });
                 });
             }
         }
@@ -90,9 +93,8 @@ class StatisticController extends Controller
 
         // Data untuk pie chart nutrisi harian
         $nutritionChartData = [
-            'labels' => ['Kalori', 'Protein (g)', 'Lemak (g)', 'Karbo (g)'],
+            'labels' => ['Protein (g)', 'Lemak (g)', 'Karbo (g)'],
             'values' => [
-                round($totalKaloriMasuk, 2),
                 round($totalProtein, 2),
                 round($totalLemak, 2),
                 round($totalKarbo, 2),

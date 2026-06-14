@@ -47,6 +47,8 @@ class ProfileController extends Controller
             'protein_ratio'  => 'required|integer|min:10|max:70',
             'carbo_ratio'    => 'required|integer|min:10|max:70',
             'fat_ratio'      => 'required|integer|min:10|max:70',
+            'food_reminder_time' => 'nullable|date_format:H:i',
+            'exercise_reminder_time' => 'nullable|date_format:H:i',
         ], [
             'email.required'     => 'Email wajib diisi.',
             'email.email'        => 'Format email tidak valid.',
@@ -99,6 +101,8 @@ class ProfileController extends Controller
             'protein_ratio'  => $validated['protein_ratio'],
             'carbo_ratio'    => $validated['carbo_ratio'],
             'fat_ratio'      => $validated['fat_ratio'],
+            'food_reminder_time' => $validated['food_reminder_time'] ?? null,
+            'exercise_reminder_time' => $validated['exercise_reminder_time'] ?? null,
         ];
 
         // Handle photo upload — replace old photo if exists

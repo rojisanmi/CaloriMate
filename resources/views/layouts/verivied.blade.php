@@ -78,9 +78,10 @@
 
       {{-- AVATAR DROPDOWN --}}
       @php
-        $uname = session('user_name', 'T');
+        $trainerData = \App\Models\Trainer::where('username', session('user_id'))->first();
+        $uname = $trainerData ? $trainerData->nama : session('user_name', 'T');
         $ini = strtoupper(substr($uname, 0, 2));
-        $trainerPhoto = optional(\App\Models\Trainer::where('username', session('user_id'))->first())->photo_url;
+        $trainerPhoto = optional($trainerData)->photo_url;
       @endphp
       <div class="relative" id="avatarMenuWrap">
         <button id="avatarMenuBtn" type="button"
@@ -141,7 +142,7 @@
 
   {{-- FOOTER --}}
   <footer class="mt-auto w-full bg-[#2E471F]">
-    <div class="py-3 text-center text-xs text-white/50">©2025 CaloriMate · Telkom University</div>
+    <div class="py-3 text-center text-xs text-white/50">2026 CaloriMate · Telkom University</div>
   </footer>
 
   @include('layouts._delete-modal')

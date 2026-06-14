@@ -14,7 +14,9 @@ use App\Http\Controllers\Api\Client\DiaryController;
 use App\Http\Controllers\Api\Client\HistoryController;
 use App\Http\Controllers\Api\Client\StatisticController;
 use App\Http\Controllers\Api\Client\ExerciseController;
+use App\Http\Controllers\Api\Client\NotificationController as ClientNotificationController;
 use App\Http\Controllers\Api\Client\ProfileController as ClientProfileController;
+use App\Http\Controllers\Api\Client\RecommendationController;
 
 
 // Public Routes
@@ -37,6 +39,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Trainer Routes (role:2)
     Route::middleware('role:2')->prefix('trainer')->name('api.trainer.')->group(function () {
         
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Api\Trainer\DashboardController::class, 'index']);
+
         // Profile Trainer
         Route::get('/profile', [TrainerProfileController::class, 'show']);
         Route::post('/profile', [TrainerProfileController::class, 'update']); // Menggunakan POST untuk multipart/form-data (upload file)
@@ -56,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/profile', [ClientProfileController::class, 'update']); // POST karena upload avatar
 
         // Diary
+        Route::get('/foods', [DiaryController::class, 'foods']);
         Route::get('/diary', [DiaryController::class, 'index']);
         Route::post('/diary', [DiaryController::class, 'store']);
         Route::delete('/diary', [DiaryController::class, 'destroy']);
@@ -70,6 +76,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/exercise', [ExerciseController::class, 'index']);
         Route::get('/exercise/{id}', [ExerciseController::class, 'show']);
         Route::post('/exercise/{id}/start', [ExerciseController::class, 'start']);
+
+        // Notifications
+        Route::get('/notifications/unread', [ClientNotificationController::class, 'unread']);
+        Route::get('/notifications', [ClientNotificationController::class, 'index']);
+        Route::post('/notifications/read', [ClientNotificationController::class, 'markAsRead']);
+
+        // Recommendations (Intelligent System)
+        Route::get('/recommendations/food', [RecommendationController::class, 'food']);
+        Route::get('/recommendations/exercise', [RecommendationController::class, 'exercise']);
+        Route::get('/recommendations/weekly', [RecommendationController::class, 'weekly']);
 
     });
 });

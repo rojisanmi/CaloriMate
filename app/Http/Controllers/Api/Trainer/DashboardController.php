@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Trainer;
 
+use App\Http\Controllers\Controller;
 use App\Models\Food;
 use App\Models\Program;
 use App\Models\History;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
-class TrainerHomeController extends Controller
+class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $totalClients  = User::where('role', 1)->count();
         $totalFoods    = Food::count();
@@ -44,9 +46,14 @@ class TrainerHomeController extends Controller
         }
         $activityChart = ['labels' => $chartLabels, 'values' => $chartValues];
 
-        return view('trainer_home', compact(
-            'totalClients', 'totalFoods', 'totalPrograms', 'activeClients',
-            'topFoods', 'topPrograms', 'activityChart'
-        ));
+        return response()->json([
+            'total_clients'  => $totalClients,
+            'active_clients' => $activeClients,
+            'total_foods'    => $totalFoods,
+            'total_programs' => $totalPrograms,
+            'activity_chart' => $activityChart,
+            'top_foods'      => $topFoods,
+            'top_programs'   => $topPrograms,
+        ]);
     }
 }

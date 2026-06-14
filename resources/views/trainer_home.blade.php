@@ -8,7 +8,7 @@
 <div class="flex items-center justify-between gap-6 mb-8 cm-fadein">
   <div>
     <h1 class="font-raleway text-2xl sm:text-3xl font-extrabold text-[#2E471F] leading-tight">
-      Halo, <span class="text-[#F5A623]">{{ session('user_name', 'Trainer') }}</span>!
+      Halo, <span class="text-[#F5A623]">{{ optional(\App\Models\Trainer::where('username', session('user_id'))->first())->nama ?? session('user_name', 'Trainer') }}</span>!
     </h1>
     <p class="text-sm text-gray-500 mt-1">Berikut ringkasan aktivitas platform CaloriMate.</p>
   </div>

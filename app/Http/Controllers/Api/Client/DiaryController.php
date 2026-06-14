@@ -11,6 +11,20 @@ use Illuminate\Http\Request;
 class DiaryController extends Controller
 {
     /**
+     * List foods for diary add-food picker
+     */
+    public function foods(Request $request)
+    {
+        $query = Food::orderBy('name');
+
+        if ($q = $request->get('q')) {
+            $query->where('name', 'like', '%' . $q . '%');
+        }
+
+        return response()->json($query->limit(100)->get());
+    }
+
+    /**
      * Display diary overview
      */
     public function index(Request $request)
@@ -42,11 +56,12 @@ class DiaryController extends Controller
         $dailyCaloriesTarget = $client ? $client->calculateDailyCalories() : 2000;
         $remainingCalories = max(0, $dailyCaloriesTarget - $consumedCalories);
 
+        // Empty PHP array encodes as JSON [] — force object {} for mobile clients
         return response()->json([
             'daily_target' => $dailyCaloriesTarget,
             'consumed_calories' => $consumedCalories,
             'remaining_calories' => $remainingCalories,
-            'consumptions' => $consumptions,
+            'consumptions' => empty($consumptions) ? (object) [] : $consumptions,
         ]);
     }
 
@@ -74,8 +89,10 @@ class DiaryController extends Controller
             ->first();
 
         if ($existing) {
-            $existing->portions += $data['portions'];
-            $existing->save();
+            FoodConsumption::where('history_id', $history->history_id)
+                ->where('food_id', $data['food_id'])
+                ->where('category', $data['category'])
+                ->update(['portions' => $existing->portions + $data['portions']]);
         } else {
             FoodConsumption::create([
                 'history_id' => $history->history_id,
@@ -125,7 +142,10 @@ class DiaryController extends Controller
             $history->calori_in = max(0, $history->calori_in);
             $history->save();
 
-            $consumption->delete();
+            FoodConsumption::where('history_id', $history->history_id)
+                ->where('food_id', $data['food_id'])
+                ->where('category', $data['category'])
+                ->delete();
 
             return response()->json(['message' => 'Food removed successfully']);
         }

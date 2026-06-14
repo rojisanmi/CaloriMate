@@ -41,12 +41,12 @@
         <div class="space-y-4">
           <a href="{{ url('/login/trainer') }}"
              class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90">
-            Login as Trainer
+            Masuk sebagai Trainer
           </a>
-          <div class="text-sm text-[#2E4F2A]/70">Or</div>
+          <div class="text-sm text-[#2E4F2A]/70">Atau</div>
           <a href="{{ url('/login/client') }}"
              class="block rounded-lg bg-[#2E7D32] px-5 py-3 font-semibold text-white shadow-md hover:opacity-90">
-            Login as Client
+            Masuk sebagai Client
           </a>
         </div>
       </div>
